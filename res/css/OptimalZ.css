@@ -1,0 +1,64 @@
+.root{
+    /*-fx-background-color: #ffcd38;*/
+    
+    /*-fx-background-color: rgba(255, 161, 0, 0.5);*/
+    -fx-background-color: #cfcfcf;
+
+}
+
+#btnOpenFile{    
+    -fx-graphic: url("/pictures/open2.png");
+}
+
+#btnOpenProjectFile{
+    -fx-graphic: url("/pictures/open2.png");
+}
+
+#btnOpenChoiceFile{
+    -fx-graphic: url("/pictures/open2.png");
+}
+
+
+#btnSave{
+	-fx-graphic: url("/pictures/save.png");
+}
+
+#btnStatistik{
+	
+	-fx-graphic: url("/pictures/statistic2.png");
+	
+}
+
+#btnPrint{
+    -fx-graphic: url("/pictures/printer.png");
+}
+
+#btnUndo{
+	
+	-fx-graphic: url("/pictures/Undo.png");
+	
+}
+
+#btnRedo{
+	
+	-fx-graphic: url("/pictures/Redo.png");
+	
+}
+
+#btnStartAssignment{
+	
+	-fx-graphic: url("/pictures/start.png");
+	
+}
+
+#statusBox{
+	
+	-fx-background-color: #ffcd38;		
+}
+
+#bottomBox{
+	
+	-fx-background-color: #ffcd38;		
+}
+
+
