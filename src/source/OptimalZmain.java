@@ -33,7 +33,7 @@ public class OptimalZmain extends Application {
 		OptimalZmodel model = new OptimalZmodel();
 
 
-
+// test jonas
 
         //String priorityFileName = "res/BIT_ChoiceAdjusted.csv";
         //String priorityFileName ="C:/Users/LorisGrether/Desktop/FHNW/Semester4/PracticalProject/Source/TestData/BIT_ChoiceAdjusted.csv";
