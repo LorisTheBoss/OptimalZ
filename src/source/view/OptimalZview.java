@@ -43,8 +43,7 @@ public class OptimalZview {
 	private Label lblChoiceFileName = new Label("Choice-File");
 	private Label lblStatus = new Label("Status");
 
-	//blablabla
-	
+
 	//Pane
 	private VBox bottomBox;
 	private HBox statusBox;
@@ -165,8 +164,6 @@ public class OptimalZview {
         ObservableList<Assignment> tableValues = FXCollections.observableArrayList();
 
         tableValues.addAll(model.getListAssignmnet());
-
-
 
         colID.setCellValueFactory(new PropertyValueFactory<Assignment, Integer>("id"));
         colName.setCellValueFactory(new PropertyValueFactory<Assignment, String>("name"));

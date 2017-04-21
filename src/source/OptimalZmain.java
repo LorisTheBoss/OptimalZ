@@ -56,8 +56,6 @@ public class OptimalZmain extends Application {
         assigner.computeAssignment();
 
 
-
-
 		OptimalZview view = new OptimalZview(primaryStage, model);
 		new OptimalZcontroller(model, view);
 		
