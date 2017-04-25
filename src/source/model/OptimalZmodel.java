@@ -1,7 +1,10 @@
 package source.model;
 
+import au.com.bytecode.opencsv.CSVWriter;
 import source.Assignment;
 
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class OptimalZmodel {
@@ -24,4 +27,5 @@ public class OptimalZmodel {
     public ArrayList<ArrayList<Assignment>> getListVersions() {
         return listVersions;
     }
+
 }

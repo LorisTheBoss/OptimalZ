@@ -127,8 +127,8 @@ public class OptimalZview {
         TableColumn<Assignment, String> colProjectPrio4 = new TableColumn<Assignment, String>("Prio 4");
         TableColumn<Assignment, String> colProjectPrio5 = new TableColumn<Assignment, String>("Prio 5");
 
-        TableColumn<Assignment, String> colCost = new TableColumn<Assignment, String>("Cost");
-        TableColumn<Assignment, String> colPriority = new TableColumn<Assignment, String>("Priority");
+        //TableColumn<Assignment, String> colCost = new TableColumn<Assignment, String>("Cost");
+        //TableColumn<Assignment, String> colPriority = new TableColumn<Assignment, String>("Priority");
         TableColumn<Assignment, Boolean> colLock = new TableColumn<Assignment, Boolean>("Lock");
 
 //		colName.prefWidthProperty().bind(stage.widthProperty().divide(4));
@@ -157,8 +157,8 @@ public class OptimalZview {
                 colProjectPrio3,
                 colProjectPrio4,
                 colProjectPrio5,
-                colCost,
-                colPriority,
+                //colCost,
+                //colPriority,
                 colLock);
 
         ObservableList<Assignment> tableValues = FXCollections.observableArrayList();
@@ -168,7 +168,7 @@ public class OptimalZview {
         colID.setCellValueFactory(new PropertyValueFactory<Assignment, Integer>("id"));
         colName.setCellValueFactory(new PropertyValueFactory<Assignment, String>("name"));
         colAssignedProject.setCellValueFactory(new PropertyValueFactory<Assignment, String>("assignedProject"));
-        colCost.setCellValueFactory(new PropertyValueFactory<Assignment, String>("Cost"));
+        //colCost.setCellValueFactory(new PropertyValueFactory<Assignment, String>("Cost"));
         //colPriority.setCellValueFactory(new PropertyValueFactory<String, String>("Priority"));
 
         table.setItems(tableValues);

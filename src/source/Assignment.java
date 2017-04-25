@@ -9,7 +9,7 @@ public class Assignment {
 	private final int id;
 	private String name;
 	private String assignedProject;
-	private HashMap<Integer, String> chosenProjects = new HashMap<>();
+	private HashMap<Integer, String> chosenProjects = new HashMap<>(); //Integer entspricht Projektwahl -> int 1 = 1. Prio, int 2 = 2. Prio etc.
 	private boolean isOwnProject;
 
 	public Assignment(){

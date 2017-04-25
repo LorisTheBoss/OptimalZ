@@ -33,12 +33,12 @@ public class OptimalZmain extends Application {
 		OptimalZmodel model = new OptimalZmodel();
 
 
-// test jonas
+
 
         //String priorityFileName = "res/BIT_ChoiceAdjusted.csv";
         //String priorityFileName ="C:/Users/LorisGrether/Desktop/FHNW/Semester4/PracticalProject/Source/TestData/BIT_ChoiceAdjusted.csv";
 
-        String priorityFileName ="C:/Users/LorisGrether/Documents/Workspace/OptimalZ/res/project priority test-6-records-20170414_1124-comma_separated.csv";
+        String priorityFileName ="C:/Users/Tobias/Dropbox/Practical Project (OptimalZ)/Development/csv files/project priority test-9-records-20170423_1419-comma_separated_Number Format_testTobias.csv";
 
 
         // *** 2 ***
@@ -48,12 +48,14 @@ public class OptimalZmain extends Application {
         //String projectsFileName = "res/BIT_Projects.csv";
         //String projectsFileName ="C:/Users/LorisGrether/Desktop/FHNW/Semester4/PracticalProject/Source/TestData/BIT_Projects.csv";
 
-        String projectsFileName ="C:/Users/LorisGrether/Documents/Workspace/OptimalZ/res/ProjectListMoodle.csv";
+        String projectsFileName ="C:/Users/Tobias/Dropbox/Practical Project (OptimalZ)/Development/csv files/Project List number format_testTobias.csv";
 
         ProjectAssigner assigner = new ProjectAssigner(model);
         assigner.readCSV(priorityFileName, projectsFileName);
         assigner.computeCostMatrix(priorityFileName);
         assigner.computeAssignment();
+
+
 
 
 		OptimalZview view = new OptimalZview(primaryStage, model);
