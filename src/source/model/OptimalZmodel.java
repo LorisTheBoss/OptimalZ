@@ -3,6 +3,7 @@ package source.model;
 
 import source.Assignment;
 
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -28,7 +29,9 @@ public class OptimalZmodel {
         String COMMA_DELIMITER = ",";
         String NEW_LINE_SEPARATOR = "\n";
         String FILE_HEADER = "GROUP,PROJECT";
-        FileWriter fileWriter = new FileWriter("C:\\Users\\Tobias\\Desktop\\AssignmentList.csv");
+        //FileWriter fileWriter = new FileWriter("C:\\Users\\Tobias\\Desktop\\AssignmentList.csv");
+        File desktop = new File(System.getProperty("user.home"), "Desktop");
+        FileWriter fileWriter = new FileWriter(desktop.getAbsolutePath() + "\\ProjektAssignment.csv");
         try {
             fileWriter.append(FILE_HEADER);
             for (int i = 1; i <= listAssignmnet.size(); i++) {
