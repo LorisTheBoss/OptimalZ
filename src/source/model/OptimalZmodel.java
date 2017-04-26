@@ -1,6 +1,6 @@
 package source.model;
 
-import au.com.bytecode.opencsv.CSVWriter;
+
 import source.Assignment;
 
 import java.io.FileWriter;
@@ -17,6 +17,34 @@ public class OptimalZmodel {
 
         this.listAssignmnet = new ArrayList<>();
         this.listVersions = new ArrayList<>();
+    }
+
+    /**
+     * @author Tobias Gerhard
+     * Responsible for the export of the final list
+     */
+    public void csvWriter() throws IOException {
+
+        String COMMA_DELIMITER = ",";
+        String NEW_LINE_SEPARATOR = "\n";
+        String FILE_HEADER = "GROUP,PROJECT";
+        FileWriter fileWriter = new FileWriter("C:\\Users\\Tobias\\Desktop\\AssignmentList.csv");
+        try {
+            fileWriter.append(FILE_HEADER);
+            for (int i = 1; i <= listAssignmnet.size(); i++) {
+                Assignment a = listAssignmnet.get(i - 1);
+                fileWriter.append(NEW_LINE_SEPARATOR);
+                fileWriter.append(a.getName());
+                fileWriter.append(COMMA_DELIMITER);
+                fileWriter.append(a.getAssignedProject());
+                fileWriter.flush();
+            }
+        } catch (Exception e) {
+            System.err.println("Something went wrong during export");
+        } finally {
+            fileWriter.flush();
+            fileWriter.close();
+        }
     }
 
 

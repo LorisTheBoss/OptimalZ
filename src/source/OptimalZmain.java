@@ -1,11 +1,14 @@
 package source;
 
 
+import au.com.bytecode.opencsv.CSVWriter;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import source.controller.OptimalZcontroller;
 import source.model.OptimalZmodel;
 import source.view.OptimalZview;
+
+import java.io.FileWriter;
 
 public class OptimalZmain extends Application {
 
@@ -64,6 +67,8 @@ public class OptimalZmain extends Application {
 		view.start();
 
 
+
+
 		/*
 
 		//String priorityFileName = "res/BIT_ChoiceAdjusted.csv";
@@ -85,7 +90,42 @@ public class OptimalZmain extends Application {
 		
 		
 		*/
-		
-		
+
+
+
+		/************************************************
+		 *	Export Test Tobi
+		 ************************************************/
+
+		/**
+		 * @author Tobias Gerhard
+		 * Responsible for the export of the final list
+
+		String COMMA_DELIMITER = ",";
+		String NEW_LINE_SEPARATOR = "\n";
+		String FILE_HEADER = "GROUP, PROJECT";
+		FileWriter fileWriter = new FileWriter("C:\\Users\\Tobias\\Desktop\\AssignmentList.csv");
+		try {
+			fileWriter.append(FILE_HEADER);
+			for (int i = 1 ; i <= model.getListAssignmnet().size() ; i++) {
+				Assignment a = model.getListAssignmnet().get(i-1);
+				fileWriter.append(NEW_LINE_SEPARATOR);
+				fileWriter.append(a.getName());
+				fileWriter.append(COMMA_DELIMITER);
+				fileWriter.append(a.getAssignedProject());
+				fileWriter.flush();
+			}
+		} catch (Exception e) {
+			System.err.println("Something went wrong during export");
+		} finally {
+			fileWriter.flush();
+			fileWriter.close();
+		}
+		*/
+
+		model.csvWriter();
+
+
+
 	}
 }
