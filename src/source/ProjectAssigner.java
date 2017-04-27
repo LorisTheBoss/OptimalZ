@@ -86,6 +86,7 @@ public class ProjectAssigner {
                     }
 
                     model.getListAssignmnet().add(assignment);
+
                 }
             }
             scan.close();

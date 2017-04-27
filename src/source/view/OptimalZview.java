@@ -99,7 +99,8 @@ public class OptimalZview {
 
 		ComboBox<Object> comboBoxVersions = new ComboBox<>();
 		
-		comboBoxVersions.getItems().addAll("Version 1","Version 2","Version 3");
+		//comboBoxVersions.getItems().addAll("Version 1","Version 2","Version 3");
+        comboBoxVersions.getItems().addAll(model.getListVersions());
 		comboBoxVersions.getSelectionModel().selectFirst();
 		
 		bar.getItems().add(comboBoxVersions);
@@ -220,6 +221,10 @@ public class OptimalZview {
     }
 
     public Button getBtnStartAssignment() {return this.btnStartAssignment;}
+
+    public Button getBtnSave() {
+        return this.btnSave;
+    }
 
     public Button getBtnPrint() {return this.btnPrint;}
 
