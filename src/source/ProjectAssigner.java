@@ -68,11 +68,11 @@ public class ProjectAssigner {
                 System.out.println(studentLine);
 
                 lineScanner = new Scanner(studentLine);
-                lineScanner.useDelimiter(",");
+                lineScanner.useDelimiter(";");
                 String students = lineScanner.next();
                 this.studentList.add(students);
 
-                String[] split = studentLine.split(",");
+                String[] split = studentLine.split(";");
 
                 if (checkName(split[0])) { //checks if the group name is unique
 
@@ -137,7 +137,7 @@ public class ProjectAssigner {
         while (scan.hasNext()) {
             String studentLine = scan.nextLine();
             lineScanner = new Scanner(studentLine);
-            lineScanner.useDelimiter(",");
+            lineScanner.useDelimiter(";");
             lineScanner.next(); // the student group
             for (int q = 0; q < 5; q++) {
 

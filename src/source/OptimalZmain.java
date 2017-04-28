@@ -7,8 +7,6 @@ import source.controller.OptimalZcontroller;
 import source.model.OptimalZmodel;
 import source.view.OptimalZview;
 
-import java.io.FileWriter;
-
 public class OptimalZmain extends Application {
 
 	public static void main(String[] args) {
@@ -40,7 +38,10 @@ public class OptimalZmain extends Application {
         //String priorityFileName = "res/BIT_ChoiceAdjusted.csv";
         //String priorityFileName ="C:/Users/LorisGrether/Desktop/FHNW/Semester4/PracticalProject/Source/TestData/BIT_ChoiceAdjusted.csv";
 
-        String priorityFileName ="C:/Users/Tobias/Dropbox/Practical Project (OptimalZ)/Development/csv files/project priority test-9-records-20170423_1419-comma_separated_Number Format_testTobias.csv";
+        String priorityFileName ="C:/Users/LorisGrether/Desktop/FHNW/Semester4/PracticalProject/Source/TestData/BIT_ChoiceAdjusted.csv";
+
+        //String priorityFileName ="C:/Users/LorisGrether/Documents/Workspace/OptimalZ/res/project priority test-6-records-20170414_1124-comma_separated.csv";
+
 
         // *** 2 ***
         // a single column file with all project numbers available (also with
@@ -49,7 +50,9 @@ public class OptimalZmain extends Application {
         //String projectsFileName = "res/BIT_Projects.csv";
         //String projectsFileName ="C:/Users/LorisGrether/Desktop/FHNW/Semester4/PracticalProject/Source/TestData/BIT_Projects.csv";
 
-        String projectsFileName ="C:/Users/Tobias/Dropbox/Practical Project (OptimalZ)/Development/csv files/Project List number format_testTobias.csv";
+        String projectsFileName ="C:/Users/LorisGrether/Desktop/FHNW/Semester4/PracticalProject/Source/TestData/BIT_Projects.csv";
+
+        //String projectsFileName ="C:/Users/LorisGrether/Documents/Workspace/OptimalZ/res/ProjectListMoodle.csv";
 
         ProjectAssigner assigner = new ProjectAssigner(model);
         assigner.readCSV(priorityFileName, projectsFileName);
@@ -57,14 +60,10 @@ public class OptimalZmain extends Application {
         assigner.computeAssignment();
 
 
-
-
 		OptimalZview view = new OptimalZview(primaryStage, model);
 		new OptimalZcontroller(model, view);
 		
 		view.start();
-
-
 
 
 		/*
@@ -88,12 +87,7 @@ public class OptimalZmain extends Application {
 		
 		
 		*/
-
-
-
-
-
-
+		
+		
 	}
-
 }

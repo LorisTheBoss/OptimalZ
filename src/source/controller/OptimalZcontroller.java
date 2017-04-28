@@ -45,7 +45,7 @@ public class OptimalZcontroller {
 			@Override
 			public void handle(ActionEvent event) {
 
-                String priorityFileName = openFile();
+                //String priorityFileName = openFile();
 
 			}
 		});
@@ -54,7 +54,7 @@ public class OptimalZcontroller {
             @Override
             public void handle(ActionEvent event) {
 
-                String projectsFileName = openFile();
+                //String projectsFileName = openFile();
 
             }
         });
@@ -95,14 +95,15 @@ public class OptimalZcontroller {
             public void handle(ActionEvent event) {
                 System.out.println("start calculation!!");
 
+                view.getLblStatus().setText("Calculation Successful");
+
             }
 
 
 
 
         });
-
-
+		
 		view.getStage().setOnCloseRequest(new EventHandler<WindowEvent>() {
 
 			@Override
