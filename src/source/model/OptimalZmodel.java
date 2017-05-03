@@ -1,78 +1,103 @@
 package source.model;
 
-
+import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import source.Assignment;
-
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.text.DateFormat;
-import java.text.FieldPosition;
-import java.text.ParsePosition;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.LinkedHashMap;
 
+/**
+ * Created by LorisGrether on 10.04.2017.
+ */
 public class OptimalZmodel {
 
     private ArrayList<Assignment> listAssignmnet;
-    private ArrayList<ArrayList<Assignment>> listVersions;
+    private ObservableList<ArrayList<Assignment>> listVersions;
     private boolean isExported = false;
 
-    public OptimalZmodel(){
+    private SimpleStringProperty priorityFileName;
+    private SimpleStringProperty projectsFileName;
+
+    private boolean areFilesReadIn = false;
+
+    public OptimalZmodel() {
 
         this.listAssignmnet = new ArrayList<>();
-        this.listVersions = new ArrayList<>();
+        this.listVersions = FXCollections.observableArrayList();
+
+        this.priorityFileName = new SimpleStringProperty();
+        this.projectsFileName = new SimpleStringProperty();
     }
 
-    /**
-     * @author Tobias Gerhard
-     * Responsible for the export of the final list
-     */
-    public void csvWriter() throws IOException {
+    public ObservableList<LinkedHashMap<String,String>> getTableData(){
 
-        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        Date date = new Date();
-        String today = dateFormat.format(date);
-        File desktop = new File(System.getProperty("user.home"), "Desktop");
-        FileWriter fileWriter = new FileWriter(desktop.getAbsolutePath() + "\\ProjektAssignment_" + today + ".csv");
-        String COMMA_DELIMITER = ",";
-        String NEW_LINE_SEPARATOR = "\n";
-        String FILE_HEADER = "GROUP,PROJECT";
-        String FILE_TITLE = "Projektzuteilung vom " + today;
+        ObservableList<LinkedHashMap<String,String>> tableData = FXCollections.observableArrayList();
 
-        try {
-            fileWriter.append(FILE_TITLE);
-            fileWriter.append(NEW_LINE_SEPARATOR);
-            fileWriter.append(FILE_HEADER);
+        for (Assignment assignment: listAssignmnet) {
+            LinkedHashMap<String, String> rowData = new LinkedHashMap<>();
 
-            for (int i = 1; i <= listAssignmnet.size(); i++) {
-                Assignment a = listAssignmnet.get(i - 1);
-                fileWriter.append(NEW_LINE_SEPARATOR);
-                fileWriter.append(a.getName());
-                fileWriter.append(COMMA_DELIMITER);
-                fileWriter.append(a.getAssignedProject());
-                fileWriter.flush();
-                isExported = true;
+            rowData.put("ID", String.valueOf(assignment.getId()));
+            rowData.put("Student Names", assignment.getName());
+            rowData.put("Assigned Project", assignment.getAssignedProject());
+
+            for (int i = 1; i <= assignment.getChosenProjects().size(); i++){
+                rowData.put("Priority " + i, assignment.getChosenProjects().get(i));
             }
-        } catch (Exception e) {
-            System.err.println("Something went wrong during export");
-        } finally {
-            fileWriter.flush();
-            fileWriter.close();
+
+            rowData.put("Cost", String.valueOf(assignment.getId()));
+            rowData.put("Priority", String.valueOf(assignment.getId()));
+
+            tableData.add(rowData);
         }
+        return tableData;
     }
+
+
+    // ----- getters and setters -----
 
     public ArrayList<Assignment> getListAssignmnet() {
         return listAssignmnet;
     }
 
-    public ArrayList<ArrayList<Assignment>> getListVersions() {
+    public ObservableList<ArrayList<Assignment>> getListVersions() {
         return listVersions;
     }
 
     public boolean getIsExported() {
         return isExported;
+    }
+
+    public SimpleStringProperty getPriorityFileName() {
+        return priorityFileName;
+    }
+
+    public void setPriorityFileName(String priorityFileName) {
+        this.priorityFileName.set(priorityFileName);
+    }
+
+    public SimpleStringProperty getProjectsFileName() {
+        return projectsFileName;
+    }
+
+    public void setProjectsFileName(String projectsFileName) {
+        this.projectsFileName.set(projectsFileName);
+    }
+
+    public boolean getAreFilesReadIn() {
+        return areFilesReadIn;
+    }
+
+    public void setAreFilesReadIn(boolean areFilesReadIn) {
+        this.areFilesReadIn = areFilesReadIn;
+    }
+
+    public boolean isExported() {
+        return isExported;
+    }
+
+    public void setIsExported(boolean exported) {
+        isExported = exported;
     }
 
 }

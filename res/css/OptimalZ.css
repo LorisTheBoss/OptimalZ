@@ -3,7 +3,11 @@
     
     /*-fx-background-color: rgba(255, 161, 0, 0.5);*/
     -fx-background-color: #cfcfcf;
+    -fx-min-height: 32px;
+}
 
+.tooltip{
+    -fx-font-size: 15px;
 }
 
 #btnOpenFile{    
@@ -12,6 +16,7 @@
 
 #btnOpenProjectFile{
     -fx-graphic: url("/pictures/open2.png");
+    -fx-min-height: 32px;
 }
 
 #btnOpenChoiceFile{
@@ -21,6 +26,8 @@
 
 #btnSave{
 	-fx-graphic: url("/pictures/save.png");
+    -fx-min-height: 32px;
+
 }
 
 #btnStatistik{
@@ -29,20 +36,18 @@
 	
 }
 
-#btnPrint{
-    -fx-graphic: url("/pictures/printer.png");
-}
-
 #btnUndo{
 	
 	-fx-graphic: url("/pictures/Undo.png");
+    -fx-min-height: 32px;
 	
 }
 
 #btnRedo{
 	
 	-fx-graphic: url("/pictures/Redo.png");
-	
+    -fx-min-height: 32px;
+
 }
 
 #btnStartAssignment{
@@ -61,4 +66,7 @@
 	-fx-background-color: #ffcd38;		
 }
 
-
+#comboBoxVersions{
+    -fx-min-height: 32px;
+    -fx-min-width: 100px;
+}

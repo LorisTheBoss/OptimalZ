@@ -2,6 +2,7 @@ package source.view;
 
 
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -9,6 +10,7 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxTableCell;
+import javafx.scene.control.cell.MapValueFactory;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
@@ -18,97 +20,128 @@ import javafx.util.Callback;
 import source.Assignment;
 import source.model.OptimalZmodel;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
+
+/**
+ * Created by LorisGrether on 10.04.2017.
+ */
 public class OptimalZview {
 
-	//Button
-	Button btnOpenProjectFile = new Button("Project File");
-	Button btnOpenChoiceFile = new Button("Choice File");
+    //Button
+    Button btnOpenProjectFile = new Button("Project File");
+    Button btnOpenChoiceFile = new Button("Choice File");
 
-	private Button btnSave = new Button();
-	private Button btnStatistik = new Button();
-	private Button btnUndo = new Button();
-	private Button brnRedo = new Button();
-	private Button btnStartAssignment = new Button();
-	private Button btnPrint = new Button();
-	
-	//Label
-	private Label lblProjectFileName = new Label("Project-File");
-	private Label lblChoiceFileName = new Label("Choice-File");
-	private Label lblStatus = new Label("Status");
+    private Button btnSave = new Button();
+    private Button btnStatistik = new Button();
+    private Button btnUndo = new Button();
+    private Button btnRedo = new Button();
+    private Button btnStartAssignment = new Button();
 
+    //Label
+    private Label lblStatus = new Label("Status");
 
-	//Pane
-	private VBox bottomBox;
-	private HBox statusBox;
-	
-	private Scene scene;
-	
-	private OptimalZmodel model;
-	private Stage stage;
-	
-	public OptimalZview(Stage primaryStage, OptimalZmodel model) {
-		
-		this.model = model;
-		this.stage = primaryStage;
-				
-		stage.setTitle("OptimalZ");
-		
-		BorderPane root = new BorderPane();
-		
-		root.setTop(createTop());
-		root.setCenter(createCenter());
-		root.setBottom(createBottom());
-		
-		scene = new Scene(root, 800, 600);
-		
-		this.setControlIDs();
-		
+    TableView<Assignment> tableView;
+
+    public ObservableList<LinkedHashMap<String, String>> getTableData() {
+        return tableData;
+    }
+
+    private ObservableList<LinkedHashMap<String, String>> tableData;
+
+    public TableView getTable() {
+        return table;
+    }
+
+    TableView table;
+
+    ComboBox<Object> comboBoxVersions;
+
+    //Pane
+    private VBox bottomBox;
+    private HBox statusBox;
+
+    private Scene scene;
+
+    private OptimalZmodel model;
+    private Stage stage;
+
+    public OptimalZview(Stage primaryStage, OptimalZmodel model) {
+
+        this.model = model;
+        this.stage = primaryStage;
+
+        stage.setTitle("OptimalZ");
+
+        BorderPane root = new BorderPane();
+
+        root.setTop(createTop());
+        root.setCenter(createCenter());
+        root.setBottom(createBottom());
+
+        scene = new Scene(root, 800, 600);
+
+        this.setControlIDs();
+        this.setToolTipText();
+
         String css = this.getClass().getResource("/css/OptimalZ.css").toExternalForm();
         scene.getStylesheets().add(css);
-        
-		stage.setScene(scene);		
-	}
-	
-	public void start() {
-		stage.show();
-		this.lblStatus.setText("Ready");
-	}
 
-	private Node createTop() {
+        stage.setScene(scene);
+    }
 
-		HBox topBox = new HBox();
-		
-		ToolBar bar = new ToolBar(
-			    this.btnOpenProjectFile,
+    public void start() {
+        stage.show();
+        this.lblStatus.setText("Ready");
+    }
+
+    private Node createTop() {
+
+        HBox topBox = new HBox();
+
+        ToolBar bar = new ToolBar(
+                this.btnOpenProjectFile,
                 this.btnOpenChoiceFile,
-			    new Separator(),
+                new Separator(),
                 this.btnStartAssignment,
                 this.btnUndo,
-                this.brnRedo,
+                this.btnRedo,
                 new Separator(),
                 this.btnStatistik,
-                this.btnSave,
-                this.btnPrint);
+                this.btnSave);
 
-		ComboBox<Object> comboBoxVersions = new ComboBox<>();
-		
-		//comboBoxVersions.getItems().addAll("Version 1","Version 2","Version 3");
-        comboBoxVersions.getItems().addAll(model.getListVersions());
-		comboBoxVersions.getSelectionModel().selectFirst();
-		
-		bar.getItems().add(comboBoxVersions);
-		
-		bar.setMinWidth(Double.MAX_VALUE);
-		
-		topBox.getChildren().add(bar);
-		
-		return topBox;
-	}
+        comboBoxVersions = new ComboBox<>();
+        comboBoxVersions.getSelectionModel().selectFirst();
+
+        bar.getItems().add(comboBoxVersions);
+
+        bar.setMinWidth(Double.MAX_VALUE);
+
+        topBox.getChildren().add(bar);
+
+        return topBox;
+    }
+
+    //From Hermann
+    public Node createCenter() {
+
+        tableData = FXCollections.observableArrayList();
+
+        table = new TableView<>(tableData);
+
+        table.setEditable(true);
+        table.getSelectionModel().setCellSelectionEnabled(true);
+
+        return table;
+    }
 
 
-	private Node createCenter() {
+    public Node createCenter2() {
 
-        TableView<Assignment> table = new TableView<Assignment>();
+        tableView = new TableView<Assignment>();
+
+        tableView.setEditable(true);
+        tableView.getSelectionModel().setCellSelectionEnabled(true);
 
         TableColumn<Assignment, Integer> colID = new TableColumn<Assignment, Integer>("ID");
         TableColumn<Assignment, String> colName = new TableColumn<Assignment, String>("Name");
@@ -142,7 +175,7 @@ public class OptimalZview {
         });
 
 
-        table.getColumns().addAll(
+        tableView.getColumns().addAll(
                 colID,
                 colName,
                 colAssignedProject,
@@ -165,66 +198,92 @@ public class OptimalZview {
         //colCost.setCellValueFactory(new PropertyValueFactory<Assignment, String>("Cost"));
         //colPriority.setCellValueFactory(new PropertyValueFactory<String, String>("Priority"));
 
-        table.setItems(tableValues);
+        tableView.setItems(tableValues);
 
-        return table;
+        return tableView;
     }
-	
-	private Node createBottom() {
 
-		bottomBox = new VBox(30);
-		
-        statusBox = new HBox(20);        
+    private Node createBottom() {
+
+        bottomBox = new VBox(30);
+
+        statusBox = new HBox(20);
         statusBox.setPadding(new Insets(5));
         statusBox.getChildren().add(lblStatus);
-        
+
         bottomBox.getChildren().addAll(statusBox);
         return bottomBox;
-	}
-	
-	private void setControlIDs() {
-		
-		//Button ID's
-		this.btnOpenProjectFile.setId("btnOpenProjectFile");
-		this.btnOpenChoiceFile.setId("btnOpenChoiceFile");
-		this.btnSave.setId("btnSave");
-		this.btnStatistik.setId("btnStatistik");
-		this.brnRedo.setId("btnRedo");
-		this.btnUndo.setId("btnUndo");
-		this.btnStartAssignment.setId("btnStartAssignment");
-		this.btnPrint.setId("btnPrint");
+    }
 
-		//Label ID's
+    private void setControlIDs() {
+
+        //Button ID's
+        this.btnOpenProjectFile.setId("btnOpenProjectFile");
+        this.btnOpenChoiceFile.setId("btnOpenChoiceFile");
+        this.btnSave.setId("btnSave");
+        this.btnStatistik.setId("btnStatistik");
+        this.btnRedo.setId("btnRedo");
+        this.btnUndo.setId("btnUndo");
+        this.btnStartAssignment.setId("btnStartAssignment");
+
+        //ComboBox
+        this.comboBoxVersions.setId("comboBoxVersions");
+
+        //Label ID's
         this.lblStatus.setId("lblStatus");
 
-		//Pane ID's
-		this.bottomBox.setId("bottomBox");
-		this.statusBox.setId("statusBox");
-				
-	}
-	
-	// ----- getters and setters -----
-	
-	public Button getBtnOpenProjectFile(){
-		return this.btnOpenProjectFile;
-	}
+        //Pane ID's
+        this.bottomBox.setId("bottomBox");
+        this.statusBox.setId("statusBox");
 
-    public Button getBtnOpenChoiceFile(){
+    }
+
+    private void setToolTipText() {
+
+        this.btnOpenProjectFile.setTooltip(new Tooltip("Open the file with the available projects"));
+        this.btnOpenChoiceFile.setTooltip(new Tooltip("Open the file with all the choices"));
+        this.btnStartAssignment.setTooltip(new Tooltip("Calculate Assignment"));
+        this.btnSave.setTooltip(new Tooltip("Save the actual version"));
+        this.btnStatistik.setTooltip(new Tooltip("Show the statistics of the actual version"));
+        this.btnRedo.setTooltip(new Tooltip("Redo your changes"));
+        this.btnUndo.setTooltip(new Tooltip("Undo your changes"));
+        this.comboBoxVersions.setTooltip(new Tooltip("Version History"));
+    }
+
+
+    // ----- getters and setters -----
+
+    public Button getBtnOpenProjectFile() {
+        return this.btnOpenProjectFile;
+    }
+
+    public Button getBtnOpenChoiceFile() {
         return this.btnOpenChoiceFile;
     }
 
-    public Button getBtnStartAssignment() {return this.btnStartAssignment;}
+    public Button getBtnStartAssignment() {
+        return this.btnStartAssignment;
+    }
 
     public Button getBtnSave() {
         return this.btnSave;
     }
 
-    public Button getBtnPrint() {return this.btnPrint;}
+    public Stage getStage() {
+        return this.stage;
+    }
 
-    public Stage getStage() {return this.stage;
-	}
+    public Label getLblStatus() {
+        return this.lblStatus;
+    }
 
-	public Label getLblStatus(){return this.lblStatus;}
+    public Button getBtnStatistik() {
+        return btnStatistik;
+    }
+
+    public ComboBox<Object> getComboBoxVersions() {
+        return comboBoxVersions;
+    }
 }
 
 

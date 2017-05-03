@@ -7,6 +7,9 @@ import source.controller.OptimalZcontroller;
 import source.model.OptimalZmodel;
 import source.view.OptimalZview;
 
+/**
+ * Created by LorisGrether on 10.04.2017.
+ */
 public class OptimalZmain extends Application {
 
 	public static void main(String[] args) {
@@ -32,62 +35,25 @@ public class OptimalZmain extends Application {
 		
 		OptimalZmodel model = new OptimalZmodel();
 
-
-
-
-        //String priorityFileName = "res/BIT_ChoiceAdjusted.csv";
         //String priorityFileName ="C:/Users/LorisGrether/Desktop/FHNW/Semester4/PracticalProject/Source/TestData/BIT_ChoiceAdjusted.csv";
-
-        String priorityFileName ="C:/Users/LorisGrether/Desktop/FHNW/Semester4/PracticalProject/Source/TestData/BIT_ChoiceAdjusted.csv";
-
-        //String priorityFileName ="C:/Users/LorisGrether/Documents/Workspace/OptimalZ/res/project priority test-6-records-20170414_1124-comma_separated.csv";
 
 
         // *** 2 ***
         // a single column file with all project numbers available (also with
         // one row header)
-        // String projectsFileName = "/Users/rza/Desktop/BOK_Projects.csv";
-        //String projectsFileName = "res/BIT_Projects.csv";
+
         //String projectsFileName ="C:/Users/LorisGrether/Desktop/FHNW/Semester4/PracticalProject/Source/TestData/BIT_Projects.csv";
 
-        String projectsFileName ="C:/Users/LorisGrether/Desktop/FHNW/Semester4/PracticalProject/Source/TestData/BIT_Projects.csv";
-
-        //String projectsFileName ="C:/Users/LorisGrether/Documents/Workspace/OptimalZ/res/ProjectListMoodle.csv";
-
+        /*
         ProjectAssigner assigner = new ProjectAssigner(model);
         assigner.readCSV(priorityFileName, projectsFileName);
         assigner.computeCostMatrix(priorityFileName);
         assigner.computeAssignment();
-
+        */
 
 		OptimalZview view = new OptimalZview(primaryStage, model);
 		new OptimalZcontroller(model, view);
 		
 		view.start();
-
-
-		/*
-
-		//String priorityFileName = "res/BIT_ChoiceAdjusted.csv";
-		String priorityFileName ="C:/Users/LorisGrether/Desktop/FHNW/Semester4/PracticalProject/Source/TestData/BIT_ChoiceAdjusted.csv";
-
-		// *** 2 ***
-		// a single column file with all project numbers available (also with
-		// one row header)
-		// String projectsFileName = "/Users/rza/Desktop/BOK_Projects.csv";
-		
-
-		//String projectsFileName = "res/BIT_Projects.csv";
-		String projectsFileName ="C:/Users/LorisGrether/Desktop/FHNW/Semester4/PracticalProject/Source/TestData/BIT_Projects.csv";
-		
-		ProjectAssigner assigner = new ProjectAssigner(model);
-		assigner.readCSV(priorityFileName, projectsFileName);
-		assigner.computeCostMatrix(priorityFileName);
-		assigner.computeAssignment();
-		
-		
-		*/
-		
-		
 	}
 }

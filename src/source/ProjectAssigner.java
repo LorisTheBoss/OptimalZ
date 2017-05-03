@@ -1,5 +1,6 @@
 package source;
 
+import javafx.collections.ObservableList;
 import source.model.OptimalZmodel;
 
 import java.io.File;
@@ -95,6 +96,9 @@ public class ProjectAssigner {
             if (studentList.size() > projectNumbers.size()) {
                 System.err.println("\nMore groups than projects - complete assignment is not possible!\n");
             }
+
+            model.setAreFilesReadIn(true);
+
         } catch (FileNotFoundException e) {
             //TODO you have to catch this error in the front end
             System.err.println("invalid filename");
@@ -204,11 +208,13 @@ public class ProjectAssigner {
             }
         }
 
-        model.getListAssignmnet();
+        //ArrayList<Assignment> test = new ArrayList<>(model.getListAssignmnet());
 
-        //this.model.getListVersions().add(this.model.getListAssignmnet());
+        this.model.getListVersions().add(new ArrayList<>(model.getListAssignmnet()));
+
         //this.model.getListAssignmnet().clear();
-        //this.model.getListVersions();
+
+        this.model.getListVersions();
     }
 
 
@@ -259,6 +265,16 @@ public class ProjectAssigner {
             }
             System.out.println();
         }
+    }
+
+    // ----- getters and setters -----
+
+    public LinkedList<String> getProjectNumbers() {
+        return projectNumbers;
+    }
+
+    public LinkedList<String> getStudentList() {
+        return studentList;
     }
 
 
