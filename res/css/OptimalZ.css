@@ -21,6 +21,7 @@
 
 #btnOpenChoiceFile{
     -fx-graphic: url("/pictures/open2.png");
+    -fx-min-height: 32px;
 }
 
 
@@ -33,7 +34,8 @@
 #btnStatistik{
 	
 	-fx-graphic: url("/pictures/statistic2.png");
-	
+    -fx-min-height: 32px;
+
 }
 
 #btnUndo{
@@ -53,7 +55,8 @@
 #btnStartAssignment{
 	
 	-fx-graphic: url("/pictures/start.png");
-	
+    -fx-min-height: 32px;
+
 }
 
 #statusBox{
