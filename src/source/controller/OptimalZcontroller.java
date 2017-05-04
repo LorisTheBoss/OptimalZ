@@ -175,14 +175,12 @@ public class OptimalZcontroller {
                         assigner.computeCostMatrix(model.getPriorityFileName().getValue());
                         assigner.computeAssignment();
 
-                        ObservableList<Assignment> tableValues = FXCollections.observableArrayList();
-                        tableValues.addAll(model.getListAssignmnet());
+                        //ObservableList<Assignment> tableValues = FXCollections.observableArrayList();
+                        //tableValues.addAll(model.getListAssignmnet());
+                        //view.getTableView().setItems(tableValues);
 
 
                         view.getTableData().setAll(model.getTableData());
-
-
-                        //view.getTableView().setItems(tableValues);
                         view.getLblStatus().setText("INFO: Assignment was successfully computed");
 
                     } catch (FileNotFoundException e) {
