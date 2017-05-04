@@ -129,7 +129,7 @@ public class OptimalZcontroller {
 
                 //model.setPriorityFileName(openFile("Priority File"));
 
-                String filePath = openFile("Project File");
+                String filePath = openFile("Choice File");
 
                 if ((model.getPriorityFileName().getValue() == null && filePath != null) || (model.getPriorityFileName() != null && filePath != null)) {
                     model.setPriorityFileName(filePath);
@@ -321,10 +321,10 @@ public class OptimalZcontroller {
 
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("OptimalZ - Open " + fileType);
-        //File desktop = new File(System.getProperty("user.home"), "Desktop");
+        File desktop = new File(System.getProperty("user.home"), "Desktop");
 
         //Loris
-        File desktop = new File("C:/Users/LorisGrether/Desktop/FHNW/Semester4/PracticalProject/Source/TestData");
+       // File desktop = new File("C:/Users/LorisGrether/Desktop/FHNW/Semester4/PracticalProject/Source/TestData");
         fileChooser.setInitialDirectory(desktop);
 
         fileChooser.getExtensionFilters().addAll(
