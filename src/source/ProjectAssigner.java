@@ -2,17 +2,20 @@ package source;
 
 import javafx.collections.ObservableList;
 import source.model.OptimalZmodel;
+import source.view.OptimalZview;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.Scanner;
 
 
 public class ProjectAssigner {
 
     //Loris Grether
     private OptimalZmodel model;
-
+    OptimalZview view;
 
     // MAX_PRIO is used to define a "non-select" of a group-project
     private final int MAX_PRIO = 10;
@@ -32,8 +35,9 @@ public class ProjectAssigner {
      *
      * @param model
      */
-    public ProjectAssigner(OptimalZmodel model) {
+    public ProjectAssigner(OptimalZmodel model, OptimalZview view) {
         this.model = model;
+        this.view = view;
         this.projectNumbers = new LinkedList<String>();
         this.studentList = new LinkedList<String>();
     }
@@ -56,7 +60,6 @@ public class ProjectAssigner {
                 System.out.println(projectNumber);
             }
             scan.close();
-
             scan = new Scanner(new File(priorityFileName));
             scan.nextLine();  // header is not used
             Scanner lineScanner;
@@ -66,17 +69,13 @@ public class ProjectAssigner {
 
                 //LorisGrether
                 System.out.println(studentLine);
+
                 lineScanner = new Scanner(studentLine);
                 lineScanner.useDelimiter(":");
                 String students = lineScanner.next();
-
-
                 this.studentList.add(students);
 
                 String[] split = studentLine.split(":");
-
-
-
 
                 if (checkName(split[0])) { //checks if the group name is unique
 
@@ -104,11 +103,13 @@ public class ProjectAssigner {
 
         } catch (FileNotFoundException e) {
             //TODO you have to catch this error in the front end
+            view.getLblStatus().setText("ERROR: Invalid filename");
             System.err.println("invalid filename");
             e.printStackTrace();
         }
 
-        addValuesToEmptyLists();
+        //TODO at the moment auskommentiert because it is not needed yet
+        //addValuesToEmptyLists();
 
     }
 
@@ -137,7 +138,7 @@ public class ProjectAssigner {
      * @param priorityFileName
      * @throws FileNotFoundException
      */
-    public void computeCostMatrix(String priorityFileName) throws FileNotFoundException, NoSuchElementException {
+    public void computeCostMatrix(String priorityFileName) throws FileNotFoundException {
         this.costMatrix = new double[studentList.size()][projectNumbers.size() + studentList.size()];
         this.fillMatrix(); // fills the matrix with entries MAX_PRIO
         Scanner scan = new Scanner(new File(priorityFileName));
@@ -148,7 +149,8 @@ public class ProjectAssigner {
             String studentLine = scan.nextLine();
             lineScanner = new Scanner(studentLine);
 
-            /* von mir geschrieben
+
+                        /* von mir geschrieben
             String s = studentLine.toString();
             int x = s.length();
             while (x > 2 && (s.charAt(x) == ':' && s.charAt(x - 1) == ':')) {
@@ -157,12 +159,10 @@ public class ProjectAssigner {
             }
             */
 
+
             lineScanner.useDelimiter(":");
             lineScanner.next(); // the student group
-
             for (int q = 0; q < 5; q++) {
-
-
 
                 String projectCode = lineScanner.next();
                 int index = this.searchProjectIndex(projectCode); // returns the index of the projected
@@ -215,12 +215,20 @@ public class ProjectAssigner {
                         System.out.println(this.studentList.get(i) + "\t-->\t" + this.projectNumbers.get(assignment[i][1]) + " (Cost = " + this.costMatrix[i][assignment[i][1]] + ")");
 
                         this.model.getListAssignmnet().get(j).setAssignedProject(this.projectNumbers.get(assignment[i][1]));
+                        this.model.getListAssignmnet().get(j).setCost(this.costMatrix[i][assignment[i][1]]);
 
                     } else {
 
                         //Loris Grether
 
-                        this.model.getListAssignmnet().get(j).setAssignedProject("Eigenes?");
+                        if (this.costMatrix[i][assignment[i][1]] == 0.0){
+                            this.model.getListAssignmnet().get(j).setAssignedProject("Eigenes");
+                        }
+                        else if (this.costMatrix[i][assignment[i][1]] == 10.0){
+                            this.model.getListAssignmnet().get(j).setAssignedProject("Nicht Zugewiesen");
+                        }
+
+                        //this.model.getListAssignmnet().get(j).setAssignedProject("Eigenes?");
                         System.out.println(this.studentList.get(i) + "\t-->\t Eigenes? " + " (Cost = " + this.costMatrix[i][assignment[i][1]] + ")");
                     }
                 }

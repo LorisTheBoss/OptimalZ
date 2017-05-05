@@ -10,7 +10,8 @@ public class Assignment {
 	private String name;
 	private String assignedProject;
 	private HashMap<Integer, String> chosenProjects = new HashMap<>(); //Integer entspricht Projektwahl -> int 1 = 1. Prio, int 2 = 2. Prio etc.
-	private boolean isOwnProject;
+
+    private Double cost;
 
 	public Assignment(){
         this.id = counter++;
@@ -20,6 +21,7 @@ public class Assignment {
 		this.id = counter++;
 		this.name = name;
 		this.assignedProject = assignedProject;
+
 		this.chosenProjects = chosenProjects;
 	}
 
@@ -47,12 +49,16 @@ public class Assignment {
         this.assignedProject = assignedProject;
     }
 
-    public void setChosenProjects(HashMap<Integer, String> chosenProjects) {
-        this.chosenProjects = chosenProjects;
+    public Double getCost() {
+        return cost;
     }
 
-    public void setOwnProject(boolean ownProject) {
-        isOwnProject = ownProject;
+    public void setCost(Double cost) {
+        this.cost = cost;
+    }
+
+    public void setChosenProjects(HashMap<Integer, String> chosenProjects) {
+        this.chosenProjects = chosenProjects;
     }
 
 }

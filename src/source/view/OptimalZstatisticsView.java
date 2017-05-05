@@ -1,25 +1,33 @@
 package source.view;
 
+import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 
 /**
  * Created by LorisGrether on 30.04.2017.
  */
 public class OptimalZstatisticsView {
 
+    private VBox bottomBox;
+    private HBox statusBox;
+
     Stage statisticStage;
     Scene scene;
 
 
-    public OptimalZstatisticsView(String version) {
+    //public OptimalZstatisticsView(String version) {
+    public OptimalZstatisticsView() {
 
         statisticStage = new Stage();
-        statisticStage.setTitle("OptimalZ - Statistics - " + version);
+
+        //statisticStage.setTitle("OptimalZ - Statistics - " + version);
+        statisticStage.setTitle("OptimalZ - Statistics");
 
         BorderPane root = new BorderPane();
         root.setTop(createTop());
@@ -27,6 +35,9 @@ public class OptimalZstatisticsView {
         root.setBottom(createBottom());
 
         scene = new Scene(root, 800, 600);
+
+        //String css = this.getClass().getResource("/css/OptimalZ.css").toExternalForm();
+        //scene.getStylesheets().add(css);
 
 
         statisticStage.setScene(scene);
@@ -51,6 +62,4 @@ public class OptimalZstatisticsView {
 
         return bottomBox;
     }
-
-
 }

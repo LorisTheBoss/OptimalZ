@@ -20,6 +20,7 @@ public class OptimalZmodel {
     private SimpleStringProperty projectsFileName;
 
     private boolean areFilesReadIn = false;
+    private int actualVersion = 1;
 
     public OptimalZmodel() {
 
@@ -34,9 +35,7 @@ public class OptimalZmodel {
 
         ObservableList<LinkedHashMap<String,String>> tableData = FXCollections.observableArrayList();
 
-        ObservableList<Assignment> tableValues = FXCollections.observableArrayList();
-
-        for (Assignment assignment: listAssignmnet) {
+        for (Assignment assignment : listVersions.get(actualVersion - 1)) {
             LinkedHashMap<String, String> rowData = new LinkedHashMap<>();
 
             rowData.put("ID", String.valueOf(assignment.getId()));
@@ -97,5 +96,13 @@ public class OptimalZmodel {
 
     public void setIsExported(boolean exported) {
         isExported = exported;
+    }
+
+    public int getActualVersion() {
+        return actualVersion;
+    }
+
+    public void setActualVersion(int actualVersion) {
+        this.actualVersion = actualVersion;
     }
 }

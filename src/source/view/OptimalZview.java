@@ -9,6 +9,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.TableColumn;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.MapValueFactory;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -20,6 +21,7 @@ import javafx.util.Callback;
 import source.Assignment;
 import source.model.OptimalZmodel;
 
+import javax.swing.table.*;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -42,20 +44,14 @@ public class OptimalZview {
     private Label lblStatus = new Label("Status");
 
     TableView<Assignment> tableView;
+    private TableView table;
+    private ComboBox<Object> comboBoxVersions;
 
     public ObservableList<LinkedHashMap<String, String>> getTableData() {
         return tableData;
     }
 
     private ObservableList<LinkedHashMap<String, String>> tableData;
-
-    public TableView getTable() {
-        return table;
-    }
-
-    TableView table;
-
-    ComboBox<Object> comboBoxVersions;
 
     //Pane
     private VBox bottomBox;
@@ -122,7 +118,6 @@ public class OptimalZview {
         return topBox;
     }
 
-    //From Hermann
     public Node createCenter() {
 
         tableData = FXCollections.observableArrayList();
@@ -283,6 +278,10 @@ public class OptimalZview {
 
     public ComboBox<Object> getComboBoxVersions() {
         return comboBoxVersions;
+    }
+
+    public TableView getTable() {
+        return table;
     }
 }
 

@@ -53,7 +53,7 @@ public class OptimalZcontroller {
 
         this.model = model;
         this.view = view;
-        assigner = new ProjectAssigner(model);
+        assigner = new ProjectAssigner(model, view);
 
         eventhandler();
 
@@ -73,7 +73,7 @@ public class OptimalZcontroller {
 
                 view.getComboBoxVersions().getItems().add("Version " + model.getListVersions().size());
                 view.getComboBoxVersions().getSelectionModel().selectLast();
-
+                model.setActualVersion(model.getListVersions().size());
             }
         });
 
@@ -83,14 +83,19 @@ public class OptimalZcontroller {
 
                 System.out.println("other version was selected");
 
-
-                ObservableList<Assignment> tableValues = FXCollections.observableArrayList();
+                //ObservableList<Assignment> tableValues = FXCollections.observableArrayList();
+                //tableValues.addAll(model.getListVersions().get(Integer.parseInt(split[1])-1));
+                //view.getTableView().setItems(tableValues);
 
                 String[] split = view.getComboBoxVersions().getSelectionModel().getSelectedItem().toString().split(" ");
 
-                tableValues.addAll(model.getListVersions().get(Integer.parseInt(split[1])-1));
-                //TODO das wider ikommentiere
-                //view.getTableView().setItems(tableValues);
+                model.setActualVersion(Integer.parseInt(split[1]));
+
+                view.getTable().getColumns().clear();
+                view.getTable().getItems().clear();
+
+                view.getTableData().setAll(model.getTableData());
+                fillTableView();
 
                 System.out.println("The shown version is : " + (Integer.parseInt(split[1])));
             }
@@ -101,12 +106,15 @@ public class OptimalZcontroller {
             @Override
             public void handle(ActionEvent event) {
 
-                if (model.getListVersions().size() != 0) {
+                //OptimalZstatisticsView optimalZstatisticsView = new OptimalZstatisticsView(view.getComboBoxVersions().getSelectionModel().getSelectedItem().toString());
+                OptimalZstatisticsView optimalZstatisticsView = new OptimalZstatisticsView();
 
-                    OptimalZstatisticsView optimalZstatisticsView = new OptimalZstatisticsView(view.getComboBoxVersions().getSelectionModel().getSelectedItem().toString());
-                } else {
-                    view.getLblStatus().setText("INFO: You first have to select a version");
-                }
+
+//                if (model.getListVersions().size() != 0) {
+//                } else {
+//                    view.getLblStatus().setText("INFO: You first have to select a version");
+//                }
+
             }
         });
 
@@ -169,6 +177,7 @@ public class OptimalZcontroller {
 
                 System.out.println("start calculation!!!");
 
+                checkForLocks();
 
                 if ((assigner.getProjectNumbers().size() != 0 && assigner.getStudentList().size() != 0) && model.getAreFilesReadIn()) {
 
@@ -176,14 +185,16 @@ public class OptimalZcontroller {
                         assigner.computeCostMatrix(model.getPriorityFileName().getValue());
                         assigner.computeAssignment();
 
-                        ObservableList<Assignment> tableValues = FXCollections.observableArrayList();
-                        tableValues.addAll(model.getListAssignmnet());
+                        //ObservableList<Assignment> tableValues = FXCollections.observableArrayList();
+                        //tableValues.addAll(model.getListAssignmnet());
+                        //view.getTableView().setItems(tableValues);
 
+                        view.getTable().getColumns().clear();
+                        view.getTable().getItems().clear();
 
                         view.getTableData().setAll(model.getTableData());
+                        fillTableView();
 
-
-                        //view.getTableView().setItems(tableValues);
                         view.getLblStatus().setText("INFO: Assignment was successfully computed");
 
                     } catch (FileNotFoundException e) {
@@ -199,26 +210,7 @@ public class OptimalZcontroller {
             @Override
             public void onChanged(Change c) {
 
-                if (view.getTableData().size() != 0) {
 
-
-                    for (Map.Entry entry : view.getTableData().get(0).entrySet()) {
-                        TableColumn column = new TableColumn(entry.getKey().toString());
-                        column.setCellValueFactory(new MapValueFactory<String>(entry.getKey().toString()));
-                        view.getTable().getColumns().add(column);
-                    }
-
-                    TableColumn colLock = new TableColumn("Lock");
-                    colLock.setCellValueFactory(new PropertyValueFactory<String, String>("lock"));
-                    view.getTable().getColumns().add(colLock);
-
-                    //
-                    colLock.setCellFactory(p -> {
-                        CheckBoxTableCell<Assignment, Boolean> cell = new CheckBoxTableCell<>();
-                        cell.setAlignment(Pos.CENTER);
-                        return cell;
-                    });
-                }
             }
         });
 
@@ -276,6 +268,45 @@ public class OptimalZcontroller {
 
     }
 
+    private void checkForLocks() {
+
+        for (int i = 0; i < view.getTable().getColumns().size(); i++) {
+
+            TableColumn column = (TableColumn) view.getTable().getColumns().get(i);
+
+            if (column.getText().equals("Lock")){
+
+
+
+            }
+        }
+    }
+
+    public void fillTableView() {
+
+        if (view.getTableData().size() != 0) {
+
+            for (Map.Entry entry : view.getTableData().get(0).entrySet()) {
+
+                TableColumn column = new TableColumn(entry.getKey().toString());
+                column.setCellValueFactory(new MapValueFactory<String>(entry.getKey().toString()));
+                view.getTable().getColumns().add(column);
+            }
+
+            TableColumn colLock = new TableColumn("Lock");
+            colLock.setCellValueFactory(new PropertyValueFactory<String, String>("lock"));
+            view.getTable().getColumns().add(colLock);
+
+            //
+            colLock.setCellFactory(p -> {
+                CheckBoxTableCell<Assignment, Boolean> cell = new CheckBoxTableCell<>();
+                cell.setAlignment(Pos.CENTER);
+                return cell;
+            });
+        }
+    }
+
+
     /**
      * @author Tobias Gerhard
      * Responsible for the export of the final list
@@ -332,10 +363,10 @@ public class OptimalZcontroller {
 
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("OptimalZ - Open " + fileType);
-        File desktop = new File(System.getProperty("user.home"), "Desktop");
+        //File desktop = new File(System.getProperty("user.home"), "Desktop");
 
         //Loris
-        //File desktop = new File("C:/Users/LorisGrether/Desktop/FHNW/Semester4/PracticalProject/Source/TestData");
+        File desktop = new File("C:/Users/LorisGrether/Desktop/FHNW/Semester4/PracticalProject/Source/TestData");
         fileChooser.setInitialDirectory(desktop);
 
         fileChooser.getExtensionFilters().addAll(
