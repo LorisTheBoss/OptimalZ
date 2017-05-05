@@ -5,9 +5,7 @@ import source.model.OptimalZmodel;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.Scanner;
+import java.util.*;
 
 
 public class ProjectAssigner {
@@ -58,6 +56,7 @@ public class ProjectAssigner {
                 System.out.println(projectNumber);
             }
             scan.close();
+
             scan = new Scanner(new File(priorityFileName));
             scan.nextLine();  // header is not used
             Scanner lineScanner;
@@ -67,13 +66,17 @@ public class ProjectAssigner {
 
                 //LorisGrether
                 System.out.println(studentLine);
-
                 lineScanner = new Scanner(studentLine);
-                lineScanner.useDelimiter(";");
+                lineScanner.useDelimiter(":");
                 String students = lineScanner.next();
+
+
                 this.studentList.add(students);
 
-                String[] split = studentLine.split(";");
+                String[] split = studentLine.split(":");
+
+
+
 
                 if (checkName(split[0])) { //checks if the group name is unique
 
@@ -104,6 +107,9 @@ public class ProjectAssigner {
             System.err.println("invalid filename");
             e.printStackTrace();
         }
+
+        addValuesToEmptyLists();
+
     }
 
     private boolean checkName(String name) {
@@ -131,7 +137,7 @@ public class ProjectAssigner {
      * @param priorityFileName
      * @throws FileNotFoundException
      */
-    public void computeCostMatrix(String priorityFileName) throws FileNotFoundException {
+    public void computeCostMatrix(String priorityFileName) throws FileNotFoundException, NoSuchElementException {
         this.costMatrix = new double[studentList.size()][projectNumbers.size() + studentList.size()];
         this.fillMatrix(); // fills the matrix with entries MAX_PRIO
         Scanner scan = new Scanner(new File(priorityFileName));
@@ -141,9 +147,22 @@ public class ProjectAssigner {
         while (scan.hasNext()) {
             String studentLine = scan.nextLine();
             lineScanner = new Scanner(studentLine);
-            lineScanner.useDelimiter(";");
+
+            /* von mir geschrieben
+            String s = studentLine.toString();
+            int x = s.length();
+            while (x > 2 && (s.charAt(x) == ':' && s.charAt(x - 1) == ':')) {
+                System.out.println("We have one here");
+                x--;
+            }
+            */
+
+            lineScanner.useDelimiter(":");
             lineScanner.next(); // the student group
+
             for (int q = 0; q < 5; q++) {
+
+
 
                 String projectCode = lineScanner.next();
                 int index = this.searchProjectIndex(projectCode); // returns the index of the projected
@@ -250,6 +269,32 @@ public class ProjectAssigner {
         }
     }
 
+    /**
+     * @author Tobias Gerhard
+     * Method that fills empty values with space (" ")
+     */
+    private void addValuesToEmptyLists() {
+        //Some toby stuff
+        int p = 0;
+
+        while (p <= model.getListAssignmnet().size() - 1) {
+            if (model.getListAssignmnet().get(p).getChosenProjects().size() < 5) {
+
+                int numberOfValues = model.getListAssignmnet().get(p).getChosenProjects().size();
+                int inCreasingNumber = numberOfValues + 1; //this number is necessary to count to 5, so that the keys can be filled
+
+                //dann, adde so viele values
+                while (inCreasingNumber <= 5) {
+                    model.getListAssignmnet().get(p).getChosenProjects().put(inCreasingNumber, "10");
+                    inCreasingNumber++;
+                    System.out.println("done " + inCreasingNumber);
+                }
+
+            }
+            p++;
+        }
+    }
+
     // ***************************
     // some methods for debugging
     // ***************************
@@ -266,6 +311,8 @@ public class ProjectAssigner {
             System.out.println();
         }
     }
+
+
 
     // ----- getters and setters -----
 

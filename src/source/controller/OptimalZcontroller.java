@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -129,7 +130,7 @@ public class OptimalZcontroller {
 
                 //model.setPriorityFileName(openFile("Priority File"));
 
-                String filePath = openFile("Project File");
+                String filePath = openFile("Choice File");
 
                 if ((model.getPriorityFileName().getValue() == null && filePath != null) || (model.getPriorityFileName() != null && filePath != null)) {
                     model.setPriorityFileName(filePath);
@@ -286,9 +287,8 @@ public class OptimalZcontroller {
         String today = dateFormat.format(date);
         File desktop = new File(System.getProperty("user.home"), "Desktop");
         FileWriter fileWriter = new FileWriter(desktop.getAbsolutePath() + "\\ProjektAssignment_" + today + ".csv");
-        String COMMA_DELIMITER = ",";
         String NEW_LINE_SEPARATOR = "\n";
-        String FILE_HEADER = "GROUP,PROJECT";
+        String FILE_HEADER = "GROUP" + ";" + "ASSIGNED PROJECT" + ";" + "PRIO 1" + ";" + "PRIO 2" + ";" + "PRIO 3" + ";" + "PRIO 4" + ";" + "PRIO 5";
         String FILE_TITLE = "Projektzuteilung vom " + today;
 
         try {
@@ -300,12 +300,21 @@ public class OptimalZcontroller {
             //TODO: ACHTUNG do wird nur d listAssignment usdruckt aber eigentlich mues me s assignmnent wo usdruckt wärde söll us dr "listVersions" go usehole!!
 
             for (int i = 1; i <= this.model.getListAssignmnet().size(); i++) {
+
+                int z = 1;
                 Assignment a = this.model.getListAssignmnet().get(i - 1);
                 fileWriter.append(NEW_LINE_SEPARATOR);
-                fileWriter.append(a.getName());
-                fileWriter.append(COMMA_DELIMITER);
-                fileWriter.append(a.getAssignedProject());
-                fileWriter.flush();
+                fileWriter.append(a.getName() + ";");
+                fileWriter.append(a.getAssignedProject() + ";");
+
+                while (z < 6) {
+                    fileWriter.append(a.getChosenProjects().get(z)  + ";");
+                    fileWriter.flush();
+                    z++;
+
+                }
+
+
                 this.model.setIsExported(true);
             }
         } catch (Exception e) {
@@ -323,10 +332,10 @@ public class OptimalZcontroller {
 
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("OptimalZ - Open " + fileType);
-        //File desktop = new File(System.getProperty("user.home"), "Desktop");
+        File desktop = new File(System.getProperty("user.home"), "Desktop");
 
         //Loris
-        File desktop = new File("C:/Users/LorisGrether/Desktop/FHNW/Semester4/PracticalProject/Source/TestData");
+        //File desktop = new File("C:/Users/LorisGrether/Desktop/FHNW/Semester4/PracticalProject/Source/TestData");
         fileChooser.setInitialDirectory(desktop);
 
         fileChooser.getExtensionFilters().addAll(

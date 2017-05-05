@@ -45,8 +45,8 @@ public class OptimalZmodel {
                 rowData.put("Priority " + i, assignment.getChosenProjects().get(i));
             }
 
-            rowData.put("Cost", String.valueOf(assignment.getId()));
-            rowData.put("Priority", String.valueOf(assignment.getId()));
+            //rowData.put("Cost", String.valueOf(assignment.getId()));
+            //rowData.put("Priority", String.valueOf(assignment.getId()));
 
             tableData.add(rowData);
         }
