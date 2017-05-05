@@ -53,7 +53,7 @@ public class OptimalZmodel {
     }
 
 
-    // ----- getters and setters -----
+    // ----- getters and setters ------
 
     public ArrayList<Assignment> getListAssignmnet() {
         return listAssignmnet;
