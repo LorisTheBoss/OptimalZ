@@ -34,19 +34,18 @@ public class OptimalZmodel {
 
         ObservableList<LinkedHashMap<String,String>> tableData = FXCollections.observableArrayList();
 
+        ObservableList<Assignment> tableValues = FXCollections.observableArrayList();
+
         for (Assignment assignment: listAssignmnet) {
             LinkedHashMap<String, String> rowData = new LinkedHashMap<>();
 
             rowData.put("ID", String.valueOf(assignment.getId()));
-            rowData.put("Student Names", assignment.getName());
+            rowData.put("Name", assignment.getName());
             rowData.put("Assigned Project", assignment.getAssignedProject());
 
             for (int i = 1; i <= assignment.getChosenProjects().size(); i++){
                 rowData.put("Priority " + i, assignment.getChosenProjects().get(i));
             }
-
-            //rowData.put("Cost", String.valueOf(assignment.getId()));
-            //rowData.put("Priority", String.valueOf(assignment.getId()));
 
             tableData.add(rowData);
         }
@@ -99,5 +98,4 @@ public class OptimalZmodel {
     public void setIsExported(boolean exported) {
         isExported = exported;
     }
-
 }
