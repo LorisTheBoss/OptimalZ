@@ -287,7 +287,7 @@ public class ProjectAssigner {
                 while (inCreasingNumber <= 5) {
                     model.getListAssignmnet().get(p).getChosenProjects().put(inCreasingNumber, "10");
                     inCreasingNumber++;
-                    System.out.println("done " + inCreasingNumber);
+                    System.out.println("done: " + inCreasingNumber);
                 }
 
             }

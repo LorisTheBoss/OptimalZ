@@ -167,7 +167,7 @@ public class OptimalZcontroller {
             @Override
             public void handle(ActionEvent event) {
 
-                System.out.println("start calculation!!");
+                System.out.println("start calculation!!!");
 
 
                 if ((assigner.getProjectNumbers().size() != 0 && assigner.getStudentList().size() != 0) && model.getAreFilesReadIn()) {
