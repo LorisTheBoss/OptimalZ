@@ -1,5 +1,7 @@
 package source;
 
+import javafx.beans.property.SimpleBooleanProperty;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -9,21 +11,44 @@ public class Assignment {
 	private final int id;
 	private String name;
 	private String assignedProject;
-	private HashMap<Integer, String> chosenProjects = new HashMap<>(); //Integer entspricht Projektwahl -> int 1 = 1. Prio, int 2 = 2. Prio etc.
 
+    private String projectPrio1;
+	private String projectPrio2;
+	private String projectPrio3;
+	private String projectPrio4;
+	private String projectPrio5;
+
+	private HashMap<Integer, String> chosenProjects = new HashMap<>(); //Integer entspricht Projektwahl -> int 1 = 1. Prio, int 2 = 2. Prio etc.
     private Double cost;
+
+    private SimpleBooleanProperty isLocked = new SimpleBooleanProperty(false);
+
+    public Boolean getLockedBoolean() {
+
+        if (isLockedBoolean != null){
+
+        return isLockedBoolean;}
+
+        else {return null;}
+    }
+
+    public void setLockedBoolean(Boolean lockedBoolean) {
+        isLockedBoolean = lockedBoolean;
+    }
+
+    private Boolean isLockedBoolean = false;
 
 	public Assignment(){
         this.id = counter++;
+        this.isLocked = new SimpleBooleanProperty(false);
     }
 	
 	public Assignment(String name, String assignedProject){
 		this.id = counter++;
 		this.name = name;
 		this.assignedProject = assignedProject;
-
 		this.chosenProjects = chosenProjects;
-	}
+    }
 
 	public int getId() {
 		return id;
@@ -60,5 +85,48 @@ public class Assignment {
     public void setChosenProjects(HashMap<Integer, String> chosenProjects) {
         this.chosenProjects = chosenProjects;
     }
+
+
+
+    public String getProjectPrio1() {
+        return projectPrio1;
+    }
+
+    public void setProjectPrio1(String projectPrio1) {
+        this.projectPrio1 = projectPrio1;
+    }
+
+    public String getProjectPrio2() {
+        return projectPrio2;
+    }
+
+    public void setProjectPrio2(String projectPrio2) {
+        this.projectPrio2 = projectPrio2;
+    }
+
+    public String getProjectPrio3() {
+        return projectPrio3;
+    }
+
+    public void setProjectPrio3(String projectPrio3) {
+        this.projectPrio3 = projectPrio3;
+    }
+
+    public String getProjectPrio4() {
+        return projectPrio4;
+    }
+
+    public void setProjectPrio4(String projectPrio4) {
+        this.projectPrio4 = projectPrio4;
+    }
+
+    public String getProjectPrio5() {
+        return projectPrio5;
+    }
+
+    public void setProjectPrio5(String projectPrio5) {
+        this.projectPrio5 = projectPrio5;
+    }
+
 
 }

@@ -1,6 +1,9 @@
 package source.view;
 
 
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -43,6 +46,12 @@ public class OptimalZview {
     //Label
     private Label lblStatus = new Label("Status");
 
+    public TableView<Assignment> getTableView() {
+        return tableView;
+    }
+
+    private TableColumn<Assignment, Boolean> colLock;
+
     TableView<Assignment> tableView;
     private TableView table;
     private ComboBox<Object> comboBoxVersions;
@@ -72,7 +81,7 @@ public class OptimalZview {
         BorderPane root = new BorderPane();
 
         root.setTop(createTop());
-        root.setCenter(createCenter());
+        root.setCenter(createCenter2());
         root.setBottom(createBottom());
 
         scene = new Scene(root, 800, 600);
@@ -130,7 +139,6 @@ public class OptimalZview {
         return table;
     }
 
-
     public Node createCenter2() {
 
         tableView = new TableView<Assignment>();
@@ -139,27 +147,27 @@ public class OptimalZview {
         tableView.getSelectionModel().setCellSelectionEnabled(true);
 
         TableColumn<Assignment, Integer> colID = new TableColumn<Assignment, Integer>("ID");
+        colID.setPrefWidth(35);
         TableColumn<Assignment, String> colName = new TableColumn<Assignment, String>("Name");
-
+        colName.setPrefWidth(90);
         TableColumn<Assignment, String> colAssignedProject = new TableColumn<Assignment, String>("Assigned Project");
+        colAssignedProject.setPrefWidth(105);
 
-        TableColumn<Assignment, String> colProjectPrio1 = new TableColumn<Assignment, String>("Prio 1");
-        TableColumn<Assignment, String> colProjectPrio2 = new TableColumn<Assignment, String>("Prio 2");
-        TableColumn<Assignment, String> colProjectPrio3 = new TableColumn<Assignment, String>("Prio 3");
-        TableColumn<Assignment, String> colProjectPrio4 = new TableColumn<Assignment, String>("Prio 4");
-        TableColumn<Assignment, String> colProjectPrio5 = new TableColumn<Assignment, String>("Prio 5");
+        TableColumn<Assignment, String> colProjectPrio1 = new TableColumn<Assignment, String>("Priority 1");
+        TableColumn<Assignment, String> colProjectPrio2 = new TableColumn<Assignment, String>("Priority 2");
+        TableColumn<Assignment, String> colProjectPrio3 = new TableColumn<Assignment, String>("Priority 3");
+        TableColumn<Assignment, String> colProjectPrio4 = new TableColumn<Assignment, String>("Priority 4");
+        TableColumn<Assignment, String> colProjectPrio5 = new TableColumn<Assignment, String>("Priority 5");
 
-        //TableColumn<Assignment, String> colCost = new TableColumn<Assignment, String>("Cost");
-        //TableColumn<Assignment, String> colPriority = new TableColumn<Assignment, String>("Priority");
-        TableColumn<Assignment, Boolean> colLock = new TableColumn<Assignment, Boolean>("Lock");
+        TableColumn<Assignment, String> colCost = new TableColumn<Assignment, String>("Cost");
+        colLock = new TableColumn<Assignment, Boolean>("Lock");
 
 //		colName.prefWidthProperty().bind(stage.widthProperty().divide(4));
 //		colProject.prefWidthProperty().bind(stage.widthProperty().divide(4));
 //		colCost.prefWidthProperty().bind(stage.widthProperty().divide(4));
 //		colPriority.prefWidthProperty().bind(stage.widthProperty().divide(4));
 
-
-        colLock.setCellFactory(new Callback<TableColumn<Assignment, Boolean>, //
+        colLock.setCellFactory(new Callback<TableColumn<Assignment, Boolean>,
                 TableCell<Assignment, Boolean>>() {
             @Override
             public TableCell<Assignment, Boolean> call(TableColumn<Assignment, Boolean> p) {
@@ -168,7 +176,6 @@ public class OptimalZview {
                 return cell;
             }
         });
-
 
         tableView.getColumns().addAll(
                 colID,
@@ -179,8 +186,7 @@ public class OptimalZview {
                 colProjectPrio3,
                 colProjectPrio4,
                 colProjectPrio5,
-                //colCost,
-                //colPriority,
+                colCost,
                 colLock);
 
         ObservableList<Assignment> tableValues = FXCollections.observableArrayList();
@@ -190,8 +196,13 @@ public class OptimalZview {
         colID.setCellValueFactory(new PropertyValueFactory<Assignment, Integer>("id"));
         colName.setCellValueFactory(new PropertyValueFactory<Assignment, String>("name"));
         colAssignedProject.setCellValueFactory(new PropertyValueFactory<Assignment, String>("assignedProject"));
-        //colCost.setCellValueFactory(new PropertyValueFactory<Assignment, String>("Cost"));
-        //colPriority.setCellValueFactory(new PropertyValueFactory<String, String>("Priority"));
+        colCost.setCellValueFactory(new PropertyValueFactory<Assignment, String>("Cost"));
+
+        colProjectPrio1.setCellValueFactory(new PropertyValueFactory<Assignment, String>("projectPrio1"));
+        colProjectPrio2.setCellValueFactory(new PropertyValueFactory<Assignment, String>("projectPrio2"));
+        colProjectPrio3.setCellValueFactory(new PropertyValueFactory<Assignment, String>("projectPrio3"));
+        colProjectPrio4.setCellValueFactory(new PropertyValueFactory<Assignment, String>("projectPrio4"));
+        colProjectPrio5.setCellValueFactory(new PropertyValueFactory<Assignment, String>("projectPrio5"));
 
         tableView.setItems(tableValues);
 
@@ -282,6 +293,10 @@ public class OptimalZview {
 
     public TableView getTable() {
         return table;
+    }
+
+    public TableColumn<Assignment, Boolean> getColLock() {
+        return colLock;
     }
 }
 
