@@ -30,6 +30,7 @@ import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.MapValueFactory;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
@@ -37,6 +38,7 @@ import javafx.util.Callback;
 import source.Assignment;
 import source.ProjectAssigner;
 import source.model.OptimalZmodel;
+import source.view.AssignedValueCell;
 import source.view.OptimalZstatisticsView;
 import source.view.OptimalZview;
 
@@ -56,7 +58,6 @@ public class OptimalZcontroller {
         this.view = view;
         assigner = new ProjectAssigner(model, view);
 
-        Assignment assignment = new Assignment();
         eventhandler();
 
 
@@ -256,6 +257,34 @@ public class OptimalZcontroller {
             }
         });
 
+//        /**
+//         * @author Jonas Stucki
+//         * Table Cell Priority rendering
+//         */
+//
+//        view.getColProjectPrio1().setCellFactory(new Callback<TableColumn.CellDataFeatures<Assignment, String>, TableCell<Assignment, String>>() {
+//            @Override
+//            public TableCell<Assignment, String> call(TableColumn.CellDataFeatures<Assignment, String> param) {
+//
+//                Assignment assignment = param.getValue();
+//
+//                return assignment;
+//            }
+//
+//
+//        });
+
+//        view.getColProjectPrio1().setCellFactory(column -> return new TableCell<Assignment, String>(){
+
+        view.getColProjectPrio1().setCellFactory(column -> new AssignedValueCell("#00CF18"));
+        view.getColProjectPrio2().setCellFactory(column -> new AssignedValueCell("#ADD90B"));
+        view.getColProjectPrio3().setCellFactory(column -> new AssignedValueCell("#C29A00"));
+        view.getColProjectPrio4().setCellFactory(column -> new AssignedValueCell("#D9710B"));
+        view.getColProjectPrio5().setCellFactory(column -> new AssignedValueCell("#CF1903"));
+
+
+
+
         /**
          * @author Tobias Gerhard
          * Button ruft die csvWriter()-Methode auf um das File zu exortieren
@@ -348,6 +377,7 @@ public class OptimalZcontroller {
             int actualVersion = model.getActualVersion();
             ArrayList<Assignment> arrAssignments = model.getListVersions().get(actualVersion - 1); //arrAssignments now is the list with the current assignments
 
+            //TODO: ACHTUNG do wird nur d listAssignment usdruckt aber eigentlich mues me s assignmnent wo usdruckt wärde söll us dr "listVersions" go usehole!!
 
 
             for (int i = 1; i <= arrAssignments.size(); i++) {
