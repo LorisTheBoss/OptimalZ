@@ -30,6 +30,7 @@ import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.MapValueFactory;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
@@ -37,6 +38,7 @@ import javafx.util.Callback;
 import source.Assignment;
 import source.ProjectAssigner;
 import source.model.OptimalZmodel;
+import source.view.AssignedValueCell;
 import source.view.OptimalZstatisticsView;
 import source.view.OptimalZview;
 
@@ -255,6 +257,34 @@ public class OptimalZcontroller {
             }
         });
 
+//        /**
+//         * @author Jonas Stucki
+//         * Table Cell Priority rendering
+//         */
+//
+//        view.getColProjectPrio1().setCellFactory(new Callback<TableColumn.CellDataFeatures<Assignment, String>, TableCell<Assignment, String>>() {
+//            @Override
+//            public TableCell<Assignment, String> call(TableColumn.CellDataFeatures<Assignment, String> param) {
+//
+//                Assignment assignment = param.getValue();
+//
+//                return assignment;
+//            }
+//
+//
+//        });
+
+//        view.getColProjectPrio1().setCellFactory(column -> return new TableCell<Assignment, String>(){
+
+        view.getColProjectPrio1().setCellFactory(column -> new AssignedValueCell("#00CF18"));
+        view.getColProjectPrio2().setCellFactory(column -> new AssignedValueCell("#ADD90B"));
+        view.getColProjectPrio3().setCellFactory(column -> new AssignedValueCell("#C29A00"));
+        view.getColProjectPrio4().setCellFactory(column -> new AssignedValueCell("#D9710B"));
+        view.getColProjectPrio5().setCellFactory(column -> new AssignedValueCell("#CF1903"));
+
+
+
+
         /**
          * @author Tobias Gerhard
          * Button ruft die csvWriter()-Methode auf um das File zu exortieren
@@ -322,7 +352,6 @@ public class OptimalZcontroller {
         }
     }
 
-
     /**
      * @author Tobias Gerhard
      * Responsible for the export of the final list
@@ -379,16 +408,16 @@ public class OptimalZcontroller {
 
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("OptimalZ - Open " + fileType);
-        //File desktop = new File(System.getProperty("user.home"), "Desktop");
+        File desktop = new File(System.getProperty("user.home"), "Desktop");
 
         //Loris
-        File desktop = new File("C:/Users/LorisGrether/Desktop/FHNW/Semester4/PracticalProject/Source/TestData/Tobi");
+//        File desktop = new File("C:/Users/LorisGrether/Desktop/FHNW/Semester4/PracticalProject/Source/TestData/Tobi");
         fileChooser.setInitialDirectory(desktop);
 
         fileChooser.getExtensionFilters().addAll(
                 new FileChooser.ExtensionFilter("CSV", "*.csv"));
-        //new FileChooser.ExtensionFilter("XLS", "*.xls"),
-        //new FileChooser.ExtensionFilter("XLSX", "*.xlsx"));
+//        new FileChooser.ExtensionFilter("XLS", "*.xls");
+//        new FileChooser.ExtensionFilter("XLSX", "*.xlsx");
 
         File selectedFile = fileChooser.showOpenDialog(new Stage());
 

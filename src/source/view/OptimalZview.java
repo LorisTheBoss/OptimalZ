@@ -52,6 +52,12 @@ public class OptimalZview {
 
     private TableColumn<Assignment, Boolean> colLock;
 
+    private TableColumn<Assignment, String> colProjectPrio1;
+    private TableColumn<Assignment, String> colProjectPrio2;
+    private TableColumn<Assignment, String> colProjectPrio3;
+    private TableColumn<Assignment, String> colProjectPrio4;
+    private TableColumn<Assignment, String> colProjectPrio5;
+
     TableView<Assignment> tableView;
     private TableView table;
     private ComboBox<Object> comboBoxVersions;
@@ -153,11 +159,11 @@ public class OptimalZview {
         TableColumn<Assignment, String> colAssignedProject = new TableColumn<Assignment, String>("Assigned Project");
         colAssignedProject.setPrefWidth(105);
 
-        TableColumn<Assignment, String> colProjectPrio1 = new TableColumn<Assignment, String>("Priority 1");
-        TableColumn<Assignment, String> colProjectPrio2 = new TableColumn<Assignment, String>("Priority 2");
-        TableColumn<Assignment, String> colProjectPrio3 = new TableColumn<Assignment, String>("Priority 3");
-        TableColumn<Assignment, String> colProjectPrio4 = new TableColumn<Assignment, String>("Priority 4");
-        TableColumn<Assignment, String> colProjectPrio5 = new TableColumn<Assignment, String>("Priority 5");
+        colProjectPrio1 = new TableColumn<Assignment, String>("Priority 1");
+        colProjectPrio2 = new TableColumn<Assignment, String>("Priority 2");
+        colProjectPrio3 = new TableColumn<Assignment, String>("Priority 3");
+        colProjectPrio4 = new TableColumn<Assignment, String>("Priority 4");
+        colProjectPrio5 = new TableColumn<Assignment, String>("Priority 5");
 
         TableColumn<Assignment, String> colCost = new TableColumn<Assignment, String>("Cost");
         colLock = new TableColumn<Assignment, Boolean>("Lock");
@@ -258,6 +264,24 @@ public class OptimalZview {
 
 
     // ----- getters and setters -----
+
+    public TableColumn<Assignment, String> getColProjectPrio1() {
+        return colProjectPrio1;
+    }
+
+    public TableColumn<Assignment, String> getColProjectPrio2() {
+        return colProjectPrio2;
+    }
+
+    public TableColumn<Assignment, String> getColProjectPrio3() {
+        return colProjectPrio3;
+    }
+
+    public TableColumn<Assignment, String> getColProjectPrio4() {
+        return colProjectPrio4;
+    }
+
+    public TableColumn<Assignment, String> getColProjectPrio5() { return colProjectPrio5; }
 
     public Button getBtnOpenProjectFile() {
         return this.btnOpenProjectFile;

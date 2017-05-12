@@ -50,6 +50,21 @@ public class Assignment {
 		this.chosenProjects = chosenProjects;
     }
 
+    public String getPriority() {
+        if (assignedProject.equals(projectPrio1)){
+             return projectPrio1;
+        } else if (assignedProject.equals(projectPrio2)){
+            return projectPrio2;
+        } else if (assignedProject.equals(projectPrio3)){
+            return projectPrio3;
+        } else if (assignedProject.equals(projectPrio4)){
+            return projectPrio4;
+        } else if (assignedProject.equals(projectPrio5)) {
+            return projectPrio5;
+        }
+        return null;
+    }
+
 	public int getId() {
 		return id;
 	}
