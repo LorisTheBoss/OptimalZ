@@ -79,19 +79,36 @@ public class ProjectAssigner {
 
                 String[] split = studentLine.split(":");
 
-                if (checkName(split[0])) { //checks if the group name is unique
+                if (checkLineSyntax(split[1])) {
 
-                    Assignment assignment = new Assignment();
+                    /*
+                    for (int i = 0; i < students.length(); i++) {
 
-                    assignment.setName(split[0]);
+                        if (students.charAt(i) == students.charAt(i + 1)){
 
-                    for (int i = 1; i < split.length; i++) {
-
-                        assignment.getChosenProjects().put(i, split[i]);
+                            System.out.println(" 2x doppelpunkt am stück");
+                        }
                     }
+                    */
 
-                    model.getListAssignmnet().add(assignment);
+                    if (checkName(split[0])) { //checks if the group name is unique
 
+                        Assignment assignment = new Assignment();
+
+                        assignment.setName(split[0]);
+                        assignment.setProjectPrio1(split[1]);
+                        assignment.setProjectPrio2(split[2]);
+                        assignment.setProjectPrio3(split[3]);
+                        assignment.setProjectPrio4(split[4]);
+                        assignment.setProjectPrio5(split[5]);
+
+                        for (int i = 1; i < split.length; i++) {
+
+                            assignment.getChosenProjects().put(i, split[i]);
+                        }
+
+                        model.getListAssignmnet().add(assignment);
+                    }
                 }
             }
             scan.close();
@@ -115,6 +132,19 @@ public class ProjectAssigner {
 
     }
 
+    //This method checks if the used delimiter is only used to split the csv values or if it is used as a character in the name value
+    private boolean checkLineSyntax(String project) {
+
+        for (int i = 0; i < this.getProjectNumbers().size(); i++) {
+
+            if (this.getProjectNumbers().get(i).equals(project)){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    //checks if the names chosen by the students are unique
     private boolean checkName(String name) {
 
         for (int i = 0; i < model.getListAssignmnet().size(); i++) {

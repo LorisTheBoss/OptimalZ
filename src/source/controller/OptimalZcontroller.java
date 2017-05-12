@@ -15,6 +15,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import javafx.application.Platform;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -24,15 +25,15 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.print.Printer;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.TableColumn;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.MapValueFactory;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.MouseEvent;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+import javafx.util.Callback;
 import source.Assignment;
 import source.ProjectAssigner;
 import source.model.OptimalZmodel;
@@ -49,15 +50,13 @@ public class OptimalZcontroller {
 
     ProjectAssigner assigner;
 
-    OptimalZstatisticsController stat = new OptimalZstatisticsController();
-
-
     public OptimalZcontroller(OptimalZmodel model, OptimalZview view) {
 
         this.model = model;
         this.view = view;
         assigner = new ProjectAssigner(model, view);
 
+        Assignment assignment = new Assignment();
         eventhandler();
 
 
@@ -94,11 +93,11 @@ public class OptimalZcontroller {
 
                 model.setActualVersion(Integer.parseInt(split[1]));
 
-                view.getTable().getColumns().clear();
-                view.getTable().getItems().clear();
+                //view.getTable().getColumns().clear();
+                //view.getTable().getItems().clear();
 
-                view.getTableData().setAll(model.getTableData());
-                fillTableView();
+                //view.getTableData().setAll(model.getTableData());
+                //fillTableView();
 
                 System.out.println("The shown version is : " + (Integer.parseInt(split[1])));
             }
@@ -180,7 +179,7 @@ public class OptimalZcontroller {
 
                 System.out.println("start calculation!!!");
 
-                checkForLocks();
+                //checkForLocks();
 
                 if ((assigner.getProjectNumbers().size() != 0 && assigner.getStudentList().size() != 0) && model.getAreFilesReadIn()) {
 
@@ -188,15 +187,15 @@ public class OptimalZcontroller {
                         assigner.computeCostMatrix(model.getPriorityFileName().getValue());
                         assigner.computeAssignment();
 
-                        //ObservableList<Assignment> tableValues = FXCollections.observableArrayList();
-                        //tableValues.addAll(model.getListAssignmnet());
-                        //view.getTableView().setItems(tableValues);
+                        ObservableList<Assignment> tableValues = FXCollections.observableArrayList();
+                        tableValues.addAll(model.getListAssignmnet());
+                        view.getTableView().setItems(tableValues);
 
-                        view.getTable().getColumns().clear();
-                        view.getTable().getItems().clear();
+                        //view.getTable().getColumns().clear();
+                        //view.getTable().getItems().clear();
 
-                        view.getTableData().setAll(model.getTableData());
-                        fillTableView();
+                        //view.getTableData().setAll(model.getTableData());
+                        //fillTableView();
 
                         view.getLblStatus().setText("INFO: Assignment was successfully computed");
 
@@ -209,11 +208,21 @@ public class OptimalZcontroller {
             }
         });
 
-        view.getTable().getItems().addListener(new ListChangeListener() {
+        view.getColLock().setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Assignment, Boolean>, ObservableValue<Boolean>>() {
             @Override
-            public void onChanged(Change c) {
+            public ObservableValue<Boolean> call(TableColumn.CellDataFeatures<Assignment, Boolean> param) {
 
+                Assignment assignment = param.getValue();
 
+                SimpleBooleanProperty booleanProperty = new SimpleBooleanProperty(assignment.getLockedBoolean());
+
+                booleanProperty.addListener(new ChangeListener<Boolean>() {
+                    @Override
+                    public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                        assignment.setLockedBoolean(newValue);
+                    }
+                });
+                return booleanProperty;
             }
         });
 
@@ -271,20 +280,6 @@ public class OptimalZcontroller {
 
     }
 
-    private void checkForLocks() {
-
-        for (int i = 0; i < view.getTable().getColumns().size(); i++) {
-
-            TableColumn column = (TableColumn) view.getTable().getColumns().get(i);
-
-            if (column.getText().equals("Lock")){
-
-
-
-            }
-        }
-    }
-
     public void fillTableView() {
 
         if (view.getTableData().size() != 0) {
@@ -294,11 +289,30 @@ public class OptimalZcontroller {
                 TableColumn column = new TableColumn(entry.getKey().toString());
                 column.setCellValueFactory(new MapValueFactory<String>(entry.getKey().toString()));
                 view.getTable().getColumns().add(column);
+
             }
 
-            TableColumn colLock = new TableColumn("Lock");
-            colLock.setCellValueFactory(new PropertyValueFactory<String, String>("lock"));
+            TableColumn<Assignment, Boolean> colLock = new TableColumn("Lock");
+            //colLock.setCellValueFactory(new PropertyValueFactory<String, String>("lock"));
             view.getTable().getColumns().add(colLock);
+
+
+            colLock.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Assignment, Boolean>, ObservableValue<Boolean>>() {
+                @Override
+                public ObservableValue<Boolean> call(TableColumn.CellDataFeatures<Assignment, Boolean> param) {
+
+                    SimpleBooleanProperty isLocked = new SimpleBooleanProperty();
+                    isLocked.addListener(new ChangeListener<Boolean>() {
+                        @Override
+                        public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                            System.out.println("--------->    Locked    !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+
+
+                        }
+                    });
+                    return isLocked;
+                }
+            });
 
             //
             colLock.setCellFactory(p -> {
@@ -334,6 +348,7 @@ public class OptimalZcontroller {
             int actualVersion = model.getActualVersion();
             ArrayList<Assignment> arrAssignments = model.getListVersions().get(actualVersion - 1); //arrAssignments now is the list with the current assignments
 
+            //TODO: ACHTUNG do wird nur d listAssignment usdruckt aber eigentlich mues me s assignmnent wo usdruckt wärde söll us dr "listVersions" go usehole!!
 
             for (int i = 1; i <= arrAssignments.size(); i++) {
 
@@ -353,6 +368,7 @@ public class OptimalZcontroller {
                         fileWriter.append(cost + ";");
                     }
                 }
+
 
                 this.model.setIsExported(true);
             }
