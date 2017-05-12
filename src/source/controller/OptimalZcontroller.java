@@ -305,7 +305,7 @@ public class OptimalZcontroller {
                     isLocked.addListener(new ChangeListener<Boolean>() {
                         @Override
                         public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-                            System.out.println("--------->    Locked    !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+                            System.out.println("--------->    Locked    !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 
 
                         }
@@ -348,7 +348,7 @@ public class OptimalZcontroller {
             int actualVersion = model.getActualVersion();
             ArrayList<Assignment> arrAssignments = model.getListVersions().get(actualVersion - 1); //arrAssignments now is the list with the current assignments
 
-            //TODO: ACHTUNG do wird nur d listAssignment usdruckt aber eigentlich mues me s assignmnent wo usdruckt wärde söll us dr "listVersions" go usehole!!
+
 
             for (int i = 1; i <= arrAssignments.size(); i++) {
 

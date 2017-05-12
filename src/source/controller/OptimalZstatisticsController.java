@@ -3,7 +3,6 @@ package source.controller;
 import source.Assignment;
 import source.model.OptimalZmodel;
 
-import java.lang.reflect.Array;
 import java.util.*;
 
 /**
@@ -14,11 +13,6 @@ public class OptimalZstatisticsController {
 
     OptimalZmodel model = new OptimalZmodel();
 
-    /*
-    public int numberOfChosenProjects() {
-
-    }
-    */
 
     private int priorityOne() {
 
