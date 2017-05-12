@@ -21,7 +21,7 @@ public class OptimalZstatisticsController {
 
         //gets the actual version that is displayed
         int actualVersion = model.getActualVersion();
-        ArrayList<Assignment> arrAssignments = model.getListVersions().get(actualVersion - 1); //arrAssignments now is the list with the current assignments
+        ArrayList<Assignment> arrAssignments = model.getListVersions().get(actualVersion - 1); //arrAssignments now is the list with the current  assignments
 
         while (i <= arrAssignments.size() - 1) {
             if (arrAssignments.get(i).getCost() == 0.0) {
