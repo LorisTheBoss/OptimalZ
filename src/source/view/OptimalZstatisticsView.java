@@ -1,6 +1,7 @@
 package source.view;
 
 import javafx.geometry.Insets;
+import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
@@ -38,7 +39,6 @@ public class OptimalZstatisticsView {
 
         //String css = this.getClass().getResource("/css/OptimalZ.css").toExternalForm();
         //scene.getStylesheets().add(css);
-
 
         statisticStage.setScene(scene);
         statisticStage.show();

@@ -4,6 +4,7 @@ package source;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import source.controller.OptimalZcontroller;
+import source.controller.OptimalZstatisticsController;
 import source.model.OptimalZmodel;
 import source.view.OptimalZview;
 
@@ -15,6 +16,7 @@ public class OptimalZmain extends Application {
 	public static void main(String[] args) {
 		launch();
 	}
+
 	
 	@Override
 	public void start(Stage primaryStage) throws Exception {
@@ -53,7 +55,8 @@ public class OptimalZmain extends Application {
 
 		OptimalZview view = new OptimalZview(primaryStage, model);
 		new OptimalZcontroller(model, view);
-		
+
 		view.start();
+
 	}
 }

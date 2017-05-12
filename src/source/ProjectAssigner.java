@@ -1,6 +1,7 @@
 package source;
 
 import javafx.collections.ObservableList;
+import source.controller.OptimalZstatisticsController;
 import source.model.OptimalZmodel;
 import source.view.OptimalZview;
 
@@ -8,6 +9,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 
@@ -150,15 +152,6 @@ public class ProjectAssigner {
             lineScanner = new Scanner(studentLine);
 
 
-                        /* von mir geschrieben
-            String s = studentLine.toString();
-            int x = s.length();
-            while (x > 2 && (s.charAt(x) == ':' && s.charAt(x - 1) == ':')) {
-                System.out.println("We have one here");
-                x--;
-            }
-            */
-
 
             lineScanner.useDelimiter(":");
             lineScanner.next(); // the student group
@@ -166,8 +159,11 @@ public class ProjectAssigner {
 
                 String projectCode = lineScanner.next();
                 int index = this.searchProjectIndex(projectCode); // returns the index of the projected
+
+
                 if (index >= 0) {
                     this.costMatrix[i][index] = q;
+                    System.out.println("We're at index >= 0");
                 } else {
                     if (index == -1) {
                         this.costMatrix[i][projectNumbers.size() + i] = 0; // own project

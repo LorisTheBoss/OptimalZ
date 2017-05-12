@@ -49,6 +49,9 @@ public class OptimalZcontroller {
 
     ProjectAssigner assigner;
 
+    OptimalZstatisticsController stat = new OptimalZstatisticsController();
+
+
     public OptimalZcontroller(OptimalZmodel model, OptimalZview view) {
 
         this.model = model;
@@ -317,9 +320,9 @@ public class OptimalZcontroller {
         Date date = new Date();
         String today = dateFormat.format(date);
         File desktop = new File(System.getProperty("user.home"), "Desktop");
-        FileWriter fileWriter = new FileWriter(desktop.getAbsolutePath() + "\\ProjektAssignment_" + today + ".csv");
+        FileWriter fileWriter = new FileWriter(desktop.getAbsolutePath() + "\\ProjektAssignment_" + today + "_v" + model.getActualVersion() + ".csv");
         String NEW_LINE_SEPARATOR = "\n";
-        String FILE_HEADER = "GROUP" + ";" + "ASSIGNED PROJECT" + ";" + "PRIO 1" + ";" + "PRIO 2" + ";" + "PRIO 3" + ";" + "PRIO 4" + ";" + "PRIO 5";
+        String FILE_HEADER = "GROUP" + ";" + "ASSIGNED PROJECT" + ";" + "PRIO 1" + ";" + "PRIO 2" + ";" + "PRIO 3" + ";" + "PRIO 4" + ";" + "PRIO 5" + ";" + "COST";
         String FILE_TITLE = "Projektzuteilung vom " + today;
 
         try {
@@ -327,28 +330,34 @@ public class OptimalZcontroller {
             fileWriter.append(NEW_LINE_SEPARATOR);
             fileWriter.append(FILE_HEADER);
 
+            //gets the actual version that is displayed
+            int actualVersion = model.getActualVersion();
+            ArrayList<Assignment> arrAssignments = model.getListVersions().get(actualVersion - 1); //arrAssignments now is the list with the current assignments
 
-            //TODO: ACHTUNG do wird nur d listAssignment usdruckt aber eigentlich mues me s assignmnent wo usdruckt wärde söll us dr "listVersions" go usehole!!
 
-            for (int i = 1; i <= this.model.getListAssignmnet().size(); i++) {
+            for (int i = 1; i <= arrAssignments.size(); i++) {
 
                 int z = 1;
-                Assignment a = this.model.getListAssignmnet().get(i - 1);
+                Assignment a = arrAssignments.get(i - 1);
                 fileWriter.append(NEW_LINE_SEPARATOR);
                 fileWriter.append(a.getName() + ";");
                 fileWriter.append(a.getAssignedProject() + ";");
 
-                while (z < 6) {
+                while (z <= 6) {
                     fileWriter.append(a.getChosenProjects().get(z)  + ";");
                     fileWriter.flush();
                     z++;
 
+                    if (z == 6) {
+                        String cost = String.valueOf(a.getCost());
+                        fileWriter.append(cost + ";");
+                    }
                 }
-
 
                 this.model.setIsExported(true);
             }
         } catch (Exception e) {
+            //TODO catch this in the frontend
             System.err.println("Something went wrong during export");
             this.model.setIsExported(false);
         } finally {
@@ -363,10 +372,10 @@ public class OptimalZcontroller {
 
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("OptimalZ - Open " + fileType);
-        //File desktop = new File(System.getProperty("user.home"), "Desktop");
+        File desktop = new File(System.getProperty("user.home"), "Desktop");
 
         //Loris
-        File desktop = new File("C:/Users/LorisGrether/Desktop/FHNW/Semester4/PracticalProject/Source/TestData");
+        //File desktop = new File("C:/Users/LorisGrether/Desktop/FHNW/Semester4/PracticalProject/Source/TestData");
         fileChooser.setInitialDirectory(desktop);
 
         fileChooser.getExtensionFilters().addAll(
