@@ -105,4 +105,5 @@ public class OptimalZmodel {
     public void setActualVersion(int actualVersion) {
         this.actualVersion = actualVersion;
     }
+
 }

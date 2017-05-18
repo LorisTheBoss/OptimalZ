@@ -1,0 +1,88 @@
+.root{
+    /*-fx-background-color: #ffcd38;*/
+    
+    /*-fx-background-color: rgba(255, 161, 0, 0.5);*/
+    /*-fx-background-color: #cfcfcf;*/
+    -fx-min-height: 32px;
+}
+
+.tooltip{
+    -fx-font-size: 15px;
+}
+
+#tab1{
+    -fx-graphic: url("/pictures/statistic2.png");
+    -fx-min-height: 88px;
+    -fx-background-color:royalblue ;
+}
+
+#btnOpenProjectFile{
+    -fx-graphic: url("/pictures/open2.png");
+    -fx-min-height: 32px;
+}
+
+#btnOpenChoiceFile{
+    -fx-graphic: url("/pictures/open2.png");
+    -fx-min-height: 32px;
+}
+
+
+#btnSave{
+	-fx-graphic: url("/pictures/save.png");
+    -fx-min-height: 32px;
+
+}
+
+#btnStatistik{
+	
+	-fx-graphic: url("/pictures/statistic2.png");
+    -fx-min-height: 32px;
+
+}
+
+#btnUndo{
+	
+	-fx-graphic: url("/pictures/Undo.png");
+    -fx-min-height: 32px;
+	
+}
+
+#btnRedo{
+	
+	-fx-graphic: url("/pictures/Redo.png");
+    -fx-min-height: 32px;
+
+}
+
+#btnStartAssignment{
+	
+	-fx-graphic: url("/pictures/start.png");
+    -fx-min-height: 32px;
+
+}
+
+#statusBox{
+	
+	-fx-background-color: #ffcd38;		
+}
+
+#bottomBox{
+	
+	-fx-background-color: #ffcd38;		
+}
+
+#comboBoxVersions{
+    -fx-min-height: 32px;
+    -fx-min-width: 100px;
+}
+
+.tab-pane *.tab-header-area  {
+
+    -fx-tab-min-height: 66px;
+
+}
+
+/*#tabPane{
+    -fx-get
+
+}*/

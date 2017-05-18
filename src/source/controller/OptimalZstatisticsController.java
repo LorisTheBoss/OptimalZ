@@ -5,16 +5,21 @@ import source.model.OptimalZmodel;
 
 import java.util.*;
 
+
+
 /**
  * Created by Tobias on 05.05.2017.
  */
-public class OptimalZstatisticsController {
 
+public class OptimalZstatisticsController {
 
     OptimalZmodel model = new OptimalZmodel();
 
+    public  OptimalZstatisticsController(OptimalZmodel model) {
+        this.model = model;
+    }
 
-    private int priorityOne() {
+    public int priorityOne() {
 
         int i = 0;
         int number = 0;
@@ -164,23 +169,6 @@ public class OptimalZstatisticsController {
         return priority;
     }
 
-    public int worstPriority() {
-
-        //gets the actual version that is displayed
-        int actualVersion = model.getActualVersion();
-        ArrayList<Assignment> arrAssignments = model.getListVersions().get(actualVersion - 1); //arrAssignments now is the list with the current assignments
-        int priority = 0;
-
-        int i = 0;
-        while (i <= arrAssignments.size() - 1) {
-            if (arrAssignments.get(i).getCost() < priority) {
-                priority = arrAssignments.get(i).getCost().intValue();
-            }
-        }
-
-        return priority;
-    }
-
 
     public int mostAllocatedPriority() {
         int one = 0;
@@ -226,6 +214,7 @@ public class OptimalZstatisticsController {
     }
 
 
+    /*TODO funktioniert noch nicht*/
     public int numberOfChosenProjects() {
 
         ArrayList<Assignment> arrAssignments = model.getListVersions().get(0);
@@ -239,7 +228,7 @@ public class OptimalZstatisticsController {
             int z = 1;
 
             while (z <= 5) {
-                s = a.getChosenProjects().get(1);
+                s = a.getChosenProjects().get(z); //hier is das Problem
 
                 if (!allChosenProjects.contains(s)) {
                     allChosenProjects.add(s);
@@ -250,6 +239,24 @@ public class OptimalZstatisticsController {
 
         return allChosenProjects.size();
     }
+
+    public int numberOfGroups() {
+        int groups = model.getListVersions().get(0).size();
+        return groups;
+
+    }
+
+    /*TODO write method that counts the number of projects*/
+    public int numberOfProjects() {
+
+        return 0;
+    }
+
+    /*TODO write method that counts the number of own or Eigene projects*/
+    public int numberOfOwnProjects() {
+        return 0;
+    }
+
 
 
 

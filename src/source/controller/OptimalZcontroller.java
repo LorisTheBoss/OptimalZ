@@ -110,7 +110,7 @@ public class OptimalZcontroller {
             public void handle(ActionEvent event) {
 
                 //OptimalZstatisticsView optimalZstatisticsView = new OptimalZstatisticsView(view.getComboBoxVersions().getSelectionModel().getSelectedItem().toString());
-                OptimalZstatisticsView optimalZstatisticsView = new OptimalZstatisticsView();
+                OptimalZstatisticsView optimalZstatisticsView = new OptimalZstatisticsView(model);
 
 
 //                if (model.getListVersions().size() != 0) {
@@ -396,6 +396,7 @@ public class OptimalZcontroller {
                     if (z == 6) {
                         String cost = String.valueOf(a.getCost());
                         fileWriter.append(cost + ";");
+                        break; // otherwise null in last cell
                     }
                 }
 
