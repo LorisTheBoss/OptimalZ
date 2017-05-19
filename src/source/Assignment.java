@@ -101,8 +101,6 @@ public class Assignment {
         this.chosenProjects = chosenProjects;
     }
 
-
-
     public String getProjectPrio1() {
         return projectPrio1;
     }

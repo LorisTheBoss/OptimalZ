@@ -221,6 +221,7 @@ public class OptimalZcontroller {
                     @Override
                     public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
                         assignment.setLockedBoolean(newValue);
+                        System.out.println("hallo");
                     }
                 });
                 return booleanProperty;
@@ -419,10 +420,10 @@ public class OptimalZcontroller {
 
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("OptimalZ - Open " + fileType);
-        File desktop = new File(System.getProperty("user.home"), "Desktop");
+        //File desktop = new File(System.getProperty("user.home"), "Desktop");
 
         //Loris
-        //File desktop = new File("C:/Users/LorisGrether/Desktop/FHNW/Semester4/PracticalProject/Source/TestData");
+        File desktop = new File("C:/Users/LorisGrether/Desktop/FHNW/Semester4/PracticalProject/Source/TestData/Tobi/Issues");
         fileChooser.setInitialDirectory(desktop);
 
         fileChooser.getExtensionFilters().addAll(

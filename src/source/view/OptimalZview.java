@@ -168,11 +168,6 @@ public class OptimalZview {
         TableColumn<Assignment, String> colCost = new TableColumn<Assignment, String>("Cost");
         colLock = new TableColumn<Assignment, Boolean>("Lock");
 
-//		colName.prefWidthProperty().bind(stage.widthProperty().divide(4));
-//		colProject.prefWidthProperty().bind(stage.widthProperty().divide(4));
-//		colCost.prefWidthProperty().bind(stage.widthProperty().divide(4));
-//		colPriority.prefWidthProperty().bind(stage.widthProperty().divide(4));
-
         colLock.setCellFactory(new Callback<TableColumn<Assignment, Boolean>,
                 TableCell<Assignment, Boolean>>() {
             @Override
