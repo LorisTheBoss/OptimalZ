@@ -3,14 +3,19 @@ package source.view;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.geometry.Pos;
 import javafx.geometry.Side;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.chart.*;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.CheckBoxTableCell;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
+import javafx.util.Callback;
+import source.Assignment;
 import source.controller.OptimalZstatisticsController;
 import source.model.OptimalZmodel;
 
@@ -20,7 +25,17 @@ import source.model.OptimalZmodel;
  */
 public class OptimalZstatisticsView {
 
-    //Buttons
+    //Table
+    private TableView statisticsTable;
+
+    private TableColumn colID;
+    private TableColumn colProjects;
+    private TableColumn colProjectPrio1;
+    private TableColumn colProjectPrio2;
+    private TableColumn colProjectPrio3;
+    private TableColumn colProjectPrio4;
+    private TableColumn colProjectPrio5;
+
 
     //Tabs
     private TabPane tabPane;
@@ -158,14 +173,16 @@ public class OptimalZstatisticsView {
 //        imageView.setImage(image);
 //        tab1.setGraphic(imageView);
         Label lblVersion = new Label("Version: " + model.getActualVersion());
-        Label lblAvCost = new Label("The Average Cost is: " + statisticsController.averageCost());
+//        Label lblAvCost = new Label("The Average Cost is: " + statisticsController.averageCost());
         Label lblTotCost = new Label("The total Cost of this Assignment is: " + statisticsController.totalCost());
-        Label lblNoGroups = new Label("The number of groups/students is: " + statisticsController.numberOfGroups());
+        Label lblNoGroups = new Label("The total number of groups is: " + statisticsController.numberOfGroups());
+        Label lblNoProjects = new Label("The total number of projects is: " + "XY");
+
         //Label lblChosenProjects = new Label("Groups/students have totally chosen: " + statisticsController.numberOfChosenProjects() + " projects");
 
 
         /*TODO lblChosenProjects hinzufügen*/
-        vboxOverview.getChildren().addAll(lblVersion, lblAvCost, lblTotCost, lblNoGroups);
+        vboxOverview.getChildren().addAll(lblVersion, lblTotCost, lblNoGroups, lblNoProjects);
 
         setUpControlButtons(vbox);
         tab1.setContent(vboxOverview);
@@ -206,8 +223,11 @@ public class OptimalZstatisticsView {
         tab3.setContent(vboxTab3);
         tabPane.getTabs().add(tab3);
         //Internal Tabs
-        tab4.setText("Internal Tabs");
-//        setupInternalTab();
+        tab4.setText("Project Statistics Table");
+        BorderPane content = new BorderPane();
+        content.setCenter(createStatisticsTable());
+
+        tab4.setContent(content);
         tabPane.getTabs().add(tab4);
         return tabPane;
 
@@ -273,7 +293,60 @@ public class OptimalZstatisticsView {
         }
     }
 
+
+    public Node createStatisticsTable() {
+
+        statisticsTable = new TableView<Assignment>();
+
+        statisticsTable.setEditable(false);
+        statisticsTable.getSelectionModel().setCellSelectionEnabled(false);
+
+        TableColumn colID = new TableColumn("ID");
+        colID.setPrefWidth(35);
+
+        TableColumn colProjects = new TableColumn("Project Name");
+        colProjects.setPrefWidth(160);
+
+        colProjectPrio1 = new TableColumn("Priority 1");
+        colProjectPrio2 = new TableColumn("Priority 2");
+        colProjectPrio3 = new TableColumn("Priority 3");
+        colProjectPrio4 = new TableColumn("Priority 4");
+        colProjectPrio5 = new TableColumn("Priority 5");
+
+
+
+        statisticsTable.getColumns().addAll(
+                colID,
+                colProjects,
+                colProjectPrio1,
+                colProjectPrio2,
+                colProjectPrio3,
+                colProjectPrio4,
+                colProjectPrio5);
+
+
+
+/*        colID.setCellValueFactory(new PropertyValueFactory<Assignment, Integer>("id"));
+        colName.setCellValueFactory(new PropertyValueFactory<Assignment, String>("name"));
+        colAssignedProject.setCellValueFactory(new PropertyValueFactory<Assignment, String>("assignedProject"));
+        colCost.setCellValueFactory(new PropertyValueFactory<Assignment, String>("Cost"));
+
+        colProjectPrio1.setCellValueFactory(new PropertyValueFactory<Assignment, String>("projectPrio1"));
+        colProjectPrio2.setCellValueFactory(new PropertyValueFactory<Assignment, String>("projectPrio2"));
+        colProjectPrio3.setCellValueFactory(new PropertyValueFactory<Assignment, String>("projectPrio3"));
+        colProjectPrio4.setCellValueFactory(new PropertyValueFactory<Assignment, String>("projectPrio4"));
+        colProjectPrio5.setCellValueFactory(new PropertyValueFactory<Assignment, String>("projectPrio5"));
+
+        statisticsTable.setItems(tableValues);
+*/
+        return statisticsTable;
+    }
+
+
+
 //    private void setupInternalTab() {
+
+
 //        StackPane internalTabContent = new StackPane();
 //        final TabPane internalTabPane = new TabPane();
 //        internalTabPane.getStyleClass().add(TabPane.STYLE_CLASS_FLOATING);
