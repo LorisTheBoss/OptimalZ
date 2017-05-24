@@ -15,6 +15,10 @@ import java.util.Scanner;
 
 public class ProjectAssigner {
 
+    public ProjectAssigner() {
+
+    }
+
     //Loris Grether
     private OptimalZmodel model;
     OptimalZview view;
@@ -53,7 +57,7 @@ public class ProjectAssigner {
     public void readCSV(String priorityFileName, String projectNumberListFileName) {
         try {
             Scanner scan = new Scanner(new File(projectNumberListFileName));
-            scan.nextLine(); // header is not used
+            //scan.nextLine(); // header is not used
             while (scan.hasNext()) {
                 String projectNumber = scan.next();
                 this.projectNumbers.add(projectNumber);
@@ -77,37 +81,25 @@ public class ProjectAssigner {
                 String students = lineScanner.next();
                 this.studentList.add(students);
 
-                String[] split = studentLine.split(":");
+                //String[] split = studentLine.split(":");
+                //if (checkLineSyntax(split[1])) {
 
-                if (checkLineSyntax(split[1])) {
+                if (checkLineSyntax(lineScanner.next())) {
 
-                    /*
-                    for (int i = 0; i < students.length(); i++) {
+                    for (int i = 0; i < studentLine.length(); i++) {
 
-                        if (students.charAt(i) == students.charAt(i + 1)){
+                        if (studentLine.charAt(i) == ':') {
 
-                            System.out.println(" 2x doppelpunkt am stück");
+                            studentLine = fillEmptyParameters(studentLine, i);
                         }
                     }
-                    */
+
+                    String[] split = studentLine.split(":");
 
                     if (checkName(split[0])) { //checks if the group name is unique
 
-                        Assignment assignment = new Assignment();
-
-                        assignment.setName(split[0]);
-                        assignment.setProjectPrio1(split[1]);
-                        assignment.setProjectPrio2(split[2]);
-                        assignment.setProjectPrio3(split[3]);
-                        assignment.setProjectPrio4(split[4]);
-                        assignment.setProjectPrio5(split[5]);
-
-                        for (int i = 1; i < split.length; i++) {
-
-                            assignment.getChosenProjects().put(i, split[i]);
-                        }
-
-                        model.getListAssignmnet().add(assignment);
+                        //creates a new Assignment
+                        model.getListAssignmnet().add(createAssignment(split));
                     }
                 }
             }
@@ -128,8 +120,38 @@ public class ProjectAssigner {
         }
 
         //TODO at the moment auskommentiert because it is not needed yet
+        //TODO bruche mer das überhaupt no tobi?
         //addValuesToEmptyLists();
+    }
 
+    private Assignment createAssignment(String[] split) {
+        Assignment assignment = new Assignment();
+
+        assignment.setName(split[0]);
+        assignment.setProjectPrio1(split[1]);
+        assignment.setProjectPrio2(split[2]);
+        assignment.setProjectPrio3(split[3]);
+        assignment.setProjectPrio4(split[4]);
+        assignment.setProjectPrio5(split[5]);
+
+        for (int i = 1; i < split.length; i++) {
+
+            assignment.getChosenProjects().put(i, split[i]);
+        }
+        return assignment;
+    }
+
+    private String fillEmptyParameters(String studentLine, int i) {
+
+        if (i == studentLine.length() - 1) {
+
+            studentLine = studentLine + "0";
+
+        } else if (studentLine.charAt(i) == studentLine.charAt(i + 1)) {
+
+            studentLine = studentLine.substring(0, i + 1) + "0" + studentLine.substring(i + 1, studentLine.length());
+        }
+        return studentLine;
     }
 
     //This method checks if the used delimiter is only used to split the csv values or if it is used as a character in the name value
@@ -137,7 +159,7 @@ public class ProjectAssigner {
 
         for (int i = 0; i < this.getProjectNumbers().size(); i++) {
 
-            if (this.getProjectNumbers().get(i).equals(project)){
+            if (this.getProjectNumbers().get(i).equals(project)) {
                 return true;
             }
         }
@@ -178,33 +200,50 @@ public class ProjectAssigner {
         Scanner lineScanner;
         int i = 0;
         while (scan.hasNext()) {
+
             String studentLine = scan.nextLine();
-            lineScanner = new Scanner(studentLine);
 
+            for (int s = 0; s < studentLine.length(); s++) {
 
+                if (studentLine.charAt(s) == ':') {
 
-            lineScanner.useDelimiter(":");
-            lineScanner.next(); // the student group
-            for (int q = 0; q < 5; q++) {
-
-                String projectCode = lineScanner.next();
-                int index = this.searchProjectIndex(projectCode); // returns the index of the projected
-
-
-                if (index >= 0) {
-                    this.costMatrix[i][index] = q;
-                    System.out.println("We're at index >= 0");
-                } else {
-                    if (index == -1) {
-                        this.costMatrix[i][projectNumbers.size() + i] = 0; // own project
-                    }
-                    if (index == -2) {
-                        // empty cell found:
-                        // currently we do nothing in this case?!
-                    }
+                    studentLine = fillEmptyParameters(studentLine, s);
                 }
             }
-            i++;
+
+            lineScanner = new Scanner(studentLine);
+            lineScanner.useDelimiter(":");
+
+            String[] split = studentLine.split(":");
+
+            if (checkLineSyntax(split[1])) {
+
+                lineScanner.next(); // the student group
+
+                //for (int q = 0; q < 5; q++) {
+                for (int q = 1; q < 6; q++) {
+
+                    //String projectCode = lineScanner.next();
+                    String projectCode = split[q];
+
+                    System.out.println("prio " + q + ": " + split[q]);
+
+                    int index = this.searchProjectIndex(projectCode); // returns the index of the projected
+
+                    if (index >= 0) {
+                        this.costMatrix[i][index] = q;
+                    } else {
+                        if (index == -1) {
+                            this.costMatrix[i][projectNumbers.size() + i] = 0; // own project
+                        }
+                        if (index == -2) {
+                            // empty cell found:
+                            // currently we do nothing in this case?!
+                        }
+                    }
+                }
+                i++;
+            }
         }
         scan.close();
     }
@@ -247,10 +286,9 @@ public class ProjectAssigner {
 
                         //Loris Grether
 
-                        if (this.costMatrix[i][assignment[i][1]] == 0.0){
+                        if (this.costMatrix[i][assignment[i][1]] == 0.0) {
                             this.model.getListAssignmnet().get(j).setAssignedProject("Eigenes");
-                        }
-                        else if (this.costMatrix[i][assignment[i][1]] == 10.0){
+                        } else if (this.costMatrix[i][assignment[i][1]] == 10.0) {
                             this.model.getListAssignmnet().get(j).setAssignedProject("Nicht Zugewiesen");
                         }
 
@@ -345,6 +383,7 @@ public class ProjectAssigner {
             System.out.println();
         }
     }
+
 
 
 
