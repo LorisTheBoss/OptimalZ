@@ -15,6 +15,10 @@ import java.util.Scanner;
 
 public class ProjectAssigner {
 
+    public ProjectAssigner() {
+
+    }
+
     //Loris Grether
     private OptimalZmodel model;
     OptimalZview view;
@@ -53,7 +57,7 @@ public class ProjectAssigner {
     public void readCSV(String priorityFileName, String projectNumberListFileName) {
         try {
             Scanner scan = new Scanner(new File(projectNumberListFileName));
-            scan.nextLine(); // header is not used
+            //scan.nextLine(); // header is not used
             while (scan.hasNext()) {
                 String projectNumber = scan.next();
                 this.projectNumbers.add(projectNumber);
@@ -379,6 +383,8 @@ public class ProjectAssigner {
             System.out.println();
         }
     }
+
+
 
 
     // ----- getters and setters -----

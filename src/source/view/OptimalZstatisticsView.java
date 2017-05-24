@@ -11,6 +11,8 @@ import javafx.scene.chart.*;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
+import source.Assignment;
+import source.ProjectAssigner;
 import source.controller.OptimalZstatisticsController;
 import source.model.OptimalZmodel;
 
@@ -47,11 +49,11 @@ public class OptimalZstatisticsView {
 
 
     //public OptimalZstatisticsView(String version) {
-    public OptimalZstatisticsView(OptimalZmodel model) {
+    public OptimalZstatisticsView(OptimalZmodel model, ProjectAssigner assigner, Assignment assignment) {
 
         statisticStage = new Stage();
         this.model = model;
-        this.statisticsController = new OptimalZstatisticsController(model);
+        this.statisticsController = new OptimalZstatisticsController(model, assigner, assignment);
 
         //statisticStage.setTitle("OptimalZ - Statistics - " + version);
         statisticStage.setTitle("OptimalZ - Statistics");
@@ -81,6 +83,9 @@ public class OptimalZstatisticsView {
         double number = model.getListAssignmnet().size();
         yAxis = new NumberAxis("Number of Assignements", 0.0d, number/2, number);
 
+        //TODO delete this, its only for debugging
+        statisticsController.listOfProjectsWithNumberOfPicks();
+
 
         ObservableList<BarChart.Series> barChartData = FXCollections.observableArrayList(
                 new BarChart.Series("Number of Assignments", FXCollections.observableArrayList(
@@ -89,7 +94,7 @@ public class OptimalZstatisticsView {
                         new BarChart.Data(priorities[2], statisticsController.priorityThree()),
                         new BarChart.Data(priorities[3], statisticsController.priorityFour()),
                         new BarChart.Data(priorities[4], statisticsController.priorityFive()),
-                        new BarChart.Data(priorities[5], 22d)
+                        new BarChart.Data(priorities[5], statisticsController.ownProjects())
                 ))
 //                new BarChart.Series("Lemons", FXCollections.observableArrayList(
 //                        new BarChart.Data(years[0], 956),

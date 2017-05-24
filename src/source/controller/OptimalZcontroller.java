@@ -36,6 +36,7 @@ import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import javafx.util.Callback;
 import source.Assignment;
+import source.Project;
 import source.ProjectAssigner;
 import source.model.OptimalZmodel;
 import source.view.AssignedValueCell;
@@ -49,6 +50,7 @@ public class OptimalZcontroller {
 
     OptimalZmodel model;
     OptimalZview view;
+    Assignment assignment;
 
     ProjectAssigner assigner;
 
@@ -110,7 +112,7 @@ public class OptimalZcontroller {
             public void handle(ActionEvent event) {
 
                 //OptimalZstatisticsView optimalZstatisticsView = new OptimalZstatisticsView(view.getComboBoxVersions().getSelectionModel().getSelectedItem().toString());
-                OptimalZstatisticsView optimalZstatisticsView = new OptimalZstatisticsView(model);
+                OptimalZstatisticsView optimalZstatisticsView = new OptimalZstatisticsView(model, assigner, assignment);
 
 
 //                if (model.getListVersions().size() != 0) {
@@ -420,10 +422,10 @@ public class OptimalZcontroller {
 
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("OptimalZ - Open " + fileType);
-        //File desktop = new File(System.getProperty("user.home"), "Desktop");
+        File desktop = new File(System.getProperty("user.home"), "Desktop");
 
         //Loris
-        File desktop = new File("C:/Users/LorisGrether/Desktop/FHNW/Semester4/PracticalProject/Source/TestData/Tobi/Issues");
+        //File desktop = new File("C:/Users/LorisGrether/Desktop/FHNW/Semester4/PracticalProject/Source/TestData/Tobi/Issues");
         fileChooser.setInitialDirectory(desktop);
 
         fileChooser.getExtensionFilters().addAll(
@@ -442,6 +444,5 @@ public class OptimalZcontroller {
         this.view.getLblStatus().setText("Error while selecting the " + fileType);
         return null;
     }
-
 
 }
