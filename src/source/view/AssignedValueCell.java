@@ -16,6 +16,7 @@ public class AssignedValueCell extends TableCell<Assignment, String> {
         this.color = "-fx-background-color: "+color;
     }
 
+
     @Override
     protected void updateItem(String item, boolean empty) {
         super.updateItem(item, empty);
