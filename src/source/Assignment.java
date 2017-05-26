@@ -1,6 +1,7 @@
 package source;
 
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.value.ObservableBooleanValue;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -21,26 +22,10 @@ public class Assignment {
 	private HashMap<Integer, String> chosenProjects = new HashMap<>(); //Integer entspricht Projektwahl -> int 1 = 1. Prio, int 2 = 2. Prio etc.
     private Double cost;
 
-    private SimpleBooleanProperty isLocked = new SimpleBooleanProperty(false);
-
-    public Boolean getLockedBoolean() {
-
-        if (isLockedBoolean != null){
-
-        return isLockedBoolean;}
-
-        else {return null;}
-    }
-
-    public void setLockedBoolean(Boolean lockedBoolean) {
-        isLockedBoolean = lockedBoolean;
-    }
-
     private Boolean isLockedBoolean = false;
 
 	public Assignment(){
         this.id = counter++;
-        this.isLocked = new SimpleBooleanProperty(false);
     }
 	
 	public Assignment(String name, String assignedProject){
@@ -141,5 +126,15 @@ public class Assignment {
         this.projectPrio5 = projectPrio5;
     }
 
+    public Boolean getLockedBoolean() {
+
+        //if (isLockedBoolean != null){
+            return isLockedBoolean;//}
+        //else {return null;}
+    }
+
+    public void setLockedBoolean(Boolean lockedBoolean) {
+        isLockedBoolean = lockedBoolean;
+    }
 
 }

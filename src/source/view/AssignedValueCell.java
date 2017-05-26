@@ -13,7 +13,7 @@ public class AssignedValueCell extends TableCell<Assignment, String> {
 
     public AssignedValueCell(String color){
         super();
-        this.color = "-fx-background-color: "+color;
+        this.color = "-fx-background-color: " + color;
     }
 
 
@@ -36,7 +36,9 @@ public class AssignedValueCell extends TableCell<Assignment, String> {
             } else {
                 setTextFill(Color.BLACK);
                 setStyle("");
+                //setStyle("-fx-background-color: #ffd2f8");
             }
         }
+        getTableView().refresh();
     }
 }

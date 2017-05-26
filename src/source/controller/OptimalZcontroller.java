@@ -1,7 +1,5 @@
 package source.controller;
 
-import java.awt.print.PrinterException;
-import java.awt.print.PrinterJob;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
@@ -9,12 +7,8 @@ import java.io.IOException;
 import java.lang.reflect.Array;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
-import javafx.application.Platform;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -24,13 +18,10 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
-import javafx.print.Printer;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.MapValueFactory;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
@@ -54,6 +45,9 @@ public class OptimalZcontroller {
 
     ProjectAssigner assigner;
 
+    private HashMap<String, String> map = new HashMap<String, String>();
+
+
     public OptimalZcontroller(OptimalZmodel model, OptimalZview view) {
 
         this.model = model;
@@ -71,6 +65,49 @@ public class OptimalZcontroller {
 //
 //		});
 
+        view.getTableView().setOnMousePressed(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                if (event.isPrimaryButtonDown() && event.getClickCount() == 2) {
+
+                    TablePosition pos = view.getTableView().getSelectionModel().getSelectedCells().get(0);
+                    int row = pos.getRow();
+                    Assignment item = view.getTableView().getItems().get(row);
+                    TableColumn col = pos.getTableColumn();
+                    String projectCode = (String) col.getCellObservableValue(item).getValue();
+
+                    //This code works with the ListAssignment but i guess it should be the listVersions
+//                    for (int i = 0; i < model.getListAssignmnet().size(); i++) {
+//
+//                        if (model.getListAssignmnet().get(i).getId() == view.getTableView().getSelectionModel().getSelectedItem().getId()) {
+//
+//                            System.out.println(model.getListAssignmnet().get(i).getName());
+//                            System.out.println(projectCode);
+//
+//                            map.put(model.getListAssignmnet().get(i).getName(), projectCode);
+//                            model.getListAssignmnet().get(i).setLockedBoolean(true);
+//
+//                            view.getTableView().refresh();
+//                        }
+//                    }
+
+                    for (int i = 0; i < model.getListVersions().get(model.getActualVersion()-1).size(); i++) {
+
+                        if (model.getListVersions().get(model.getActualVersion()-1).get(i).getId() == view.getTableView().getSelectionModel().getSelectedItem().getId()) {
+
+                            System.out.println("DoubleClickEvent Add: " + model.getListVersions().get(model.getActualVersion()-1).get(i).getName() + " " + projectCode);
+
+                            map.put(model.getListVersions().get(model.getActualVersion()-1).get(i).getName(), projectCode);
+                            model.getListVersions().get(model.getActualVersion()-1).get(i).setLockedBoolean(true);
+
+                            System.out.println("current map size: " + map.size());
+
+                            view.getTableView().refresh();
+                        }
+                    }
+                }
+            }
+        });
 
         model.getListVersions().addListener(new ListChangeListener<ArrayList<Assignment>>() {
             @Override
@@ -88,24 +125,37 @@ public class OptimalZcontroller {
 
                 System.out.println("other version was selected");
 
-                //ObservableList<Assignment> tableValues = FXCollections.observableArrayList();
-                //tableValues.addAll(model.getListVersions().get(Integer.parseInt(split[1])-1));
-                //view.getTableView().setItems(tableValues);
-
                 String[] split = view.getComboBoxVersions().getSelectionModel().getSelectedItem().toString().split(" ");
 
                 model.setActualVersion(Integer.parseInt(split[1]));
 
-                //view.getTable().getColumns().clear();
-                //view.getTable().getItems().clear();
+                view.getTableView().getItems().clear();
 
-                //view.getTableData().setAll(model.getTableData());
-                //fillTableView();
+                ObservableList<Assignment> tableValues = FXCollections.observableArrayList();
+                tableValues.addAll(model.getListVersions().get(model.getActualVersion()-1));
+                view.getTableView().setItems(tableValues);
+
+                view.getTableView().refresh();
 
                 System.out.println("The shown version is : " + (Integer.parseInt(split[1])));
             }
         });
 
+        //Rückgängig
+        view.getBtnUndo().setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                System.out.println("undo");
+            }
+        });
+
+        //Wiederherstellen
+        view.getBtnRedo().setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                System.out.println("redo");
+            }
+        });
 
         this.view.getBtnStatistik().setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -182,23 +232,19 @@ public class OptimalZcontroller {
 
                 System.out.println("start calculation!!!");
 
-                //checkForLocks();
-
                 if ((assigner.getProjectNumbers().size() != 0 && assigner.getStudentList().size() != 0) && model.getAreFilesReadIn()) {
 
                     try {
+                        model.getListVersions();
                         assigner.computeCostMatrix(model.getPriorityFileName().getValue());
-                        assigner.computeAssignment();
+                        assigner.recomputeAssignment(map);
+                        //assigner.computeAssignment();
+
+                        model.getListVersions().get(model.getActualVersion()-1);
 
                         ObservableList<Assignment> tableValues = FXCollections.observableArrayList();
-                        tableValues.addAll(model.getListAssignmnet());
+                        tableValues.addAll(model.getListVersions().get(model.getActualVersion() - 1));
                         view.getTableView().setItems(tableValues);
-
-                        //view.getTable().getColumns().clear();
-                        //view.getTable().getItems().clear();
-
-                        //view.getTableData().setAll(model.getTableData());
-                        //fillTableView();
 
                         view.getLblStatus().setText("INFO: Assignment was successfully computed");
 
@@ -222,8 +268,32 @@ public class OptimalZcontroller {
                 booleanProperty.addListener(new ChangeListener<Boolean>() {
                     @Override
                     public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-                        assignment.setLockedBoolean(newValue);
-                        System.out.println("hallo");
+
+                        ArrayList<Assignment> actualListAssignment = model.getListVersions().get(model.getActualVersion() - 1);
+
+                        for (int i = 0; i < actualListAssignment.size(); i++) {
+
+                            if (actualListAssignment.get(i).equals(assignment)) {
+
+                                assignment.setLockedBoolean(newValue);
+                                System.out.println(assignment.getName() + " " + newValue);
+
+                                if (newValue == false) {
+
+                                    System.out.println("CheckBoxEvent Remove: " + assignment.getName() + "  " + assignment.getAssignedProject());
+
+                                    map.remove(assignment.getName());
+                                }
+                                else if (newValue == true){
+
+                                    System.out.println("CheckBoxEvent Add: " + assignment.getName() + "  " + assignment.getAssignedProject());
+
+                                    map.put(assignment.getName(), assignment.getAssignedProject());
+                                }
+                                break;
+                            }
+                        }
+                        System.out.println("current map size: " + map.size());
                     }
                 });
                 return booleanProperty;
@@ -284,9 +354,6 @@ public class OptimalZcontroller {
         view.getColProjectPrio3().setCellFactory(column -> new AssignedValueCell("#C29A00"));
         view.getColProjectPrio4().setCellFactory(column -> new AssignedValueCell("#D9710B"));
         view.getColProjectPrio5().setCellFactory(column -> new AssignedValueCell("#CF1903"));
-
-
-
 
         /**
          * @author Tobias Gerhard
@@ -425,7 +492,7 @@ public class OptimalZcontroller {
         File desktop = new File(System.getProperty("user.home"), "Desktop");
 
         //Loris
-        //File desktop = new File("C:/Users/LorisGrether/Desktop/FHNW/Semester4/PracticalProject/Source/TestData/Tobi/Issues");
+        //File desktop = new File("C:/Users/LorisGrether/Desktop/FHNW/Semester4/PracticalProject/Source/TestData/Tobi/NoIssues");
         fileChooser.setInitialDirectory(desktop);
 
         fileChooser.getExtensionFilters().addAll(
@@ -444,5 +511,6 @@ public class OptimalZcontroller {
         this.view.getLblStatus().setText("Error while selecting the " + fileType);
         return null;
     }
+
 
 }

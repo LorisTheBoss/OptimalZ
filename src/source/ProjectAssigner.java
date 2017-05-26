@@ -7,10 +7,7 @@ import source.view.OptimalZview;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.NoSuchElementException;
-import java.util.Scanner;
+import java.util.*;
 
 
 public class ProjectAssigner {
@@ -33,7 +30,7 @@ public class ProjectAssigner {
 
     // this is the cost matrix on which the assignment is compute
     private double[][] costMatrix;
-
+    private double[][] copyOfCostMatrix;
 
     /**
      * sets up the empty lists for all project numbers available
@@ -48,13 +45,49 @@ public class ProjectAssigner {
         this.studentList = new LinkedList<String>();
     }
 
+    private void buildDeepCopy() {
+
+        for (int i = 0; i < copyOfCostMatrix.length; i++) {
+            for (int j = 0; j < copyOfCostMatrix[i].length; j++) {
+                copyOfCostMatrix[i][j] = costMatrix[i][j];
+            }
+        }
+    }
+
+    public void valueChange(String studentName, String projectCode) {
+        int i = this.studentList.indexOf(studentName);
+        int j = this.projectNumbers.indexOf(projectCode);
+        for (int k = 0; k < copyOfCostMatrix[i].length; k++) {
+            if (k != j) {
+                this.copyOfCostMatrix[i][k] = MAX_PRIO;
+            } else {
+                this.copyOfCostMatrix[i][k] = 0;
+            }
+        }
+    }
+
+    public void recomputeAssignment(HashMap<String, String> map) {
+
+        this.buildDeepCopy();
+
+        Iterator<String> iter = map.keySet().iterator();
+
+        while (iter.hasNext()) {
+            String studentName = iter.next();
+            String projectCode = map.get(studentName);
+            this.valueChange(studentName, projectCode);
+        }
+
+        this.computeAssignment();
+    }
+
     /**
      * reads the two .csv files @param priorityFileName and
      *
      * @param projectNumberListFileName that actually store the student's selection
      *                                  and the available projects in this turn
      */
-    public void readCSV(String priorityFileName, String projectNumberListFileName) {
+    public void readCSV2(String priorityFileName, String projectNumberListFileName) {
         try {
             Scanner scan = new Scanner(new File(projectNumberListFileName));
             //scan.nextLine(); // header is not used
@@ -124,6 +157,78 @@ public class ProjectAssigner {
         //addValuesToEmptyLists();
     }
 
+    public void readCSV(String priorityFileName, String projectNumberListFileName) {
+        try {
+            Scanner scan = new Scanner(new File(projectNumberListFileName));
+            scan.nextLine(); // header is not used
+            while (scan.hasNext()) {
+                String projectNumber = scan.next();
+                this.projectNumbers.add(projectNumber);
+
+                //LorisGrether
+                System.out.println(projectNumber);
+            }
+            scan.close();
+            scan = new Scanner(new File(priorityFileName));
+            scan.nextLine();  // header is not used
+            Scanner lineScanner;
+
+            while (scan.hasNext()) {
+                String studentLine = scan.nextLine();
+
+                //LorisGrether
+                System.out.println(studentLine);
+
+                lineScanner = new Scanner(studentLine);
+                lineScanner.useDelimiter(":");
+                String students = lineScanner.next();
+                this.studentList.add(students);
+
+                String[] split = studentLine.split(":");
+
+                if (checkLineSyntax(split[1])) {
+
+                    if (checkName(split[0])) { //checks if the group name is unique
+
+                        Assignment assignment = new Assignment();
+
+                        assignment.setName(split[0]);
+                        assignment.setProjectPrio1(split[1]);
+                        assignment.setProjectPrio2(split[2]);
+                        assignment.setProjectPrio3(split[3]);
+                        assignment.setProjectPrio4(split[4]);
+                        assignment.setProjectPrio5(split[5]);
+
+                        for (int i = 1; i < split.length; i++) {
+
+                            assignment.getChosenProjects().put(i, split[i]);
+                        }
+
+                        model.getListAssignmnet().add(assignment);
+                    }
+                }
+            }
+            scan.close();
+            System.out.println();
+            System.out.println("CONTROL INFO: Number of Groups = " + studentList.size() + " Number of Projects = " + projectNumbers.size());
+            if (studentList.size() > projectNumbers.size()) {
+                System.err.println("\nMore groups than projects - complete assignment is not possible!\n");
+            }
+
+            model.setAreFilesReadIn(true);
+
+        } catch (FileNotFoundException e) {
+            //TODO you have to catch this error in the front end
+            view.getLblStatus().setText("ERROR: Invalid filename");
+            System.err.println("invalid filename");
+            e.printStackTrace();
+        }
+
+        //TODO at the moment auskommentiert because it is not needed yet
+        //addValuesToEmptyLists();
+
+    }
+
     private Assignment createAssignment(String[] split) {
         Assignment assignment = new Assignment();
 
@@ -145,11 +250,11 @@ public class ProjectAssigner {
 
         if (i == studentLine.length() - 1) {
 
-            studentLine = studentLine + "0";
+            studentLine = studentLine + " ";
 
         } else if (studentLine.charAt(i) == studentLine.charAt(i + 1)) {
 
-            studentLine = studentLine.substring(0, i + 1) + "0" + studentLine.substring(i + 1, studentLine.length());
+            studentLine = studentLine.substring(0, i + 1) + " " + studentLine.substring(i + 1, studentLine.length());
         }
         return studentLine;
     }
@@ -192,7 +297,7 @@ public class ProjectAssigner {
      * @param priorityFileName
      * @throws FileNotFoundException
      */
-    public void computeCostMatrix(String priorityFileName) throws FileNotFoundException {
+    public void computeCostMatrix2(String priorityFileName) throws FileNotFoundException {
         this.costMatrix = new double[studentList.size()][projectNumbers.size() + studentList.size()];
         this.fillMatrix(); // fills the matrix with entries MAX_PRIO
         Scanner scan = new Scanner(new File(priorityFileName));
@@ -248,6 +353,43 @@ public class ProjectAssigner {
         scan.close();
     }
 
+    public void computeCostMatrix(String priorityFileName) throws FileNotFoundException {
+        this.costMatrix = new double[studentList.size()][projectNumbers.size() + studentList.size()];
+        this.copyOfCostMatrix = new double[studentList.size()][projectNumbers.size() + studentList.size()];
+        this.fillMatrix(); // fills the matrix with entries MAX_PRIO
+        Scanner scan = new Scanner(new File(priorityFileName));
+        scan.nextLine();
+        Scanner lineScanner;
+        int i = 0;
+        while (scan.hasNext()) {
+            String studentLine = scan.nextLine();
+            lineScanner = new Scanner(studentLine);
+
+            lineScanner.useDelimiter(":");
+            lineScanner.next(); // the student group
+            for (int q = 0; q < 5; q++) {
+
+                String projectCode = lineScanner.next();
+                int index = this.searchProjectIndex(projectCode); // returns the index of the projected
+
+                if (index >= 0) {
+                    this.costMatrix[i][index] = q;
+                } else {
+                    if (index == -1) {
+                        this.costMatrix[i][projectNumbers.size() + i] = 0; // own project
+                    }
+                    if (index == -2) {
+                        // empty cell found:
+                        // currently we do nothing in this case?!
+                    }
+                }
+            }
+            i++;
+        }
+        scan.close();
+        buildDeepCopy();
+    }
+
 
     /**
      * computes the optimal assignment on the basis
@@ -256,9 +398,36 @@ public class ProjectAssigner {
     public void computeAssignment() {
         int[][] assignment = new int[this.studentList.size()][2];
         HungarianAlgorithm ha = new HungarianAlgorithm();
-        assignment = ha.hgAlgorithm(costMatrix);
+        assignment = ha.hgAlgorithm(copyOfCostMatrix);
         this.printAssignment(assignment);
+        list.add(assignment);
+        printasdf();
     }
+
+    private void printasdf() {
+
+        System.out.println("print");
+
+        if (list.size() == 2) {
+
+            int[][] f = list.get(1);
+            int[][] m = list.get(0);
+
+            if (f.length == m.length) {
+                System.out.println("liste sin glich lang");
+            }
+
+            for (int j = 0; j < m.length; j++) {
+                System.out.println(m[j][0] + "  |  " + m[j][1]);
+
+                if (m[j][0] != f[j][0] || m[j][1] != f[j][1]){
+                    System.out.println("ungleich " + j);
+                }
+            }
+        }
+    }
+
+    ArrayList<int[][]> list = new ArrayList<int[][]>();
 
 
     /**
@@ -292,20 +461,14 @@ public class ProjectAssigner {
                             this.model.getListAssignmnet().get(j).setAssignedProject("Nicht Zugewiesen");
                         }
 
-                        //this.model.getListAssignmnet().get(j).setAssignedProject("Eigenes?");
                         System.out.println(this.studentList.get(i) + "\t-->\t Eigenes? " + " (Cost = " + this.costMatrix[i][assignment[i][1]] + ")");
                     }
                 }
             }
         }
 
-        //ArrayList<Assignment> test = new ArrayList<>(model.getListAssignmnet());
-
-        this.model.getListVersions().add(new ArrayList<>(model.getListAssignmnet()));
-
-        //this.model.getListAssignmnet().clear();
-
-        this.model.getListVersions();
+        ArrayList<Assignment> newVersion = new ArrayList<>(model.getListAssignmnet());
+        model.getListVersions().add(newVersion);
     }
 
 

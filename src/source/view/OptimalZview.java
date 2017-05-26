@@ -39,6 +39,7 @@ public class OptimalZview {
 
     private Button btnSave = new Button();
     private Button btnStatistik = new Button();
+
     private Button btnUndo = new Button();
     private Button btnRedo = new Button();
     private Button btnStartAssignment = new Button();
@@ -90,7 +91,7 @@ public class OptimalZview {
         root.setCenter(createCenter2());
         root.setBottom(createBottom());
 
-        scene = new Scene(root, 800, 600);
+        scene = new Scene(root, 850, 600);
 
         this.setControlIDs();
         this.setToolTipText();
@@ -155,7 +156,7 @@ public class OptimalZview {
         TableColumn<Assignment, Integer> colID = new TableColumn<Assignment, Integer>("ID");
         colID.setPrefWidth(35);
         TableColumn<Assignment, String> colName = new TableColumn<Assignment, String>("Name");
-        colName.setPrefWidth(90);
+        colName.setPrefWidth(120);
         TableColumn<Assignment, String> colAssignedProject = new TableColumn<Assignment, String>("Assigned Project");
         colAssignedProject.setPrefWidth(105);
 
@@ -316,6 +317,14 @@ public class OptimalZview {
 
     public TableColumn<Assignment, Boolean> getColLock() {
         return colLock;
+    }
+
+    public Button getBtnUndo() {
+        return btnUndo;
+    }
+
+    public Button getBtnRedo() {
+        return btnRedo;
     }
 }
 
