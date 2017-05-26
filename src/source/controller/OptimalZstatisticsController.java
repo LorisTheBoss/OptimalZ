@@ -4,9 +4,11 @@ import source.Assignment;
 import source.Project;
 import source.ProjectAssigner;
 import source.model.OptimalZmodel;
-import source.view.OptimalZstatisticsView;
 import source.view.OptimalZview;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.*;
 
 
@@ -238,14 +240,14 @@ public class OptimalZstatisticsController {
         return 0;
     }
 
-    public ArrayList<Project> listOfProjectsWithNumberOfPicks() {
+    public ArrayList<Project> getProjectPickList() {
 
         int listLength = assigner.getProjectNumbers().size(); //debugging
         ArrayList<Project> projectWithNumberOfPicks = new ArrayList<>(listLength); //define capacity first for performance reasons
         int projectAtIndex = 0;
 
         //Hier holen wir die Anzahl der Projekte und weisen sie einem String zu
-        while (projectAtIndex < assigner.getProjectNumbers().size() - 1) { //if not -1, Own in list will also be calculated as a project
+        while (projectAtIndex < assigner.getProjectNumbers().size()) { //if assigner.getProjectNumbers().size() -1, Own in list will not be considered as a project
             String projectNumber = assigner.getProjectNumbers().get(projectAtIndex);
             Project project = new Project(projectNumber);
             int assignmentAtIndex = 0;
@@ -297,12 +299,50 @@ public class OptimalZstatisticsController {
             System.out.print("We have so many projects: " + projectWithNumberOfPicks.size() + "\t");
             Project p = projectWithNumberOfPicks.get(y);
             System.out.println("Project Number: " + p.getProjectNumber() + "\tID = " + p.getID() + "\tPrio 1 = " + p.getPrio1() +
-                "\tPrio 2 = " + p.getPrio2() + "\tPrio 3 = " + p.getPrio3() + "\tPrio 4 = " + p.getPrio4() + "\tPrio 5 = " + p.getPrio5() + "\tTotal = " + p.getTotal());
+                    "\tPrio 2 = " + p.getPrio2() + "\tPrio 3 = " + p.getPrio3() + "\tPrio 4 = " + p.getPrio4() + "\tPrio 5 = " + p.getPrio5() + "\tTotal = " + p.getTotal());
             y++;
         }
 
 
         return projectWithNumberOfPicks;
+    }
+
+    public void writeProjectListToCSV() throws IOException {
+        File desktop = new File(System.getProperty("user.home"), "Desktop");
+        FileWriter fileWriter = new FileWriter(desktop.getAbsolutePath() + "\\Projektstatistik.csv");
+        String FILE_HEADER = "Project" + ";" + "PRIO 1" + ";" + "PRIO 2" + ";" + "PRIO 3" + ";" + "PRIO 4" + ";" + "PRIO 5" + ";" + "Total";
+        String NEW_LINE_SEPARATOR = "\n";
+        ArrayList<Project> projectWithNumberOfPicks = getProjectPickList();
+        int projectAtIndex  = 0;
+
+        try {
+            fileWriter.append(FILE_HEADER);
+            fileWriter.append(NEW_LINE_SEPARATOR);
+
+            while (projectAtIndex < projectWithNumberOfPicks.size()) {
+                Project p = projectWithNumberOfPicks.get(projectAtIndex);
+                fileWriter.append(p.getProjectNumber() + ";");
+                fileWriter.append(p.getPrio1() + ";");
+                fileWriter.append(p.getPrio2() + ";");
+                fileWriter.append(p.getPrio3() + ";");
+                fileWriter.append(p.getPrio4() + ";");
+                fileWriter.append(p.getPrio5() + ";");
+                fileWriter.append(p.getTotal() + NEW_LINE_SEPARATOR);
+
+                fileWriter.flush();
+                projectAtIndex++;
+            }
+
+        } catch (Exception e) {
+            //TODO catch this in the frontend
+            System.err.println("Something went wrong during export");
+        } finally {
+            fileWriter.flush();
+            fileWriter.close();
+        }
+
+
+
     }
 
 

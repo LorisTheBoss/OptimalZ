@@ -3,23 +3,22 @@ package source.view;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.geometry.Pos;
 import javafx.geometry.Side;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.chart.*;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
-import javafx.util.Callback;
 import source.Assignment;
-import source.Assignment;
+import source.Project;
 import source.ProjectAssigner;
 import source.controller.OptimalZstatisticsController;
 import source.model.OptimalZmodel;
+
+import java.util.ArrayList;
 
 /**
  * Created by LorisGrether on 30.04.2017.
@@ -37,6 +36,10 @@ public class OptimalZstatisticsView {
     private TableColumn colProjectPrio3;
     private TableColumn colProjectPrio4;
     private TableColumn colProjectPrio5;
+    private TableColumn colTotal;
+
+    private ArrayList<Integer> projectPickList;
+
 
 
     //Tabs
@@ -99,7 +102,7 @@ public class OptimalZstatisticsView {
         yAxis = new NumberAxis("Number of Assignements", 0.0d, number/2, number);
 
         //TODO delete this, its only for debugging
-        statisticsController.listOfProjectsWithNumberOfPicks();
+        statisticsController.getProjectPickList();
 
 
         ObservableList<BarChart.Series> barChartData = FXCollections.observableArrayList(
@@ -181,6 +184,7 @@ public class OptimalZstatisticsView {
 //        Label lblAvCost = new Label("The Average Cost is: " + statisticsController.averageCost());
         Label lblTotCost = new Label("The total Cost of this Assignment is: " + statisticsController.totalCost());
         Label lblNoGroups = new Label("The total number of groups is: " + statisticsController.numberOfGroups());
+//        Label lblNoChoosenProjects = new Label("The total number of choosen projects is: " + statisticsController.numberOfChosenProjects());
         Label lblNoProjects = new Label("The total number of projects is: " + "XY");
 
         //Label lblChosenProjects = new Label("Groups/students have totally chosen: " + statisticsController.numberOfChosenProjects() + " projects");
@@ -306,17 +310,18 @@ public class OptimalZstatisticsView {
         statisticsTable.setEditable(false);
         statisticsTable.getSelectionModel().setCellSelectionEnabled(false);
 
-        TableColumn colID = new TableColumn("ID");
+        colID = new TableColumn<Project, Integer>("ID");
         colID.setPrefWidth(35);
 
-        TableColumn colProjects = new TableColumn("Project Name");
-        colProjects.setPrefWidth(160);
+        colProjects = new TableColumn<Project, String>("Project Name");
+//        colProjects.setPrefWidth(160);
 
-        colProjectPrio1 = new TableColumn("Priority 1");
-        colProjectPrio2 = new TableColumn("Priority 2");
-        colProjectPrio3 = new TableColumn("Priority 3");
-        colProjectPrio4 = new TableColumn("Priority 4");
-        colProjectPrio5 = new TableColumn("Priority 5");
+        colProjectPrio1 = new TableColumn<Project, Integer>("Priority 1");
+        colProjectPrio2 = new TableColumn<Project, Integer>("Priority 2");
+        colProjectPrio3 = new TableColumn<Project, Integer>("Priority 3");
+        colProjectPrio4 = new TableColumn<Project, Integer>("Priority 4");
+        colProjectPrio5 = new TableColumn<Project, Integer>("Priority 5");
+        colTotal = new TableColumn<Project, Integer>("Total");
 
 
 
@@ -327,23 +332,29 @@ public class OptimalZstatisticsView {
                 colProjectPrio2,
                 colProjectPrio3,
                 colProjectPrio4,
-                colProjectPrio5);
+                colProjectPrio5,
+                colTotal);
 
 
+//        ArrayList<Project> tableValues = statisticsController.getProjectPickList();
 
-/*        colID.setCellValueFactory(new PropertyValueFactory<Assignment, Integer>("id"));
-        colName.setCellValueFactory(new PropertyValueFactory<Assignment, String>("name"));
-        colAssignedProject.setCellValueFactory(new PropertyValueFactory<Assignment, String>("assignedProject"));
-        colCost.setCellValueFactory(new PropertyValueFactory<Assignment, String>("Cost"));
+        ObservableList<Project> tableValues = FXCollections.observableArrayList();
 
-        colProjectPrio1.setCellValueFactory(new PropertyValueFactory<Assignment, String>("projectPrio1"));
-        colProjectPrio2.setCellValueFactory(new PropertyValueFactory<Assignment, String>("projectPrio2"));
-        colProjectPrio3.setCellValueFactory(new PropertyValueFactory<Assignment, String>("projectPrio3"));
-        colProjectPrio4.setCellValueFactory(new PropertyValueFactory<Assignment, String>("projectPrio4"));
-        colProjectPrio5.setCellValueFactory(new PropertyValueFactory<Assignment, String>("projectPrio5"));
+        tableValues.addAll(statisticsController.getProjectPickList());
+
+        colID.setCellValueFactory(new PropertyValueFactory<Project, Integer>("id"));
+        colProjects.setCellValueFactory(new PropertyValueFactory<Project, String>("projectNumber"));
+
+        colProjectPrio1.setCellValueFactory(new PropertyValueFactory<Project, Integer>("prio1"));
+        colProjectPrio2.setCellValueFactory(new PropertyValueFactory<Project, Integer>("prio2"));
+        colProjectPrio3.setCellValueFactory(new PropertyValueFactory<Project, Integer>("prio3"));
+        colProjectPrio4.setCellValueFactory(new PropertyValueFactory<Project, Integer>("prio4"));
+        colProjectPrio5.setCellValueFactory(new PropertyValueFactory<Project, Integer>("prio5"));
+
+        colTotal.setCellValueFactory(new PropertyValueFactory<Project, Integer>("total"));
 
         statisticsTable.setItems(tableValues);
-*/
+
         return statisticsTable;
     }
 
