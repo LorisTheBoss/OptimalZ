@@ -321,7 +321,7 @@ public class OptimalZstatisticsController {
         Date date = new Date();
         String today = dateFormat.format(date);
         FileWriter fileWriter = new FileWriter(desktop.getAbsolutePath() + "\\Projektstatistik_" + today + ".csv");
-        String FILE_HEADER = "ID" + ";" + "Project" + ";" + "PRIO 1" + ";" + "PRIO 2" + ";" + "PRIO 3" + ";" + "PRIO 4" + ";" + "PRIO 5" + ";" + "Total";
+        String FILE_HEADER = "Project" + ";" + "PRIO 1" + ";" + "PRIO 2" + ";" + "PRIO 3" + ";" + "PRIO 4" + ";" + "PRIO 5" + ";" + "Total";
         String NEW_LINE_SEPARATOR = "\n";
         ArrayList<Project> projectWithNumberOfPicks = getProjectPickList();
         int projectAtIndex  = 0;
@@ -332,7 +332,6 @@ public class OptimalZstatisticsController {
 
             while (projectAtIndex < projectWithNumberOfPicks.size()) {
                 Project p = projectWithNumberOfPicks.get(projectAtIndex);
-                fileWriter.append(p.getID()+ ";");
                 fileWriter.append(p.getProjectNumber() + ";");
                 fileWriter.append(p.getPrio1() + ";");
                 fileWriter.append(p.getPrio2() + ";");
