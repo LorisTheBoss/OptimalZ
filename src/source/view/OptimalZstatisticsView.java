@@ -21,8 +21,7 @@ import source.model.OptimalZmodel;
 import java.util.ArrayList;
 
 /**
- * Created by LorisGrether on 30.04.2017.
- * Extended by JonasStucki on 15.05.2017.
+ * Created by JonasStucki on 30.04.2017.
  */
 public class OptimalZstatisticsView {
 
@@ -40,6 +39,8 @@ public class OptimalZstatisticsView {
 
     private ArrayList<Integer> projectPickList;
 
+    //Button
+    private Button btnSave = new Button();
 
 
     //Tabs
@@ -159,7 +160,6 @@ public class OptimalZstatisticsView {
         tab1 = new Tab();
         tab2 = new Tab();
         tab3 = new Tab();
-
         tab4 = new Tab();
 
         tabPane.setRotateGraphic(false);
@@ -180,12 +180,12 @@ public class OptimalZstatisticsView {
 //        final ImageView imageView = new ImageView();
 //        imageView.setImage(image);
 //        tab1.setGraphic(imageView);
-        Label lblVersion = new Label("Version: " + model.getActualVersion());
+        Label lblVersion = new Label("Statistics to the Version: " + "\t" +  "\t" + "\t" + "\t" + model.getActualVersion());
 //        Label lblAvCost = new Label("The Average Cost is: " + statisticsController.averageCost());
-        Label lblTotCost = new Label("The total Cost of this Assignment is: " + statisticsController.totalCost());
-        Label lblNoGroups = new Label("The total number of groups is: " + statisticsController.numberOfGroups());
+        Label lblTotCost = new Label("The total Cost of this Assignment is: " + "\t" + statisticsController.totalCost());
+        Label lblNoGroups = new Label("The total number of groups is: " + "\t" + "\t" + statisticsController.numberOfGroups());
 //        Label lblNoChoosenProjects = new Label("The total number of choosen projects is: " + statisticsController.numberOfChosenProjects());
-        Label lblNoProjects = new Label("The total number of projects is: " + "XY");
+        Label lblNoProjects = new Label("The total number of projects is: " + "\t" + "\t" + "XY");
 
         //Label lblChosenProjects = new Label("Groups/students have totally chosen: " + statisticsController.numberOfChosenProjects() + " projects");
 
@@ -234,6 +234,7 @@ public class OptimalZstatisticsView {
         //Internal Tabs
         tab4.setText("Project Statistics Table");
         BorderPane content = new BorderPane();
+        content.setTop(createTableToolBar());
         content.setCenter(createStatisticsTable());
 
         tab4.setContent(content);
@@ -252,9 +253,9 @@ public class OptimalZstatisticsView {
 
 
 
-//        //Button ID's
-//        this.btnOpenProjectFile.setId("btnOpenProjectFile");
-//        this.btnOpenChoiceFile.setId("btnOpenChoiceFile");
+        //Button ID's
+        this.btnSave.setId("btnSave");
+
 //
        //Tab ID's
         this.tab1.setId("tab1");
@@ -278,6 +279,7 @@ public class OptimalZstatisticsView {
         this.tab2.setTooltip(new Tooltip("Tooltip 2"));
         this.tab3.setTooltip(new Tooltip("Tooltip 3"));
         this.tab4.setTooltip(new Tooltip("Tooltip 4"));
+        this.btnSave.setTooltip(new Tooltip("Save this Project Statistics Table"));
 
     }
 
@@ -311,7 +313,7 @@ public class OptimalZstatisticsView {
         statisticsTable.getSelectionModel().setCellSelectionEnabled(false);
 
         colID = new TableColumn<Project, Integer>("ID");
-        colID.setPrefWidth(35);
+//        colID.setPrefWidth(35);
 
         colProjects = new TableColumn<Project, String>("Project Name");
 //        colProjects.setPrefWidth(160);
@@ -343,6 +345,7 @@ public class OptimalZstatisticsView {
         tableValues.addAll(statisticsController.getProjectPickList());
 
         colID.setCellValueFactory(new PropertyValueFactory<Project, Integer>("id"));
+//        colProjectPrio1.setCellValueFactory(new PropertyValueFactory<Project, Integer>("id"));
         colProjects.setCellValueFactory(new PropertyValueFactory<Project, String>("projectNumber"));
 
         colProjectPrio1.setCellValueFactory(new PropertyValueFactory<Project, Integer>("prio1"));
@@ -358,6 +361,19 @@ public class OptimalZstatisticsView {
         return statisticsTable;
     }
 
+    public Node createTableToolBar() {
+
+        HBox topBox = new HBox();
+
+        ToolBar bar = new ToolBar(
+                this.btnSave);
+
+        bar.setMinWidth(Double.MAX_VALUE);
+
+        topBox.getChildren().add(bar);
+
+        return topBox;
+    }
 
 
 //    private void setupInternalTab() {

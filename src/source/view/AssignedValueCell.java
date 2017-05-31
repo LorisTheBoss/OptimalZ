@@ -2,6 +2,8 @@ package source.view;
 
 import javafx.scene.control.TableCell;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import source.Assignment;
 
 /**
@@ -13,7 +15,8 @@ public class AssignedValueCell extends TableCell<Assignment, String> {
 
     public AssignedValueCell(String color){
         super();
-        this.color = "-fx-background-color: " + color;
+//        this.color = "-fx-background-insets: 0 0 1 0 ; -fx-background-color: " + color;
+        this.color = " -fx-background-insets: 0 0 1 0 ; -fx-background-color: -fx-background; -fx-background: " + color;
     }
 
 
@@ -32,6 +35,7 @@ public class AssignedValueCell extends TableCell<Assignment, String> {
             setText(item);
             if (item.equals(assignment.getAssignedProject())) {
                 setTextFill(Color.BLACK);
+//                setFont(Font.font(null, FontWeight.BOLD, 11.5));
                 setStyle(color);
             } else {
                 setTextFill(Color.BLACK);

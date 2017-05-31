@@ -251,7 +251,7 @@ public class OptimalZview {
         this.btnOpenProjectFile.setTooltip(new Tooltip("Open the file with the available projects"));
         this.btnOpenChoiceFile.setTooltip(new Tooltip("Open the file with all the choices"));
         this.btnStartAssignment.setTooltip(new Tooltip("Calculate Assignment"));
-        this.btnSave.setTooltip(new Tooltip("Save the actual version"));
+        this.btnSave.setTooltip(new Tooltip("Save the current version"));
         this.btnStatistik.setTooltip(new Tooltip("Show the statistics of the actual version"));
         this.btnRedo.setTooltip(new Tooltip("Redo your changes"));
         this.btnUndo.setTooltip(new Tooltip("Undo your changes"));
