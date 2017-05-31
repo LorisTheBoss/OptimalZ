@@ -17,7 +17,7 @@ import java.util.*;
 
 
 /**
- * Created by Tobias on 05.05.2017.
+ * Created on 05.05.2017.
  * This class is basically responsible for everything that is statistics-related.
  */
 
@@ -30,12 +30,23 @@ public class OptimalZstatisticsController {
     ProjectAssigner assigner;
 
 
+    /**
+     * Constructor
+     * @param model
+     * @param assigner
+     * @param assignment
+     */
     public  OptimalZstatisticsController(OptimalZmodel model, ProjectAssigner assigner, Assignment assignment) {
         this.model = model;
         this.assigner = assigner;
         this.assignment = assignment;
     }
 
+
+    /**
+     * Calculates how many projects have been assigned that were chosen as 1st priority
+     * @return int
+     */
     public int priorityOne() {
 
         int i = 0;
@@ -55,7 +66,10 @@ public class OptimalZstatisticsController {
         return number;
     }
 
-
+    /**
+     * Calculates how many projects have been assigned that were chosen as 2nd priority
+     * @return int
+     */
     public int priorityTwo() {
 
         int i = 0;
@@ -75,7 +89,10 @@ public class OptimalZstatisticsController {
         return number;
     }
 
-
+    /**
+     * Calculates how many projects have been assigned that were chosen as 3rd priority
+     * @return int
+     */
     public int priorityThree() {
 
         int i = 0;
@@ -95,6 +112,11 @@ public class OptimalZstatisticsController {
         return number;
     }
 
+
+    /**
+     * Calculates how many projects have been assigned that were chosen as 4th priority
+     * @return int
+     */
     public int priorityFour() {
 
         int i = 0;
@@ -114,6 +136,10 @@ public class OptimalZstatisticsController {
         return number;
     }
 
+    /**
+     * Calculates how many projects have been assigned that were chosen as 5th priority
+     * @return int
+     */
     public int priorityFive() {
 
         int i = 0;
@@ -133,6 +159,10 @@ public class OptimalZstatisticsController {
         return number;
     }
 
+    /**
+     * Calculates how many own projects the calculation contains
+     * @return int
+     */
     public int ownProjects() {
 
         int i = 0;
@@ -154,6 +184,10 @@ public class OptimalZstatisticsController {
     }
 
 
+    /**
+     * Calculates the total cost of the assignment
+     * @return double
+     */
     public double totalCost() {
 
         //gets the actual version that is displayed
@@ -175,6 +209,10 @@ public class OptimalZstatisticsController {
     }
 
 
+    /**
+     * Calculates the average cost of the assignment
+     * @return double
+     */
     public double averageCost() {
 
         //gets the actual version that is displayed
@@ -193,61 +231,20 @@ public class OptimalZstatisticsController {
 
     }
 
-    public int bestPriority() {
-
-        //gets the actual version that is displayed
-        int actualVersion = model.getActualVersion();
-        ArrayList<Assignment> arrAssignments = model.getListVersions().get(actualVersion - 1); //arrAssignments now is the list with the current assignments
-        int priority = 5;
-
-        int i = 0;
-        while (i <= arrAssignments.size() - 1) {
-            if (arrAssignments.get(i).getCost() < priority) {
-                priority = arrAssignments.get(i).getCost().intValue();
-            }
-        }
-
-        return priority;
-    }
-
-    /*TODO funktioniert noch nicht*/
-    public int numberOfChosenProjects() {
-
-        ArrayList<Assignment> arrAssignments = model.getListVersions().get(0);
-        ArrayList<String> allChosenProjects = new ArrayList<>();
-        int i = 0;
-        Assignment a;
-        String s;
-
-        while (i <= arrAssignments.size() - 1) {
-            a = arrAssignments.get(i);
-            int z = 1;
-
-            while (z <= 5) {
-                s = a.getChosenProjects().get(z); //TODO hier is das Problem
-
-                if (!allChosenProjects.contains(s)) {
-                    allChosenProjects.add(s);
-                }
-                z++;
-            }
-        }
-
-        return allChosenProjects.size();
-    }
-
+    /**
+     * Calculates the number of groups
+     * @return int
+     */
     public int numberOfGroups() {
         int groups = model.getListVersions().get(0).size();
         return groups;
 
     }
 
-    /*TODO write method that counts the number of projects*/
-    public int numberOfProjects() {
-
-        return 0;
-    }
-
+    /**
+     * Calculates the list with each project and how often it has been chosen with which priority
+     * @return ArrayList<Project>
+     */
     public ArrayList<Project> getProjectPickList() {
 
         int listLength = assigner.getProjectNumbers().size(); //debugging
@@ -300,28 +297,20 @@ public class OptimalZstatisticsController {
             projectWithNumberOfPicks.add(project);
             projectAtIndex++;
         }
-
-        //TODO Löschen (it's for debugging)
-        int y = 0;
-        while (y < projectWithNumberOfPicks.size()) {
-            System.out.print("We have so many projects: " + projectWithNumberOfPicks.size() + "\t");
-            Project p = projectWithNumberOfPicks.get(y);
-            System.out.println("Project Number: " + p.getProjectNumber() + "\tID = " + p.getID() + "\tPrio 1 = " + p.getPrio1() +
-                    "\tPrio 2 = " + p.getPrio2() + "\tPrio 3 = " + p.getPrio3() + "\tPrio 4 = " + p.getPrio4() + "\tPrio 5 = " + p.getPrio5() + "\tTotal = " + p.getTotal());
-            y++;
-        }
-
-
         return projectWithNumberOfPicks;
     }
 
+    /**
+     * Creates a CSV that contains the the information from the getProjectPickList() method
+     * @throws IOException
+     */
     public void writeProjectListToCSV() throws IOException {
         File desktop = new File(System.getProperty("user.home"), "Desktop");
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd-HH-mm");
         Date date = new Date();
         String today = dateFormat.format(date);
         FileWriter fileWriter = new FileWriter(desktop.getAbsolutePath() + "\\Projektstatistik_" + today + ".csv");
-        String FILE_HEADER = "Project" + ";" + "PRIO 1" + ";" + "PRIO 2" + ";" + "PRIO 3" + ";" + "PRIO 4" + ";" + "PRIO 5" + ";" + "Total";
+        String FILE_HEADER = "ID" + ";" + "Project" + ";" + "PRIO 1" + ";" + "PRIO 2" + ";" + "PRIO 3" + ";" + "PRIO 4" + ";" + "PRIO 5" + ";" + "Total";
         String NEW_LINE_SEPARATOR = "\n";
         ArrayList<Project> projectWithNumberOfPicks = getProjectPickList();
         int projectAtIndex  = 0;
@@ -332,6 +321,7 @@ public class OptimalZstatisticsController {
 
             while (projectAtIndex < projectWithNumberOfPicks.size()) {
                 Project p = projectWithNumberOfPicks.get(projectAtIndex);
+                fileWriter.append(p.getID()+ ";");
                 fileWriter.append(p.getProjectNumber() + ";");
                 fileWriter.append(p.getPrio1() + ";");
                 fileWriter.append(p.getPrio2() + ";");

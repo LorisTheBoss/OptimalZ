@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.Array;
+import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -145,6 +146,7 @@ public class OptimalZcontroller {
         view.getBtnUndo().setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
+                reset(); //TODO delete falls nicht gebraucht
                 System.out.println("undo");
             }
         });
@@ -356,7 +358,7 @@ public class OptimalZcontroller {
         view.getColProjectPrio5().setCellFactory(column -> new AssignedValueCell("rgba(207, 25, 3, 0.4)"));
 
         /**
-         * @author Tobias Gerhard
+         *
          * Button ruft die csvWriter()-Methode auf um das File zu exortieren
          */
         this.view.getBtnSave().setOnAction(new EventHandler<ActionEvent>() {
@@ -424,19 +426,19 @@ public class OptimalZcontroller {
 
 
     /**
-     * @author Tobias Gerhard
-     * Responsible for the export of the final list
+     * Responsible for the export of the final assignment list
+     * @return boolean
      */
     public boolean csvWriter() throws IOException {
 
-        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd-HH-mm");
         Date date = new Date();
         String today = dateFormat.format(date);
         File desktop = new File(System.getProperty("user.home"), "Desktop");
         FileWriter fileWriter = new FileWriter(desktop.getAbsolutePath() + "\\ProjektAssignment_" + today + "_v" + model.getActualVersion() + ".csv");
         String NEW_LINE_SEPARATOR = "\n";
         String FILE_HEADER = "GROUP" + ";" + "ASSIGNED PROJECT" + ";" + "PRIO 1" + ";" + "PRIO 2" + ";" + "PRIO 3" + ";" + "PRIO 4" + ";" + "PRIO 5" + ";" + "COST";
-        String FILE_TITLE = "Projektzuteilung vom " + today;
+        String FILE_TITLE = "Project Allocation From: " + today;
 
         try {
             fileWriter.append(FILE_TITLE);
@@ -510,6 +512,17 @@ public class OptimalZcontroller {
 
         this.view.getLblStatus().setText("Error while selecting the " + fileType);
         return null;
+    }
+
+    public void reset() {
+        model.getListAssignmnet().clear();
+        model.getListVersions().clear();
+        model.setIsExported(false);
+        //model.setActualVersion();
+
+
+        assigner.getProjectNumbers().clear();
+        assigner.getStudentList().clear();
     }
 
 
