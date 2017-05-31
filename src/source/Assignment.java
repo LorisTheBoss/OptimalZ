@@ -9,7 +9,12 @@ import java.util.HashMap;
 public class Assignment {
 
     private static int counter = 1;
-	private final int id;
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    private int id;
 	private String name;
 	private String assignedProject;
 

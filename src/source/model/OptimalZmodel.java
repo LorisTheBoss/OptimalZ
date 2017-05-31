@@ -54,6 +54,10 @@ public class OptimalZmodel {
 
     // ----- getters and setters ------
 
+    public void setListAssignmnet(ArrayList<Assignment> listAssignmnet) {
+        this.listAssignmnet = listAssignmnet;
+    }
+
     public ArrayList<Assignment> getListAssignmnet() {
         return listAssignmnet;
     }

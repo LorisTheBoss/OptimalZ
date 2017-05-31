@@ -40,8 +40,6 @@ public class OptimalZview {
     private Button btnSave = new Button();
     private Button btnStatistik = new Button();
 
-    private Button btnUndo = new Button();
-    private Button btnRedo = new Button();
     private Button btnStartAssignment = new Button();
 
     //Label
@@ -111,13 +109,13 @@ public class OptimalZview {
 
         HBox topBox = new HBox();
 
+        this.btnOpenChoiceFile.setDisable(true);
+
         ToolBar bar = new ToolBar(
                 this.btnOpenProjectFile,
                 this.btnOpenChoiceFile,
                 new Separator(),
                 this.btnStartAssignment,
-                this.btnUndo,
-                this.btnRedo,
                 new Separator(),
                 this.btnStatistik,
                 this.btnSave);
@@ -193,7 +191,7 @@ public class OptimalZview {
 
         ObservableList<Assignment> tableValues = FXCollections.observableArrayList();
 
-        tableValues.addAll(model.getListAssignmnet());
+        //tableValues.addAll(model.getListAssignmnet());
 
         colID.setCellValueFactory(new PropertyValueFactory<Assignment, Integer>("id"));
         colName.setCellValueFactory(new PropertyValueFactory<Assignment, String>("name"));
@@ -230,8 +228,6 @@ public class OptimalZview {
         this.btnOpenChoiceFile.setId("btnOpenChoiceFile");
         this.btnSave.setId("btnSave");
         this.btnStatistik.setId("btnStatistik");
-        this.btnRedo.setId("btnRedo");
-        this.btnUndo.setId("btnUndo");
         this.btnStartAssignment.setId("btnStartAssignment");
 
         //ComboBox
@@ -253,8 +249,6 @@ public class OptimalZview {
         this.btnStartAssignment.setTooltip(new Tooltip("Calculate Assignment"));
         this.btnSave.setTooltip(new Tooltip("Save the current version"));
         this.btnStatistik.setTooltip(new Tooltip("Show the statistics of the actual version"));
-        this.btnRedo.setTooltip(new Tooltip("Redo your changes"));
-        this.btnUndo.setTooltip(new Tooltip("Undo your changes"));
         this.comboBoxVersions.setTooltip(new Tooltip("Version History"));
     }
 
@@ -317,13 +311,6 @@ public class OptimalZview {
         return colLock;
     }
 
-    public Button getBtnUndo() {
-        return btnUndo;
-    }
-
-    public Button getBtnRedo() {
-        return btnRedo;
-    }
 }
 
 

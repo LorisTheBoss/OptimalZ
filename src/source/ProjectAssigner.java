@@ -211,8 +211,10 @@ public class ProjectAssigner {
             scan.close();
             System.out.println();
             System.out.println("CONTROL INFO: Number of Groups = " + studentList.size() + " Number of Projects = " + projectNumbers.size());
+            this.view.getLblStatus().setText("CONTROL INFO: Number of Groups = " + studentList.size() + " Number of Projects = " + projectNumbers.size());
             if (studentList.size() > projectNumbers.size()) {
                 System.err.println("\nMore groups than projects - complete assignment is not possible!\n");
+                this.view.getLblStatus().setText("\nMore groups than projects - complete assignment is not possible!\n");
             }
 
             model.setAreFilesReadIn(true);
@@ -399,42 +401,129 @@ public class ProjectAssigner {
         int[][] assignment = new int[this.studentList.size()][2];
         HungarianAlgorithm ha = new HungarianAlgorithm();
         assignment = ha.hgAlgorithm(copyOfCostMatrix);
-        this.printAssignment(assignment);
+        this.printAssignment2(assignment);
         list.add(assignment);
-        printasdf();
     }
 
-    private void printasdf() {
-
-        System.out.println("print");
-
-        if (list.size() == 2) {
-
-            int[][] f = list.get(1);
-            int[][] m = list.get(0);
-
-            if (f.length == m.length) {
-                System.out.println("liste sin glich lang");
-            }
-
-            for (int j = 0; j < m.length; j++) {
-                System.out.println(m[j][0] + "  |  " + m[j][1]);
-
-                if (m[j][0] != f[j][0] || m[j][1] != f[j][1]){
-                    System.out.println("ungleich " + j);
-                }
-            }
-        }
+    public ArrayList<int[][]> getList() {
+        return list;
     }
 
-    ArrayList<int[][]> list = new ArrayList<int[][]>();
+    private ArrayList<int[][]> list = new ArrayList<int[][]>();
 
 
     /**
      * prints the @param assignment
      * on the console
      */
-    private void printAssignment(int[][] assignment) {
+    public void printAssignment2(int[][] assignment) {
+
+        this.model.getListAssignmnet();
+
+/*
+        ArrayList<Assignment> newVersion = new ArrayList<>(model.getListAssignmnet());
+
+        for (int i = 0; i < model.getListAssignmnet().size(); i++) {
+            Assignment tocopy = model.getListAssignmnet().get(i);
+            Assignment copy = new Assignment();
+            copy.setAssignedProject(tocopy.getAssignedProject());
+            newVersion.add(copy);
+        }
+*/
+
+        ArrayList<Assignment> newVersion = new ArrayList<>();
+
+        for (int i = 0; i < model.getListAssignmnet().size(); i++) {
+            Assignment tocopy = model.getListAssignmnet().get(i);
+            Assignment copy = new Assignment();
+            copy.setId(tocopy.getId());
+            copy.setAssignedProject(tocopy.getAssignedProject());
+            copy.setName(tocopy.getName());
+            copy.setProjectPrio1(tocopy.getProjectPrio1());
+            copy.setProjectPrio2(tocopy.getProjectPrio2());
+            copy.setProjectPrio3(tocopy.getProjectPrio3());
+            copy.setProjectPrio4(tocopy.getProjectPrio4());
+            copy.setProjectPrio5(tocopy.getProjectPrio5());
+            copy.setCost(tocopy.getCost());
+            copy.setLockedBoolean(tocopy.getLockedBoolean());
+            newVersion.add(copy);
+        }
+
+        for (int i = 0; i < assignment.length; i++) {
+
+            //Loris Grether
+            for (int j = 0; j < newVersion.size(); j++) {
+
+                if (this.studentList.get(i).equals(newVersion.get(j).getName())) {
+
+                    if (assignment[i][1] < this.projectNumbers.size()) {
+                        System.out.println(this.studentList.get(i) + "\t-->\t" + this.projectNumbers.get(assignment[i][1]) + " (Cost = " + this.costMatrix[i][assignment[i][1]] + ")");
+
+                        newVersion.get(j).setAssignedProject(this.projectNumbers.get(assignment[i][1]));
+                        newVersion.get(j).setCost(this.costMatrix[i][assignment[i][1]]);
+
+                    } else {
+
+                        //Loris Grether
+
+                        if (this.costMatrix[i][assignment[i][1]] == 0.0) {
+                            newVersion.get(j).setAssignedProject("Eigenes");
+                        } else if (this.costMatrix[i][assignment[i][1]] == 10.0) {
+                            newVersion.get(j).setAssignedProject("Nicht Zugewiesen");
+                        }
+
+                        System.out.println(this.studentList.get(i) + "\t-->\t Eigenes? " + " (Cost = " + this.costMatrix[i][assignment[i][1]] + ")");
+                    }
+                }
+            }
+        }
+
+        model.getListVersions().add(newVersion);
+    }
+
+    /**
+     * prints the @param assignment
+     * on the console
+     */
+    public void printAssignment3(int[][] assignment) {
+
+        this.model.getListAssignmnet();
+
+        for (int i = 0; i < assignment.length; i++) {
+
+            //Loris Grether
+            for (int j = 0; j < model.getListVersions().get(model.getActualVersion()-1).size(); j++) {
+
+                if (this.studentList.get(i).equals(model.getListVersions().get(model.getActualVersion()-1).get(j).getName())) {
+
+                    if (assignment[i][1] < this.projectNumbers.size()) {
+                        System.out.println(this.studentList.get(i) + "\t-->\t" + this.projectNumbers.get(assignment[i][1]) + " (Cost = " + this.costMatrix[i][assignment[i][1]] + ")");
+
+                        this.model.getListVersions().get(model.getActualVersion()-1).get(j).setAssignedProject(this.projectNumbers.get(assignment[i][1]));
+                        this.model.getListVersions().get(model.getActualVersion()-1).get(j).setCost(this.costMatrix[i][assignment[i][1]]);
+
+                    } else {
+
+                        //Loris Grether
+
+                        if (this.costMatrix[i][assignment[i][1]] == 0.0) {
+                            this.model.getListVersions().get(model.getActualVersion()-1).get(j).setAssignedProject("Eigenes");
+                        } else if (this.costMatrix[i][assignment[i][1]] == 10.0) {
+                            this.model.getListVersions().get(model.getActualVersion()-1).get(j).setAssignedProject("Nicht Zugewiesen");
+                        }
+
+                        System.out.println(this.studentList.get(i) + "\t-->\t Eigenes? " + " (Cost = " + this.costMatrix[i][assignment[i][1]] + ")");
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * prints the @param assignment
+     * on the console
+     */
+    public void printAssignment(int[][] assignment) {
 
         this.model.getListAssignmnet();
 

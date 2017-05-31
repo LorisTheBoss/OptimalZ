@@ -25,6 +25,7 @@ import javafx.scene.control.cell.MapValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import javafx.stage.WindowEvent;
 import javafx.util.Callback;
 import source.Assignment;
@@ -71,11 +72,18 @@ public class OptimalZcontroller {
             public void handle(MouseEvent event) {
                 if (event.isPrimaryButtonDown() && event.getClickCount() == 2) {
 
-                    TablePosition pos = view.getTableView().getSelectionModel().getSelectedCells().get(0);
-                    int row = pos.getRow();
-                    Assignment item = view.getTableView().getItems().get(row);
-                    TableColumn col = pos.getTableColumn();
-                    String projectCode = (String) col.getCellObservableValue(item).getValue();
+                    System.out.println("hallo");
+
+                    if (view.getTableView().getSelectionModel().getSelectedCells().size() != 0) {
+
+                        TablePosition pos = view.getTableView().getSelectionModel().getSelectedCells().get(0);
+
+                        if (pos.getColumn() >= 3 && pos.getColumn() <= 7) {
+
+                            int row = pos.getRow();
+                            Assignment item = view.getTableView().getItems().get(row);
+                            TableColumn col = pos.getTableColumn();
+                            String projectCode = (String) col.getCellObservableValue(item).getValue();
 
                     //This code works with the ListAssignment but i guess it should be the listVersions
 //                    for (int i = 0; i < model.getListAssignmnet().size(); i++) {
@@ -92,25 +100,27 @@ public class OptimalZcontroller {
 //                        }
 //                    }
 
-                    for (int i = 0; i < model.getListVersions().get(model.getActualVersion()-1).size(); i++) {
+                            for (int i = 0; i < model.getListVersions().get(model.getActualVersion() - 1).size(); i++) {
 
-                        if (model.getListVersions().get(model.getActualVersion()-1).get(i).getId() == view.getTableView().getSelectionModel().getSelectedItem().getId()) {
+                                if (model.getListVersions().get(model.getActualVersion() - 1).get(i).getId() == view.getTableView().getSelectionModel().getSelectedItem().getId()) {
 
-                            System.out.println("DoubleClickEvent Add: " + model.getListVersions().get(model.getActualVersion()-1).get(i).getName() + " " + projectCode);
+                                    System.out.println("DoubleClickEvent Add: " + model.getListVersions().get(model.getActualVersion() - 1).get(i).getName() + " " + projectCode);
 
-                            map.put(model.getListVersions().get(model.getActualVersion()-1).get(i).getName(), projectCode);
-                            model.getListVersions().get(model.getActualVersion()-1).get(i).setLockedBoolean(true);
+                                    map.put(model.getListVersions().get(model.getActualVersion() - 1).get(i).getName(), projectCode);
+                                    model.getListVersions().get(model.getActualVersion() - 1).get(i).setLockedBoolean(true);
 
-                            System.out.println("current map size: " + map.size());
+                                    System.out.println("current map size: " + map.size());
 
-                            view.getTableView().refresh();
+                                    view.getTableView().refresh();
+                                }
+                            }
                         }
                     }
                 }
             }
         });
 
-        model.getListVersions().addListener(new ListChangeListener<ArrayList<Assignment>>() {
+/*        model.getListVersions().addListener(new ListChangeListener<ArrayList<Assignment>>() {
             @Override
             public void onChanged(Change<? extends ArrayList<Assignment>> c) {
 
@@ -118,44 +128,43 @@ public class OptimalZcontroller {
                 view.getComboBoxVersions().getSelectionModel().selectLast();
                 model.setActualVersion(model.getListVersions().size());
             }
-        });
+        });*/
 
         view.getComboBoxVersions().setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
+                view.getTableView().refresh();
 
                 System.out.println("other version was selected");
 
-                String[] split = view.getComboBoxVersions().getSelectionModel().getSelectedItem().toString().split(" ");
+                //String[] split = view.getComboBoxVersions().getSelectionModel().getSelectedItem().toString().split(" ");
 
-                model.setActualVersion(Integer.parseInt(split[1]));
+                int index = view.getComboBoxVersions().getSelectionModel().getSelectedIndex();
+                System.out.println(index);
 
-                view.getTableView().getItems().clear();
+                if (assigner.getList().size() != 0) {
 
-                ObservableList<Assignment> tableValues = FXCollections.observableArrayList();
-                tableValues.addAll(model.getListVersions().get(model.getActualVersion()-1));
-                view.getTableView().setItems(tableValues);
+                    int[][] assignment = assigner.getList().get(index);
+
+                    assigner.printAssignment3(assignment);
+
+
+                    //model.setActualVersion(Integer.parseInt(split[1]));
+
+                    //view.getTableView().getItems().clear();
+
+                    ObservableList<Assignment> tableValues = FXCollections.observableArrayList();
+                    tableValues.addAll(model.getListVersions().get(model.getActualVersion() - 1));
+                    view.getTableView().setItems(tableValues);
+
+                    view.getTableView().refresh();
+                }
 
                 view.getTableView().refresh();
 
-                System.out.println("The shown version is : " + (Integer.parseInt(split[1])));
-            }
-        });
 
-        //Rückgängig
-        view.getBtnUndo().setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                reset(); //TODO delete falls nicht gebraucht
-                System.out.println("undo");
-            }
-        });
+                //System.out.println("The shown version is : " + (Integer.parseInt(split[1])));
 
-        //Wiederherstellen
-        view.getBtnRedo().setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                System.out.println("redo");
             }
         });
 
@@ -163,14 +172,13 @@ public class OptimalZcontroller {
             @Override
             public void handle(ActionEvent event) {
 
-                //OptimalZstatisticsView optimalZstatisticsView = new OptimalZstatisticsView(view.getComboBoxVersions().getSelectionModel().getSelectedItem().toString());
-                OptimalZstatisticsView optimalZstatisticsView = new OptimalZstatisticsView(model, assigner, assignment);
+                if (model.getListVersions().size() != 0) {
 
+                    OptimalZstatisticsView optimalZstatisticsView = new OptimalZstatisticsView(model, assigner, assignment);
 
-//                if (model.getListVersions().size() != 0) {
-//                } else {
-//                    view.getLblStatus().setText("INFO: You first have to select a version");
-//                }
+                } else {
+                    view.getLblStatus().setText("INFO: You first have to calculate an assignment!");
+                }
 
             }
         });
@@ -185,6 +193,8 @@ public class OptimalZcontroller {
 
                 if ((model.getProjectsFileName().getValue() == null && filePath != null) || (model.getProjectsFileName() != null && filePath != null)) {
                     model.setProjectsFileName(filePath);
+                    view.getBtnOpenProjectFile().setDisable(true);
+                    view.getBtnOpenChoiceFile().setDisable(false);
                 }
             }
         });
@@ -193,12 +203,11 @@ public class OptimalZcontroller {
             @Override
             public void handle(ActionEvent event) {
 
-                //model.setPriorityFileName(openFile("Priority File"));
-
                 String filePath = openFile("Choice File");
 
                 if ((model.getPriorityFileName().getValue() == null && filePath != null) || (model.getPriorityFileName() != null && filePath != null)) {
                     model.setPriorityFileName(filePath);
+                    view.getBtnOpenChoiceFile().setDisable(true);
                 }
             }
         });
@@ -240,15 +249,19 @@ public class OptimalZcontroller {
                         model.getListVersions();
                         assigner.computeCostMatrix(model.getPriorityFileName().getValue());
                         assigner.recomputeAssignment(map);
-                        //assigner.computeAssignment();
 
-                        model.getListVersions().get(model.getActualVersion()-1);
+                        model.getListVersions().get(model.getActualVersion() - 1);
 
                         ObservableList<Assignment> tableValues = FXCollections.observableArrayList();
                         tableValues.addAll(model.getListVersions().get(model.getActualVersion() - 1));
                         view.getTableView().setItems(tableValues);
 
                         view.getLblStatus().setText("INFO: Assignment was successfully computed");
+
+                        view.getComboBoxVersions().getItems().add("Version " + model.getListVersions().size());
+                        view.getComboBoxVersions().getSelectionModel().selectLast();
+                        model.setActualVersion(model.getListVersions().size());
+
 
                     } catch (FileNotFoundException e) {
                         e.printStackTrace();
@@ -285,8 +298,7 @@ public class OptimalZcontroller {
                                     System.out.println("CheckBoxEvent Remove: " + assignment.getName() + "  " + assignment.getAssignedProject());
 
                                     map.remove(assignment.getName());
-                                }
-                                else if (newValue == true){
+                                } else if (newValue == true) {
 
                                     System.out.println("CheckBoxEvent Add: " + assignment.getName() + "  " + assignment.getAssignedProject());
 
@@ -351,7 +363,8 @@ public class OptimalZcontroller {
 
 //        view.getColProjectPrio1().setCellFactory(column -> return new TableCell<Assignment, String>(){
 
-        view.getColProjectPrio1().setCellFactory(column -> new AssignedValueCell("rgba(10, 194, 2, 0.4)"));
+        view.getColProjectPrio1().setCellFactory(column -> new AssignedValueCell("#FF2BB1"));
+        //view.getColProjectPrio1().setCellFactory(column -> new AssignedValueCell("rgba(10, 194, 2, 0.4)"));
         view.getColProjectPrio2().setCellFactory(column -> new AssignedValueCell("rgba(155, 221, 0, 0.4)"));
         view.getColProjectPrio3().setCellFactory(column -> new AssignedValueCell("rgba(249, 174, 0, 0.4)"));
         view.getColProjectPrio4().setCellFactory(column -> new AssignedValueCell("rgba(217, 113, 11, 0.4)"));
@@ -365,11 +378,11 @@ public class OptimalZcontroller {
             @Override
             public void handle(ActionEvent event) {
                 try {
-                    if (csvWriter()) {
+                    if (csvWriter2()) {
                         Alert alert = new Alert(Alert.AlertType.INFORMATION);
                         alert.setTitle("Good News!");
                         alert.setHeaderText(null);
-                        alert.setContentText("Die Projektzuteilung wurde auf dem Desktop gespeichert. ");
+                        alert.setContentText("The assignment is stored on the desktop. ");
                         alert.showAndWait();
                     } else view.getLblStatus().setText("Error during export!");
                 } catch (IOException e) {
@@ -424,12 +437,11 @@ public class OptimalZcontroller {
         }
     }
 
-
     /**
-     * Responsible for the export of the final assignment list
-     * @return boolean
+     * @author Tobias Gerhard
+     * Responsible for the export of the final list
      */
-    public boolean csvWriter() throws IOException {
+    public boolean csvWriter2() throws IOException {
 
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd-HH-mm");
         Date date = new Date();
@@ -454,27 +466,21 @@ public class OptimalZcontroller {
 
             for (int i = 1; i <= arrAssignments.size(); i++) {
 
-                int z = 1;
                 Assignment a = arrAssignments.get(i - 1);
                 fileWriter.append(NEW_LINE_SEPARATOR);
                 fileWriter.append(a.getName() + ";");
                 fileWriter.append(a.getAssignedProject() + ";");
-
-                while (z <= 6) {
-                    fileWriter.append(a.getChosenProjects().get(z)  + ";");
-                    fileWriter.flush();
-                    z++;
-
-                    if (z == 6) {
-                        String cost = String.valueOf(a.getCost());
-                        fileWriter.append(cost + ";");
-                        break; // otherwise null in last cell
-                    }
-                }
-
-
-                this.model.setIsExported(true);
+                fileWriter.append(a.getProjectPrio1() + ";");
+                fileWriter.append(a.getProjectPrio2() + ";");
+                fileWriter.append(a.getProjectPrio3() + ";");
+                fileWriter.append(a.getProjectPrio4() + ";");
+                fileWriter.append(a.getProjectPrio5() + ";");
+                String cost = String.valueOf(a.getCost());
+                fileWriter.append(cost + ";");
+                fileWriter.flush();
             }
+            this.model.setIsExported(true);
+
         } catch (Exception e) {
             //TODO catch this in the frontend
             System.err.println("Something went wrong during export");
@@ -486,15 +492,14 @@ public class OptimalZcontroller {
         }
     }
 
-
     private String openFile(String fileType) {
 
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("OptimalZ - Open " + fileType);
-        File desktop = new File(System.getProperty("user.home"), "Desktop");
+        //File desktop = new File(System.getProperty("user.home"), "Desktop");
 
         //Loris
-        //File desktop = new File("C:/Users/LorisGrether/Desktop/FHNW/Semester4/PracticalProject/Source/TestData/Tobi/NoIssues");
+        File desktop = new File("C:/Users/LorisGrether/Desktop/FHNW/Semester4/PracticalProject/Source/TestData/Tobi/NoIssues");
         fileChooser.setInitialDirectory(desktop);
 
         fileChooser.getExtensionFilters().addAll(
@@ -520,10 +525,7 @@ public class OptimalZcontroller {
         model.setIsExported(false);
         //model.setActualVersion();
 
-
         assigner.getProjectNumbers().clear();
         assigner.getStudentList().clear();
     }
-
-
 }
