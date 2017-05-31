@@ -291,9 +291,7 @@ public class OptimalZview {
         return this.btnStartAssignment;
     }
 
-    public Button getBtnSave() {
-        return this.btnSave;
-    }
+    public Button getBtnSave() { return this.btnSave; }
 
     public Stage getStage() {
         return this.stage;

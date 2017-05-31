@@ -1,9 +1,13 @@
 package source.controller;
 
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.scene.control.Alert;
 import source.Assignment;
 import source.Project;
 import source.ProjectAssigner;
 import source.model.OptimalZmodel;
+import source.view.OptimalZstatisticsView;
 import source.view.OptimalZview;
 
 import java.io.File;
@@ -26,8 +30,9 @@ public class OptimalZstatisticsController {
 
     OptimalZmodel model;
     Assignment assignment;
-    OptimalZview view; //just because ProjectAssigner wants it in constructor
+//    OptimalZview view; //just because ProjectAssigner wants it in constructor
     ProjectAssigner assigner;
+    OptimalZstatisticsView statisticsView;
 
 
     /**
@@ -36,10 +41,15 @@ public class OptimalZstatisticsController {
      * @param assigner
      * @param assignment
      */
-    public  OptimalZstatisticsController(OptimalZmodel model, ProjectAssigner assigner, Assignment assignment) {
+
+ //   public  OptimalZstatisticsController(OptimalZmodel model, ProjectAssigner assigner, Assignment assignment, OptimalZstatisticsView statisticsView) {
+        public  OptimalZstatisticsController(OptimalZmodel model, ProjectAssigner assigner, Assignment assignment, OptimalZstatisticsView optimalZstatisticsView) {
         this.model = model;
         this.assigner = assigner;
         this.assignment = assignment;
+        this.statisticsView = optimalZstatisticsView;
+
+                eventhandler();
     }
 
 
@@ -304,7 +314,8 @@ public class OptimalZstatisticsController {
      * Creates a CSV that contains the the information from the getProjectPickList() method
      * @throws IOException
      */
-    public void writeProjectListToCSV() throws IOException {
+    public boolean writeProjectListToCSV() throws IOException {
+        boolean bool = false;
         File desktop = new File(System.getProperty("user.home"), "Desktop");
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd-HH-mm");
         Date date = new Date();
@@ -332,6 +343,7 @@ public class OptimalZstatisticsController {
 
                 fileWriter.flush();
                 projectAtIndex++;
+                bool = true;
             }
 
         } catch (Exception e) {
@@ -342,13 +354,49 @@ public class OptimalZstatisticsController {
             fileWriter.close();
         }
 
+        return bool;
 
 
     }
 
+    /**
+     * Returns the number of projects that are in the list of projects
+     * @return int
+     */
+    public int numberOfProjects(){
+        int projects = 0;
 
+        projects = assigner.getProjectNumbers().size() - 1; //-1 becase of own project
 
+        return projects;
+    }
 
+    private void eventhandler() {
+
+        this.statisticsView.getBtnSave().setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                try {
+                    if (writeProjectListToCSV()) {
+                        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                        alert.setTitle("Good News!");
+                        alert.setHeaderText(null);
+                        alert.setContentText("Die Projektzuteilung wurde auf dem Desktop gespeichert. ");
+                        alert.showAndWait();
+                    } else {
+                        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                        alert.setTitle("Bad News!");
+                        alert.setHeaderText(null);
+                        alert.setContentText("Oops, something went wrong during export. try again.");
+                        alert.showAndWait();
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+    }
 
 
 

@@ -28,7 +28,7 @@ public class OptimalZstatisticsView {
     //Table
     private TableView statisticsTable;
 
-    private TableColumn colID;
+//    private TableColumn colID;
     private TableColumn colProjects;
     private TableColumn colProjectPrio1;
     private TableColumn colProjectPrio2;
@@ -47,7 +47,7 @@ public class OptimalZstatisticsView {
     private TabPane tabPane;
     private Tab tab1;
     private Tab tab2;
-    private Tab tab3;
+//    private Tab tab3;
     private Tab tab4;
 
     //Charts
@@ -72,7 +72,7 @@ public class OptimalZstatisticsView {
 
         statisticStage = new Stage();
         this.model = model;
-        this.statisticsController = new OptimalZstatisticsController(model, assigner, assignment);
+        this.statisticsController = new OptimalZstatisticsController(model, assigner, assignment, this);
 
         //statisticStage.setTitle("OptimalZ - Statistics - " + version);
         statisticStage.setTitle("OptimalZ - Statistics");
@@ -159,7 +159,7 @@ public class OptimalZstatisticsView {
         tabPane = new TabPane();
         tab1 = new Tab();
         tab2 = new Tab();
-        tab3 = new Tab();
+//        tab3 = new Tab();
         tab4 = new Tab();
 
         tabPane.setRotateGraphic(false);
@@ -185,7 +185,7 @@ public class OptimalZstatisticsView {
         Label lblTotCost = new Label("The total Cost of this Assignment is: " + "\t" + statisticsController.totalCost());
         Label lblNoGroups = new Label("The total number of groups is: " + "\t" + "\t" + statisticsController.numberOfGroups());
 //        Label lblNoChoosenProjects = new Label("The total number of choosen projects is: " + statisticsController.numberOfChosenProjects());
-        Label lblNoProjects = new Label("The total number of projects is: " + "\t" + "\t" + "XY");
+        Label lblNoProjects = new Label("The total number of projects is: " + "\t" + "\t" + statisticsController.numberOfProjects());
 
         //Label lblChosenProjects = new Label("Groups/students have totally chosen: " + statisticsController.numberOfChosenProjects() + " projects");
 
@@ -215,7 +215,7 @@ public class OptimalZstatisticsView {
         tabPane.getTabs().add(tab2);
 
 
-        // Tab 3 has a checkbox for showing/hiding tab labels
+ /*       // Tab 3 has a checkbox for showing/hiding tab labels
         tab3.setText("Project popularity distribution");
         final VBox vboxTab3 = new VBox();
         vboxTab3.setSpacing(10);
@@ -231,7 +231,7 @@ public class OptimalZstatisticsView {
 
         tab3.setContent(vboxTab3);
         tabPane.getTabs().add(tab3);
-        //Internal Tabs
+  */       //Internal Tabs
         tab4.setText("Project Statistics Table");
         BorderPane content = new BorderPane();
         content.setTop(createTableToolBar());
@@ -260,7 +260,7 @@ public class OptimalZstatisticsView {
        //Tab ID's
         this.tab1.setId("tab1");
         this.tab2.setId("tab2");
-        this.tab3.setId("tab3");
+//        this.tab3.setId("tab3");
         this.tab4.setId("tab4");
 
 //
@@ -277,7 +277,7 @@ public class OptimalZstatisticsView {
 
         this.tab1.setTooltip(new Tooltip("This Tab shows you an Overview of the Statistics Data!"));
         this.tab2.setTooltip(new Tooltip("Tooltip 2"));
-        this.tab3.setTooltip(new Tooltip("Tooltip 3"));
+//        this.tab3.setTooltip(new Tooltip("Tooltip 3"));
         this.tab4.setTooltip(new Tooltip("Tooltip 4"));
         this.btnSave.setTooltip(new Tooltip("Save this Project Statistics Table"));
 
@@ -312,8 +312,11 @@ public class OptimalZstatisticsView {
         statisticsTable.setEditable(false);
         statisticsTable.getSelectionModel().setCellSelectionEnabled(false);
 
-        colID = new TableColumn<Project, Integer>("ID");
+//        colID = new TableColumn<Project, Integer>("ID");
 //        colID.setPrefWidth(35);
+
+        TableColumn<Project, Integer> colID = new TableColumn<Project, Integer>("ID");
+        colID.setPrefWidth(35);
 
         colProjects = new TableColumn<Project, String>("Project Name");
 //        colProjects.setPrefWidth(160);
@@ -430,5 +433,9 @@ public class OptimalZstatisticsView {
 //        });
 
     }
+
+    // ----- getters and setters -----
+
+    public Button getBtnSave() { return this.btnSave; }
 
 }
