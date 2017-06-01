@@ -154,7 +154,7 @@ public class OptimalZview {
         TableColumn<Assignment, Integer> colID = new TableColumn<Assignment, Integer>("ID");
         colID.setPrefWidth(35);
         TableColumn<Assignment, String> colName = new TableColumn<Assignment, String>("Name");
-        colName.setPrefWidth(120);
+        colName.setPrefWidth(147);
         TableColumn<Assignment, String> colAssignedProject = new TableColumn<Assignment, String>("Assigned Project");
         colAssignedProject.setPrefWidth(105);
 

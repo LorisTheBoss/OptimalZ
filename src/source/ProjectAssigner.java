@@ -186,7 +186,7 @@ public class ProjectAssigner {
 
                 String[] split = studentLine.split(":");
 
-                if (checkLineSyntax(split[1])) {
+                //if (checkLineSyntax(split[1])) {
 
                     if (checkName(split[0])) { //checks if the group name is unique
 
@@ -206,7 +206,7 @@ public class ProjectAssigner {
 
                         model.getListAssignmnet().add(assignment);
                     }
-                }
+                //}
             }
             scan.close();
             System.out.println();
@@ -266,7 +266,8 @@ public class ProjectAssigner {
 
         for (int i = 0; i < this.getProjectNumbers().size(); i++) {
 
-            if (this.getProjectNumbers().get(i).equals(project)) {
+            //Now it should work
+            if (this.getProjectNumbers().get(i).equals(project) || project.equals("Eig") || project.equals("eig")) {
                 return true;
             }
         }
@@ -372,7 +373,7 @@ public class ProjectAssigner {
             for (int q = 0; q < 5; q++) {
 
                 String projectCode = lineScanner.next();
-                int index = this.searchProjectIndex(projectCode); // returns the index of the projected
+                int index = this.searchProjectIndex(projectCode); // returns the index of the project
 
                 if (index >= 0) {
                     this.costMatrix[i][index] = q;
@@ -390,6 +391,10 @@ public class ProjectAssigner {
         }
         scan.close();
         buildDeepCopy();
+
+
+        printMatrix();
+
     }
 
 
@@ -420,17 +425,6 @@ public class ProjectAssigner {
 
         this.model.getListAssignmnet();
 
-/*
-        ArrayList<Assignment> newVersion = new ArrayList<>(model.getListAssignmnet());
-
-        for (int i = 0; i < model.getListAssignmnet().size(); i++) {
-            Assignment tocopy = model.getListAssignmnet().get(i);
-            Assignment copy = new Assignment();
-            copy.setAssignedProject(tocopy.getAssignedProject());
-            newVersion.add(copy);
-        }
-*/
-
         ArrayList<Assignment> newVersion = new ArrayList<>();
 
         for (int i = 0; i < model.getListAssignmnet().size(); i++) {
@@ -445,7 +439,7 @@ public class ProjectAssigner {
             copy.setProjectPrio4(tocopy.getProjectPrio4());
             copy.setProjectPrio5(tocopy.getProjectPrio5());
             copy.setCost(tocopy.getCost());
-            copy.setLockedBoolean(tocopy.getLockedBoolean());
+            copy.setLockedBoolean(false);
             newVersion.add(copy);
         }
 
@@ -477,8 +471,9 @@ public class ProjectAssigner {
                 }
             }
         }
-
         model.getListVersions().add(newVersion);
+        model.setActualVersion(model.getListVersions().size());
+
     }
 
     /**

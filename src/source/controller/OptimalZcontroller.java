@@ -19,6 +19,9 @@ import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.MapValueFactory;
+import javafx.scene.input.ContextMenuEvent;
+import javafx.scene.input.DragEvent;
+import javafx.scene.input.InputMethodEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -95,18 +98,22 @@ public class OptimalZcontroller {
 //                        }
 //                    }
 
-                            for (int i = 0; i < model.getListVersions().get(model.getActualVersion() - 1).size(); i++) {
+                            ArrayList<Assignment> actualList = model.getListVersions().get(model.getActualVersion()-1);
 
-                                if (model.getListVersions().get(model.getActualVersion() - 1).get(i).getId() == view.getTableView().getSelectionModel().getSelectedItem().getId()) {
+                            for (int i = 0; i < actualList.size(); i++) {
 
-                                    System.out.println("DoubleClickEvent Add: " + model.getListVersions().get(model.getActualVersion() - 1).get(i).getName() + " " + projectCode);
+                                //if (actualList.get(i).getId() == view.getTableView().getSelectionModel().getSelectedItem().getId()) {
+                                if (actualList.get(i).getName().equals(view.getTableView().getSelectionModel().getSelectedItem().getName())) {
 
-                                    map.put(model.getListVersions().get(model.getActualVersion() - 1).get(i).getName(), projectCode);
+                                    System.out.println("DoubleClickEvent Add: " + actualList.get(i).getName() + " " + projectCode);
+
+                                    map.put(actualList.get(i).getName(), projectCode);
                                     model.getListVersions().get(model.getActualVersion() - 1).get(i).setLockedBoolean(true);
 
                                     System.out.println("current map size: " + map.size());
 
                                     view.getTableView().refresh();
+                                    break;
                                 }
                             }
                         }
@@ -125,6 +132,8 @@ public class OptimalZcontroller {
             }
         });*/
 
+
+
         view.getComboBoxVersions().setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -137,11 +146,16 @@ public class OptimalZcontroller {
                 int index = view.getComboBoxVersions().getSelectionModel().getSelectedIndex();
                 System.out.println(index);
 
+                model.setActualVersion(index + 1);
+
                 if (assigner.getList().size() != 0) {
 
                     int[][] assignment = assigner.getList().get(index);
 
                     assigner.printAssignment3(assignment);
+
+                    //TODO: Indexproblem immer 1 versetzt ausser beim ersten mal + evt anderes actionevent bei combobox
+                    System.out.println(index + " <--> " + String.valueOf(model.getActualVersion()-1));
 
 
                     //model.setActualVersion(Integer.parseInt(split[1]));
@@ -256,7 +270,6 @@ public class OptimalZcontroller {
                         view.getComboBoxVersions().getItems().add("Version " + model.getListVersions().size());
                         view.getComboBoxVersions().getSelectionModel().selectLast();
                         model.setActualVersion(model.getListVersions().size());
-
 
                     } catch (FileNotFoundException e) {
                         e.printStackTrace();
