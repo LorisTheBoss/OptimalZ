@@ -4,8 +4,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.lang.reflect.Array;
-import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -14,7 +12,6 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -25,11 +22,9 @@ import javafx.scene.control.cell.MapValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 import javafx.stage.WindowEvent;
 import javafx.util.Callback;
 import source.Assignment;
-import source.Project;
 import source.ProjectAssigner;
 import source.model.OptimalZmodel;
 import source.view.AssignedValueCell;
@@ -377,7 +372,7 @@ public class OptimalZcontroller {
             @Override
             public void handle(ActionEvent event) {
                 try {
-                    if (csvWriter2()) {
+                    if (csvWriter()) {
                         Alert alert = new Alert(Alert.AlertType.INFORMATION);
                         alert.setTitle("Good News!");
                         alert.setHeaderText(null);
@@ -440,13 +435,13 @@ public class OptimalZcontroller {
      * @author Tobias Gerhard
      * Responsible for the export of the final list
      */
-    public boolean csvWriter2() throws IOException {
+    public boolean csvWriter() throws IOException {
 
-        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd-HH-mm");
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss");
         Date date = new Date();
         String today = dateFormat.format(date);
         File desktop = new File(System.getProperty("user.home"), "Desktop");
-        FileWriter fileWriter = new FileWriter(desktop.getAbsolutePath() + "\\ProjektAssignment_" + today + "_v" + model.getActualVersion() + ".csv");
+        FileWriter fileWriter = new FileWriter(desktop.getAbsolutePath() + "\\ProjektAssignment_" + today + ".csv");
         String NEW_LINE_SEPARATOR = "\n";
         String FILE_HEADER = "GROUP" + ";" + "ASSIGNED PROJECT" + ";" + "PRIO 1" + ";" + "PRIO 2" + ";" + "PRIO 3" + ";" + "PRIO 4" + ";" + "PRIO 5" + ";" + "COST";
         String FILE_TITLE = "Project Allocation From: " + today;
@@ -460,7 +455,6 @@ public class OptimalZcontroller {
             int actualVersion = model.getActualVersion();
             ArrayList<Assignment> arrAssignments = model.getListVersions().get(actualVersion - 1); //arrAssignments now is the list with the current assignments
 
-            //TODO: ACHTUNG do wird nur d listAssignment usdruckt aber eigentlich mues me s assignmnent wo usdruckt wärde söll us dr "listVersions" go usehole!!!
 
 
             for (int i = 1; i <= arrAssignments.size(); i++) {
