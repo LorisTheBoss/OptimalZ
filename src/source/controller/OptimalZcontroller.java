@@ -376,7 +376,7 @@ public class OptimalZcontroller {
                         Alert alert = new Alert(Alert.AlertType.INFORMATION);
                         alert.setTitle("Good News!");
                         alert.setHeaderText(null);
-                        alert.setContentText("The assignment is stored on the desktop. ");
+                        alert.setContentText("The assignment is stored on the desktop.");
                         alert.showAndWait();
                     } else view.getLblStatus().setText("Error during export!");
                 } catch (IOException e) {

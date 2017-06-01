@@ -271,6 +271,7 @@ public class OptimalZstatisticsView {
         rectPrio5 = new Rectangle(16,16);
         rectOwn = new Rectangle(16,16);
 
+
         rectPrio1.setStyle("-fx-fill: #0AC202; -fx-arc-height: 7; -fx-arc-width: 7;");
         rectPrio2.setStyle("-fx-fill: #9BDD00; -fx-arc-height: 7; -fx-arc-width: 7;");
         rectPrio3.setStyle("-fx-fill: #F9AE00; -fx-arc-height: 7; -fx-arc-width: 7;");

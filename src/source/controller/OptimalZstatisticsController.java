@@ -380,7 +380,7 @@ public class OptimalZstatisticsController {
                         Alert alert = new Alert(Alert.AlertType.INFORMATION);
                         alert.setTitle("Good News!");
                         alert.setHeaderText(null);
-                        alert.setContentText("The statistics is stored on the desktop. ");
+                        alert.setContentText("The statistics is stored on the desktop.");
                         alert.showAndWait();
                     } else {
                         Alert alert = new Alert(Alert.AlertType.INFORMATION);
