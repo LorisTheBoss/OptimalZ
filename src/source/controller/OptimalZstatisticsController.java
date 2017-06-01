@@ -317,11 +317,11 @@ public class OptimalZstatisticsController {
     public boolean writeProjectListToCSV() throws IOException {
         boolean bool = false;
         File desktop = new File(System.getProperty("user.home"), "Desktop");
-        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd-HH-mm");
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss");
         Date date = new Date();
         String today = dateFormat.format(date);
         FileWriter fileWriter = new FileWriter(desktop.getAbsolutePath() + "\\Projektstatistik_" + today + ".csv");
-        String FILE_HEADER = "ID" + ";" + "Project" + ";" + "PRIO 1" + ";" + "PRIO 2" + ";" + "PRIO 3" + ";" + "PRIO 4" + ";" + "PRIO 5" + ";" + "Total";
+        String FILE_HEADER = "Project" + ";" + "PRIO 1" + ";" + "PRIO 2" + ";" + "PRIO 3" + ";" + "PRIO 4" + ";" + "PRIO 5" + ";" + "Total";
         String NEW_LINE_SEPARATOR = "\n";
         ArrayList<Project> projectWithNumberOfPicks = getProjectPickList();
         int projectAtIndex  = 0;
@@ -332,7 +332,6 @@ public class OptimalZstatisticsController {
 
             while (projectAtIndex < projectWithNumberOfPicks.size()) {
                 Project p = projectWithNumberOfPicks.get(projectAtIndex);
-                fileWriter.append(p.getID()+ ";");
                 fileWriter.append(p.getProjectNumber() + ";");
                 fileWriter.append(p.getPrio1() + ";");
                 fileWriter.append(p.getPrio2() + ";");
@@ -381,13 +380,13 @@ public class OptimalZstatisticsController {
                         Alert alert = new Alert(Alert.AlertType.INFORMATION);
                         alert.setTitle("Good News!");
                         alert.setHeaderText(null);
-                        alert.setContentText("Die Projektzuteilung wurde auf dem Desktop gespeichert. ");
+                        alert.setContentText("The statistics is stored on the desktop. ");
                         alert.showAndWait();
                     } else {
                         Alert alert = new Alert(Alert.AlertType.INFORMATION);
                         alert.setTitle("Bad News!");
                         alert.setHeaderText(null);
-                        alert.setContentText("Oops, something went wrong during export. try again.");
+                        alert.setContentText("Something went wrong during export. Try again.");
                         alert.showAndWait();
                     }
                 } catch (IOException e) {
