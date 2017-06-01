@@ -363,8 +363,7 @@ public class OptimalZcontroller {
 
 //        view.getColProjectPrio1().setCellFactory(column -> return new TableCell<Assignment, String>(){
 
-        view.getColProjectPrio1().setCellFactory(column -> new AssignedValueCell("#FF2BB1"));
-        //view.getColProjectPrio1().setCellFactory(column -> new AssignedValueCell("rgba(10, 194, 2, 0.4)"));
+        view.getColProjectPrio1().setCellFactory(column -> new AssignedValueCell("rgba(10, 194, 2, 0.4)"));
         view.getColProjectPrio2().setCellFactory(column -> new AssignedValueCell("rgba(155, 221, 0, 0.4)"));
         view.getColProjectPrio3().setCellFactory(column -> new AssignedValueCell("rgba(249, 174, 0, 0.4)"));
         view.getColProjectPrio4().setCellFactory(column -> new AssignedValueCell("rgba(217, 113, 11, 0.4)"));
@@ -496,10 +495,10 @@ public class OptimalZcontroller {
 
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("OptimalZ - Open " + fileType);
-        //File desktop = new File(System.getProperty("user.home"), "Desktop");
+        File desktop = new File(System.getProperty("user.home"), "Desktop");
 
         //Loris
-        File desktop = new File("C:/Users/LorisGrether/Desktop/FHNW/Semester4/PracticalProject/Source/TestData/Tobi/NoIssues");
+//        File desktop = new File("C:/Users/LorisGrether/Desktop/FHNW/Semester4/PracticalProject/Source/TestData/Tobi/NoIssues");
         fileChooser.setInitialDirectory(desktop);
 
         fileChooser.getExtensionFilters().addAll(

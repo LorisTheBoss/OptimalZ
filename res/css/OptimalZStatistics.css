@@ -13,7 +13,6 @@
 #tab1{
     -fx-graphic: url("/pictures/statistic2.png");
     -fx-min-height: 88px;
-    -fx-background-color:royalblue ;
 }
 
 #btnOpenProjectFile{

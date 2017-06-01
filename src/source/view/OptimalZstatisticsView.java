@@ -10,7 +10,10 @@ import javafx.scene.Scene;
 import javafx.scene.chart.*;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import source.Assignment;
 import source.Project;
@@ -28,7 +31,7 @@ public class OptimalZstatisticsView {
     //Table
     private TableView statisticsTable;
 
-//    private TableColumn colID;
+    //private TableColumn colID;
     private TableColumn colProjects;
     private TableColumn colProjectPrio1;
     private TableColumn colProjectPrio2;
@@ -42,20 +45,31 @@ public class OptimalZstatisticsView {
     //Button
     private Button btnSave = new Button();
 
-
     //Tabs
     private TabPane tabPane;
     private Tab tab1;
     private Tab tab2;
-//    private Tab tab3;
-    private Tab tab4;
+    private Tab tab3;
+
+    private Rectangle rectPrio1;
+    private Rectangle rectPrio2;
+    private Rectangle rectPrio3;
+    private Rectangle rectPrio4;
+    private Rectangle rectPrio5;
+    private Rectangle rectOwn;
+
 
     //Charts
     private BarChart prioDistQual;
     private CategoryAxis xAxis;
     private NumberAxis yAxis;
 
-    private PieChart chart;
+    final static String prio1 = "Priority 1";
+    final static String prio2 = "Priority 2";
+    final static String prio3 = "Priority 3";
+    final static String prio4 = "Priority 4";
+    final static String prio5 = "Priority 5";
+    final static String own = "Own";
 
     private VBox bottomBox;
     private HBox statusBox;
@@ -82,10 +96,11 @@ public class OptimalZstatisticsView {
         root.setCenter(createCenter());
         root.setBottom(createBottom());
 
-        scene = new Scene(root, 800, 600);
+        scene = new Scene(root, 850, 600);
 
         this.setControlIDs();
         this.setToolTipText();
+        this.setTabImages();
 
         String css = this.getClass().getResource("/css/OptimalZStatistics.css").toExternalForm();
         scene.getStylesheets().add(css);
@@ -95,54 +110,86 @@ public class OptimalZstatisticsView {
 
     }
 
-    public Parent createContentPrioBarChart() {
-        String[] priorities = {"Prio 1", "Prio 2", "Prio 3", "Prio 4", "Prio 5", "Own"};
-        xAxis = new CategoryAxis();
-        xAxis.setCategories(FXCollections.<String>observableArrayList(priorities));
-        double number = model.getListAssignmnet().size();
-        yAxis = new NumberAxis("Number of Assignements", 0.0d, number/2, number);
-
-        //TODO delete this, its only for debugging
-        statisticsController.getProjectPickList();
-
-
-        ObservableList<BarChart.Series> barChartData = FXCollections.observableArrayList(
-                new BarChart.Series("Number of Assignments", FXCollections.observableArrayList(
-                        new BarChart.Data(priorities[0], statisticsController.priorityOne()),
-                        new BarChart.Data(priorities[1], statisticsController.priorityTwo()),
-                        new BarChart.Data(priorities[2], statisticsController.priorityThree()),
-                        new BarChart.Data(priorities[3], statisticsController.priorityFour()),
-                        new BarChart.Data(priorities[4], statisticsController.priorityFive()),
-                        new BarChart.Data(priorities[5], statisticsController.ownProjects())
-                ))
-//                new BarChart.Series("Lemons", FXCollections.observableArrayList(
-//                        new BarChart.Data(years[0], 956),
-//                        new BarChart.Data(years[1], 1665),
-//                        new BarChart.Data(years[2], 2559)
+//    public Parent createContentPrioBarChart() {
+//        String[] priorities = {"Prio 1", "Prio 2", "Prio 3", "Prio 4", "Prio 5", "Own"};
+//        xAxis = new CategoryAxis();
+//        xAxis.setCategories(FXCollections.<String>observableArrayList(priorities));
+//        double number = model.getListAssignmnet().size();
+//        yAxis = new NumberAxis("Number of Assignements", 0.0d, number/2, number);
+//
+//        //TODO delete this, its only for debugging
+//        statisticsController.getProjectPickList();
+//
+//
+//        ObservableList<BarChart.Series> barChartData = FXCollections.observableArrayList(
+//                new BarChart.Series("Priority 1: " + statisticsController.priorityOne() + "  ", FXCollections.observableArrayList(
+//                        new BarChart.Data(priorities[0], statisticsController.priorityOne())
+//
 //                )),
-//                new BarChart.Series("Oranges", FXCollections.observableArrayList(
-//                        new BarChart.Data(years[0], 1154),
-//                        new BarChart.Data(years[1], 1927),
-//                        new BarChart.Data(years[2], 2774)
+//                new BarChart.Series("Priority 2: " + statisticsController.priorityTwo() + "  ", FXCollections.observableArrayList(
+//                        new BarChart.Data(priorities[1], statisticsController.priorityTwo())
+//
+//                )),
+//                new BarChart.Series("Priority 3: " + statisticsController.priorityThree() + "  ", FXCollections.observableArrayList(
+//                        new BarChart.Data(priorities[2], statisticsController.priorityThree())
+//
+//                )),
+//                new BarChart.Series("Priority 4: " + statisticsController.priorityFour() + "  ", FXCollections.observableArrayList(
+//                        new BarChart.Data(priorities[3], statisticsController.priorityFour())
+//
+//                )),
+//                new BarChart.Series("Priority 5: " + statisticsController.priorityFive() + "  ", FXCollections.observableArrayList(
+//                        new BarChart.Data(priorities[4], statisticsController.priorityFive())
+//
+//                )),
+//                new BarChart.Series("Own: " + statisticsController.ownProjects() + "  ", FXCollections.observableArrayList(
+//                        new BarChart.Data(priorities[5], statisticsController.ownProjects())
+//
 //                ))
-        );
-        prioDistQual = new BarChart(xAxis, yAxis, barChartData, 25.0d);
-        return prioDistQual;
-    }
+//        );
+//        prioDistQual = new BarChart(xAxis, yAxis, barChartData, 60.0d);
+//        prioDistQual.setHorizontalGridLinesVisible(false);
+//        return prioDistQual;
+//    }
 
-    public static ObservableList<PieChart.Data> generateData() {
-        return FXCollections.observableArrayList(
-                new PieChart.Data("Optimal Z", 5),
-                new PieChart.Data("Project 2", 45),
-                new PieChart.Data("Project 3", 25),
-                new PieChart.Data("Project 4", 15),
-                new PieChart.Data("Project 5", 10));
-    }
+    public Parent createContentPrioBarChart() {
 
-    public Parent createContentPieChart() {
-        chart = new PieChart(generateData());
-        chart.setClockwise(false);
-        return chart;
+        final CategoryAxis xAxis = new CategoryAxis();
+        final NumberAxis yAxis = new NumberAxis();
+        final BarChart<String, Number> bc = new BarChart<String, Number>(xAxis, yAxis);
+        bc.setTitle("Priority Distribution");
+
+        xAxis.setLabel("Priorities");
+        yAxis.setLabel("Number of Assignments");
+
+        XYChart.Series series1 = new XYChart.Series();
+//        series1.setName("2003");
+        final XYChart.Data<String, Number> dataPrio1 = new XYChart.Data(prio1, statisticsController.priorityOne());
+        final XYChart.Data<String, Number> dataPrio2 = new XYChart.Data(prio2, statisticsController.priorityTwo());
+        final XYChart.Data<String, Number> dataPrio3 = new XYChart.Data(prio3, statisticsController.priorityThree());
+        final XYChart.Data<String, Number> dataPrio4 = new XYChart.Data(prio4, statisticsController.priorityFour());
+        final XYChart.Data<String, Number> dataPrio5 = new XYChart.Data(prio5, statisticsController.priorityFive());
+        final XYChart.Data<String, Number> dataOwn = new XYChart.Data(own, statisticsController.ownProjects());
+        series1.getData().add(dataPrio1);
+        series1.getData().add(dataPrio2);
+        series1.getData().add(dataPrio3);
+        series1.getData().add(dataPrio4);
+        series1.getData().add(dataPrio5);
+        series1.getData().add(dataOwn);
+//        Scene scene = new Scene(bc, 500, 600);
+        bc.getData().addAll(series1);
+
+
+        dataPrio1.getNode().setStyle("-fx-bar-fill: rgba(10, 194, 2, 1);");
+        dataPrio2.getNode().setStyle("-fx-bar-fill: rgba(155, 221, 0, 1);");
+        dataPrio3.getNode().setStyle("-fx-bar-fill: rgba(249, 174, 0, 1);");
+        dataPrio4.getNode().setStyle("-fx-bar-fill: rgba(217, 113, 11, 1);");
+        dataPrio5.getNode().setStyle("-fx-bar-fill: rgba(207, 25, 3, 1);");
+        dataOwn.getNode().setStyle("-fx-bar-fill: rgba(151, 65, 198, 1);");
+
+        bc.setLegendVisible(false);
+
+        return bc;
     }
 
     private Node createTop() {
@@ -160,7 +207,7 @@ public class OptimalZstatisticsView {
         tab1 = new Tab();
         tab2 = new Tab();
 //        tab3 = new Tab();
-        tab4 = new Tab();
+        tab3 = new Tab();
 
         tabPane.setRotateGraphic(false);
         tabPane.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
@@ -193,7 +240,7 @@ public class OptimalZstatisticsView {
         /*TODO lblChosenProjects hinzufügen*/
         vboxOverview.getChildren().addAll(lblVersion, lblTotCost, lblNoGroups, lblNoProjects);
 
-        setUpControlButtons(vbox);
+//        setUpControlButtons(vbox);
         tab1.setContent(vboxOverview);
         //tab1.setContent(vbox);
         tabPane.getTabs().add(tab1);
@@ -201,44 +248,53 @@ public class OptimalZstatisticsView {
         // Tab2 has longer label and toggles tab closing
         tab2.setText("Priority Distribution Quality");
         final VBox vboxLongTab = new VBox();
+        final HBox hBoxLabels = new HBox();
         vboxLongTab.setSpacing(10);
         vboxLongTab.setTranslateX(10);
         vboxLongTab.setTranslateY(10);
 
-        Label explainRadios = new Label("Here we could put the first Statistic:");
+        Label explainRadios = new Label("Histogram showing the Distribution of the assignments to the different priorities:");
         vboxLongTab.getChildren().add(explainRadios);
 
+        Label lblSpacer = new Label("\t" + "\t" + "\t");
+        Label lblNoPrio1 = new Label(" Priority 1:  " + statisticsController.priorityOne() + "\t");
+        Label lblNoPrio2 = new Label(" Priority 2:  " + statisticsController.priorityTwo() + "\t");
+        Label lblNoPrio3 = new Label(" Priority 3:  " + statisticsController.priorityThree() + "\t");
+        Label lblNoPrio4 = new Label(" Priority 4:  " + statisticsController.priorityFour() + "\t");
+        Label lblNoPrio5 = new Label(" Priority 5:  " + statisticsController.priorityFive() + "\t");
+        Label lblNoOwn = new Label(" Own:  " + statisticsController.ownProjects() + "\t");
+
+        rectPrio1 = new Rectangle(16,16);
+        rectPrio2 = new Rectangle(16,16);
+        rectPrio3 = new Rectangle(16,16);
+        rectPrio4 = new Rectangle(16,16);
+        rectPrio5 = new Rectangle(16,16);
+        rectOwn = new Rectangle(16,16);
+
+        rectPrio1.setStyle("-fx-fill: #0AC202; -fx-arc-height: 7; -fx-arc-width: 7;");
+        rectPrio2.setStyle("-fx-fill: #9BDD00; -fx-arc-height: 7; -fx-arc-width: 7;");
+        rectPrio3.setStyle("-fx-fill: #F9AE00; -fx-arc-height: 7; -fx-arc-width: 7;");
+        rectPrio4.setStyle("-fx-fill: #D9710B; -fx-arc-height: 7; -fx-arc-width: 7;");
+        rectPrio5.setStyle("-fx-fill: #CF1903; -fx-arc-height: 7; -fx-arc-width: 7;");
+        rectOwn.setStyle("-fx-fill: #9741C6; -fx-arc-height: 7; -fx-arc-width: 7;");
+
+
+        hBoxLabels.getChildren().addAll(lblSpacer, rectPrio1, lblNoPrio1, rectPrio2, lblNoPrio2, rectPrio3, lblNoPrio3, rectPrio4, lblNoPrio4, rectPrio5, lblNoPrio5, rectOwn, lblNoOwn);
+
         //Add Barchart to tab 2
-        vboxLongTab.getChildren().add(this.createContentPrioBarChart());
+        vboxLongTab.getChildren().addAll(this.createContentPrioBarChart(), hBoxLabels);
 
         tab2.setContent(vboxLongTab);
         tabPane.getTabs().add(tab2);
 
 
- /*       // Tab 3 has a checkbox for showing/hiding tab labels
-        tab3.setText("Project popularity distribution");
-        final VBox vboxTab3 = new VBox();
-        vboxTab3.setSpacing(10);
-        vboxTab3.setTranslateX(10);
-        vboxTab3.setTranslateY(10);
-
-        Label thirdTab = new Label("Here we could put the second Statistic:");
-        vboxTab3.getChildren().add(thirdTab);
-
-        //Add Pie Chart to tab 3
-        vboxTab3.getChildren().add(this.createContentPieChart());
-
-
-        tab3.setContent(vboxTab3);
-        tabPane.getTabs().add(tab3);
-  */       //Internal Tabs
-        tab4.setText("Project Statistics Table");
+        tab3.setText("Project Statistics Table");
         BorderPane content = new BorderPane();
         content.setTop(createTableToolBar());
         content.setCenter(createStatisticsTable());
 
-        tab4.setContent(content);
-        tabPane.getTabs().add(tab4);
+        tab3.setContent(content);
+        tabPane.getTabs().add(tab3);
         return tabPane;
 
     }
@@ -251,34 +307,44 @@ public class OptimalZstatisticsView {
 
     private void setControlIDs() {
 
-
-
         //Button ID's
         this.btnSave.setId("btnSave");
 
-//
        //Tab ID's
         this.tab1.setId("tab1");
         this.tab2.setId("tab2");
-//        this.tab3.setId("tab3");
-        this.tab4.setId("tab4");
+        this.tab3.setId("tab3");
 
-//
+        //Rectangles
+//        this.prio1.setId("prio1");
+//        rect.getStyleClass().add("my-rect");
+//        this.prio1.getStyleClass().add
 //        //Label ID's
 //        this.lblStatus.setId("lblStatus");
-//
+
        //Pane ID's
         this.tabPane.setId("tabPane");
 
+    }
 
+    private void setTabImages(){
+
+        final Image img1 = new Image(getClass().getResourceAsStream("/pictures/statistics3.png"));
+        final ImageView imageView1 = new ImageView();
+        imageView1.setImage(img1);
+        tab2.setGraphic(imageView1);
+
+        final Image img2 = new Image(getClass().getResourceAsStream("/pictures/spreadsheet.png"));
+        final ImageView imageView2 = new ImageView();
+        imageView2.setImage(img2);
+        tab3.setGraphic(imageView2);
     }
 
     private void setToolTipText() {
 
-        this.tab1.setTooltip(new Tooltip("This Tab shows you an Overview of the Statistics Data!"));
-        this.tab2.setTooltip(new Tooltip("Tooltip 2"));
-//        this.tab3.setTooltip(new Tooltip("Tooltip 3"));
-        this.tab4.setTooltip(new Tooltip("Tooltip 4"));
+        this.tab1.setTooltip(new Tooltip("Shows Statistics Overview"));
+        this.tab2.setTooltip(new Tooltip("Show Priority Distribution Histogram"));
+        this.tab3.setTooltip(new Tooltip("Show Project Statistics Table"));
         this.btnSave.setTooltip(new Tooltip("Save this Project Statistics Table"));
 
     }
@@ -379,60 +445,20 @@ public class OptimalZstatisticsView {
     }
 
 
-//    private void setupInternalTab() {
-
-
-//        StackPane internalTabContent = new StackPane();
-//        final TabPane internalTabPane = new TabPane();
-//        internalTabPane.getStyleClass().add(TabPane.STYLE_CLASS_FLOATING);
-//        internalTabPane.setSide(Side.LEFT);
-//
-//        internalTabPane.setPrefSize(Region.USE_COMPUTED_SIZE, Region.USE_COMPUTED_SIZE);
-//        final Tab innerTab = new Tab();
-//        innerTab.setText("Tab 1");
-//        final VBox innerVbox = new VBox();
-//        innerVbox.setSpacing(10);
-//        innerVbox.setTranslateX(10);
-//        innerVbox.setTranslateY(10);
-//        Button innerTabPosButton = new Button("Toggle Tab Position");
-//        innerTabPosButton.setOnAction((ActionEvent e) -> {
-//            toggleTabPosition(internalTabPane);
+//    private void setUpControlButtons(VBox vbox) {
+//        // Toggle style class floating
+//        final Button tabModeButton = new Button("Toggle Tab Mode");
+//        tabModeButton.setOnAction((ActionEvent e) -> {
+//            toggleTabMode(tabPane);
 //        });
-//        innerVbox.getChildren().add(innerTabPosButton);
-//        {
-//            Button innerTabModeButton = new Button("Toggle Tab Mode");
-//            innerTabModeButton.setOnAction((ActionEvent e) -> {
-//                toggleTabMode(internalTabPane);
-//            });
-//            innerVbox.getChildren().add(innerTabModeButton);
-//        }
-//        innerTab.setContent(innerVbox);
-//        internalTabPane.getTabs().add(innerTab);
+//        vbox.getChildren().add(tabModeButton);
+////        // Tab position
+////        final Button tabPositionButton = new Button("Toggle Tab Position");
+////        tabPositionButton.setOnAction((ActionEvent e) -> {
+////            toggleTabPosition(tabPane);
+////        });
 //
-//        for (int i = 1; i < 5; i++) {
-//            Tab tab = new Tab();
-//            tab.setText("Tab " + i);
-//            tab.setContent(new Region());
-//            internalTabPane.getTabs().add(tab);
-//        }
-//        internalTabContent.getChildren().add(internalTabPane);
-//        tab4.setContent(internalTabContent);
 //    }
-//
-    private void setUpControlButtons(VBox vbox) {
-        // Toggle style class floating
-        final Button tabModeButton = new Button("Toggle Tab Mode");
-        tabModeButton.setOnAction((ActionEvent e) -> {
-            toggleTabMode(tabPane);
-        });
-        vbox.getChildren().add(tabModeButton);
-//        // Tab position
-//        final Button tabPositionButton = new Button("Toggle Tab Position");
-//        tabPositionButton.setOnAction((ActionEvent e) -> {
-//            toggleTabPosition(tabPane);
-//        });
-
-    }
 
     // ----- getters and setters -----
 
