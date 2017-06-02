@@ -3,6 +3,7 @@ package source.view;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.geometry.Pos;
 import javafx.geometry.Side;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -248,6 +249,9 @@ public class OptimalZstatisticsView {
         // Tab2 has longer label and toggles tab closing
         tab2.setText("Priority Distribution Quality");
         final VBox vboxLongTab = new VBox();
+        final BorderPane barChart = new BorderPane();
+        barChart.setMaxWidth(600);
+        final BorderPane barChartLabels = new BorderPane();
         final HBox hBoxLabels = new HBox();
         vboxLongTab.setSpacing(10);
         vboxLongTab.setTranslateX(10);
@@ -256,7 +260,7 @@ public class OptimalZstatisticsView {
         Label explainRadios = new Label("Histogram showing the Distribution of the assignments to the different priorities:");
         vboxLongTab.getChildren().add(explainRadios);
 
-        Label lblSpacer = new Label("\t" + "\t" + "\t");
+        Label lblSpacer = new Label("\t" + "\t");
         Label lblNoPrio1 = new Label(" Priority 1:  " + statisticsController.priorityOne() + "\t");
         Label lblNoPrio2 = new Label(" Priority 2:  " + statisticsController.priorityTwo() + "\t");
         Label lblNoPrio3 = new Label(" Priority 3:  " + statisticsController.priorityThree() + "\t");
@@ -282,8 +286,11 @@ public class OptimalZstatisticsView {
 
         hBoxLabels.getChildren().addAll(lblSpacer, rectPrio1, lblNoPrio1, rectPrio2, lblNoPrio2, rectPrio3, lblNoPrio3, rectPrio4, lblNoPrio4, rectPrio5, lblNoPrio5, rectOwn, lblNoOwn);
 
+//        barChartLabels.setCenter(hBoxLabels);
+//        barChartLabels.setAlignment(hBoxLabels, Pos.CENTER);
+        barChart.setCenter(this.createContentPrioBarChart());
         //Add Barchart to tab 2
-        vboxLongTab.getChildren().addAll(this.createContentPrioBarChart(), hBoxLabels);
+        vboxLongTab.getChildren().addAll(barChart, hBoxLabels);
 
         tab2.setContent(vboxLongTab);
         tabPane.getTabs().add(tab2);
@@ -382,8 +389,8 @@ public class OptimalZstatisticsView {
 //        colID = new TableColumn<Project, Integer>("ID");
 //        colID.setPrefWidth(35);
 
-        TableColumn<Project, Integer> colID = new TableColumn<Project, Integer>("ID");
-        colID.setPrefWidth(35);
+//        TableColumn<Project, Integer> colID = new TableColumn<Project, Integer>("ID");
+//        colID.setPrefWidth(35);
 
         colProjects = new TableColumn<Project, String>("Project Name");
 //        colProjects.setPrefWidth(160);
@@ -398,7 +405,7 @@ public class OptimalZstatisticsView {
 
 
         statisticsTable.getColumns().addAll(
-                colID,
+//                colID,
                 colProjects,
                 colProjectPrio1,
                 colProjectPrio2,
@@ -414,7 +421,7 @@ public class OptimalZstatisticsView {
 
         tableValues.addAll(statisticsController.getProjectPickList());
 
-        colID.setCellValueFactory(new PropertyValueFactory<Project, Integer>("id"));
+//        colID.setCellValueFactory(new PropertyValueFactory<Project, Integer>("id"));
 //        colProjectPrio1.setCellValueFactory(new PropertyValueFactory<Project, Integer>("id"));
         colProjects.setCellValueFactory(new PropertyValueFactory<Project, String>("projectNumber"));
 
