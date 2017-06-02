@@ -365,7 +365,9 @@ public class OptimalZstatisticsController {
     public int numberOfProjects(){
         int projects = 0;
 
-        projects = assigner.getProjectNumbers().size() - 1; //-1 becase of own project
+        //todo das minus eins mues wäg sunscht stimmts nit
+        //projects = assigner.getProjectNumbers().size() - 1; //-1 becase of own project
+        projects = assigner.getProjectNumbers().size(); //-1 becase of own project
 
         return projects;
     }

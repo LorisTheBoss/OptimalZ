@@ -14,15 +14,13 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.MapValueFactory;
-import javafx.scene.input.ContextMenuEvent;
-import javafx.scene.input.DragEvent;
-import javafx.scene.input.InputMethodEvent;
-import javafx.scene.input.MouseEvent;
+import javafx.scene.input.*;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
@@ -152,15 +150,13 @@ public class OptimalZcontroller {
 
                     int[][] assignment = assigner.getList().get(index);
 
+                    //TODO not shure if this is really necessary
                     assigner.printAssignment3(assignment);
 
-                    //TODO: Indexproblem immer 1 versetzt ausser beim ersten mal + evt anderes actionevent bei combobox
                     System.out.println(index + " <--> " + String.valueOf(model.getActualVersion()-1));
 
 
                     //model.setActualVersion(Integer.parseInt(split[1]));
-
-                    //view.getTableView().getItems().clear();
 
                     ObservableList<Assignment> tableValues = FXCollections.observableArrayList();
                     tableValues.addAll(model.getListVersions().get(model.getActualVersion() - 1));
@@ -170,10 +166,10 @@ public class OptimalZcontroller {
                 }
 
                 view.getTableView().refresh();
-
-
-                //System.out.println("The shown version is : " + (Integer.parseInt(split[1])));
-
+                
+                Event.fireEvent(view.getTableView(), new MouseEvent(MouseEvent.MOUSE_PRESSED, 200,
+                        200, 200, 200, MouseButton.SECONDARY, 1, true, true, true, true,
+                        true, true, true, true, true, true, null));
             }
         });
 
@@ -502,10 +498,10 @@ public class OptimalZcontroller {
 
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("OptimalZ - Open " + fileType);
-        File desktop = new File(System.getProperty("user.home"), "Desktop");
+        //File desktop = new File(System.getProperty("user.home"), "Desktop");
 
         //Loris
-//        File desktop = new File("C:/Users/LorisGrether/Desktop/FHNW/Semester4/PracticalProject/Source/TestData/Tobi/NoIssues");
+        File desktop = new File("C:/Users/LorisGrether/Desktop/FHNW/Semester4/PracticalProject/Source/TestData/Tobi/NoIssues");
         fileChooser.setInitialDirectory(desktop);
 
         fileChooser.getExtensionFilters().addAll(

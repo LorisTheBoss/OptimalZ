@@ -21,7 +21,7 @@ public class ProjectAssigner {
     OptimalZview view;
 
     // MAX_PRIO is used to define a "non-select" of a group-project
-    private final int MAX_PRIO = 10;
+    public final int MAX_PRIO = 100;
 
     // we store both the project codes and the
     // student groups two seperate linked lists
@@ -123,7 +123,7 @@ public class ProjectAssigner {
 
                         if (studentLine.charAt(i) == ':') {
 
-                            studentLine = fillEmptyParameters(studentLine, i);
+                            //studentLine = fillEmptyParameters(studentLine, i);
                         }
                     }
 
@@ -176,6 +176,8 @@ public class ProjectAssigner {
             while (scan.hasNext()) {
                 String studentLine = scan.nextLine();
 
+                studentLine = fillEmptyParameters(studentLine);
+
                 //LorisGrether
                 System.out.println(studentLine);
 
@@ -188,24 +190,24 @@ public class ProjectAssigner {
 
                 //if (checkLineSyntax(split[1])) {
 
-                    if (checkName(split[0])) { //checks if the group name is unique
+                if (checkName(split[0])) { //checks if the group name is unique
 
-                        Assignment assignment = new Assignment();
+                    Assignment assignment = new Assignment();
 
-                        assignment.setName(split[0]);
-                        assignment.setProjectPrio1(split[1]);
-                        assignment.setProjectPrio2(split[2]);
-                        assignment.setProjectPrio3(split[3]);
-                        assignment.setProjectPrio4(split[4]);
-                        assignment.setProjectPrio5(split[5]);
+                    assignment.setName(split[0]);
+                    assignment.setProjectPrio1(split[1]);
+                    assignment.setProjectPrio2(split[2]);
+                    assignment.setProjectPrio3(split[3]);
+                    assignment.setProjectPrio4(split[4]);
+                    assignment.setProjectPrio5(split[5]);
 
-                        for (int i = 1; i < split.length; i++) {
+                    for (int i = 1; i < split.length; i++) {
 
-                            assignment.getChosenProjects().put(i, split[i]);
-                        }
-
-                        model.getListAssignmnet().add(assignment);
+                        assignment.getChosenProjects().put(i, split[i]);
                     }
+
+                    model.getListAssignmnet().add(assignment);
+                }
                 //}
             }
             scan.close();
@@ -248,17 +250,27 @@ public class ProjectAssigner {
         return assignment;
     }
 
-    private String fillEmptyParameters(String studentLine, int i) {
+    private String fillEmptyParameters(String studentLine) {
 
-        if (i == studentLine.length() - 1) {
+        String newStudentLine = "";
 
-            studentLine = studentLine + " ";
+        for (int i = 0; i < studentLine.length() - 1; i++) {
+            char c1 = studentLine.charAt(i);
+            char c2 = studentLine.charAt(i + 1);
 
-        } else if (studentLine.charAt(i) == studentLine.charAt(i + 1)) {
+            newStudentLine += c1;
 
-            studentLine = studentLine.substring(0, i + 1) + " " + studentLine.substring(i + 1, studentLine.length());
+            if (c1 == ':' && c1 == c2) {
+                newStudentLine += " ";
+            }
         }
-        return studentLine;
+
+        if (studentLine.charAt(studentLine.length() - 1) == ':') {
+            newStudentLine += studentLine.charAt(studentLine.length() - 1) + " ";
+        } else {
+            newStudentLine += studentLine.charAt(studentLine.length() - 1);
+        }
+        return newStudentLine;
     }
 
     //This method checks if the used delimiter is only used to split the csv values or if it is used as a character in the name value
@@ -289,17 +301,7 @@ public class ProjectAssigner {
     }
 
 
-    /**
-     * prepares the cost matrix on which the
-     * assignment is evetuall computed. e.g.
-     * p1	p2	p3	p4	p5	p6	p7	p8	d1	d2	d3
-     * group1	10	10	0	3	4	2	10	1 	10	10	10
-     * group2	10	0	10	2	4	3	10	1 	10	10	10
-     * group3	10	10	10	10	10	10	10	10	10	10	0 <<-- encoding for an own project!
-     *
-     * @param priorityFileName
-     * @throws FileNotFoundException
-     */
+
     public void computeCostMatrix2(String priorityFileName) throws FileNotFoundException {
         this.costMatrix = new double[studentList.size()][projectNumbers.size() + studentList.size()];
         this.fillMatrix(); // fills the matrix with entries MAX_PRIO
@@ -315,7 +317,7 @@ public class ProjectAssigner {
 
                 if (studentLine.charAt(s) == ':') {
 
-                    studentLine = fillEmptyParameters(studentLine, s);
+                    //studentLine = fillEmptyParameters(studentLine, s);
                 }
             }
 
@@ -356,6 +358,17 @@ public class ProjectAssigner {
         scan.close();
     }
 
+    /**
+     * prepares the cost matrix on which the
+     * assignment is evetuall computed. e.g.
+     * p1	p2	p3	p4	p5	p6	p7	p8	d1	d2	d3
+     * group1	10	10	0	3	4	2	10	1 	10	10	10
+     * group2	10	0	10	2	4	3	10	1 	10	10	10
+     * group3	10	10	10	10	10	10	10	10	10	10	0 <<-- encoding for an own project!
+     *
+     * @param priorityFileName
+     * @throws FileNotFoundException
+     */
     public void computeCostMatrix(String priorityFileName) throws FileNotFoundException {
         this.costMatrix = new double[studentList.size()][projectNumbers.size() + studentList.size()];
         this.copyOfCostMatrix = new double[studentList.size()][projectNumbers.size() + studentList.size()];
@@ -366,17 +379,25 @@ public class ProjectAssigner {
         int i = 0;
         while (scan.hasNext()) {
             String studentLine = scan.nextLine();
+            studentLine = fillEmptyParameters(studentLine);
             lineScanner = new Scanner(studentLine);
 
             lineScanner.useDelimiter(":");
             lineScanner.next(); // the student group
+
+
+            int[] linear = {0,1,2,3,4};
+            int[] quadratic = {0,1,4,9,16};
+            //todo check which is selected
+            int[] selected = quadratic;
+
             for (int q = 0; q < 5; q++) {
 
                 String projectCode = lineScanner.next();
                 int index = this.searchProjectIndex(projectCode); // returns the index of the project
 
                 if (index >= 0) {
-                    this.costMatrix[i][index] = q;
+                    this.costMatrix[i][index] = linear[q];
                 } else {
                     if (index == -1) {
                         this.costMatrix[i][projectNumbers.size() + i] = 0; // own project
@@ -487,24 +508,24 @@ public class ProjectAssigner {
         for (int i = 0; i < assignment.length; i++) {
 
             //Loris Grether
-            for (int j = 0; j < model.getListVersions().get(model.getActualVersion()-1).size(); j++) {
+            for (int j = 0; j < model.getListVersions().get(model.getActualVersion() - 1).size(); j++) {
 
-                if (this.studentList.get(i).equals(model.getListVersions().get(model.getActualVersion()-1).get(j).getName())) {
+                if (this.studentList.get(i).equals(model.getListVersions().get(model.getActualVersion() - 1).get(j).getName())) {
 
                     if (assignment[i][1] < this.projectNumbers.size()) {
                         System.out.println(this.studentList.get(i) + "\t-->\t" + this.projectNumbers.get(assignment[i][1]) + " (Cost = " + this.costMatrix[i][assignment[i][1]] + ")");
 
-                        this.model.getListVersions().get(model.getActualVersion()-1).get(j).setAssignedProject(this.projectNumbers.get(assignment[i][1]));
-                        this.model.getListVersions().get(model.getActualVersion()-1).get(j).setCost(this.costMatrix[i][assignment[i][1]]);
+                        this.model.getListVersions().get(model.getActualVersion() - 1).get(j).setAssignedProject(this.projectNumbers.get(assignment[i][1]));
+                        this.model.getListVersions().get(model.getActualVersion() - 1).get(j).setCost(this.costMatrix[i][assignment[i][1]]);
 
                     } else {
 
                         //Loris Grether
 
                         if (this.costMatrix[i][assignment[i][1]] == 0.0) {
-                            this.model.getListVersions().get(model.getActualVersion()-1).get(j).setAssignedProject("Eigenes");
+                            this.model.getListVersions().get(model.getActualVersion() - 1).get(j).setAssignedProject("Eigenes");
                         } else if (this.costMatrix[i][assignment[i][1]] == 10.0) {
-                            this.model.getListVersions().get(model.getActualVersion()-1).get(j).setAssignedProject("Nicht Zugewiesen");
+                            this.model.getListVersions().get(model.getActualVersion() - 1).get(j).setAssignedProject("Nicht Zugewiesen");
                         }
 
                         System.out.println(this.studentList.get(i) + "\t-->\t Eigenes? " + " (Cost = " + this.costMatrix[i][assignment[i][1]] + ")");
@@ -570,11 +591,12 @@ public class ProjectAssigner {
                 return i;
             }
         }
-        if (projectCode.contains("eig") || projectCode.contains("Eig")) {
-            return -1;
-        } else {
-            return -2;
-        }
+        return -1;
+//        if (projectCode.contains("eig") || projectCode.contains("Eig")) {
+//            return -1;
+//        } else {
+//            return -2;
+//        }
     }
 
     /**
@@ -624,14 +646,12 @@ public class ProjectAssigner {
 
     private void printMatrix() {
         for (int i = 0; i < this.costMatrix.length; i++) {
-            for (int j = 0; j < this.costMatrix.length; j++) {
+            for (int j = 0; j < this.costMatrix[0].length; j++) {
                 System.out.print(this.costMatrix[i][j] + "\t");
             }
             System.out.println();
         }
     }
-
-
 
 
     // ----- getters and setters -----
