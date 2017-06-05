@@ -15,10 +15,8 @@ public class AssignedValueCell extends TableCell<Assignment, String> {
 
     public AssignedValueCell(String color){
         super();
-//        this.color = "-fx-background-insets: 0 0 1 0 ; -fx-background-color: " + color;
         this.color = " -fx-background-insets: 0 0 1 0 ; -fx-background-color: -fx-background; -fx-background: " + color;
     }
-
 
     @Override
     protected void updateItem(String item, boolean empty) {
@@ -35,12 +33,10 @@ public class AssignedValueCell extends TableCell<Assignment, String> {
             setText(item);
             if (item.equals(assignment.getAssignedProject())) {
                 setTextFill(Color.BLACK);
-//                setFont(Font.font(null, FontWeight.BOLD, 11.5));
                 setStyle(color);
             } else {
                 setTextFill(Color.BLACK);
                 setStyle("");
-                //setStyle("-fx-background-color: #ffd2f8");
             }
         }
         getTableView().refresh();
