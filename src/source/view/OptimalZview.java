@@ -16,9 +16,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.MapValueFactory;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import source.Assignment;
@@ -34,13 +32,12 @@ import java.util.Map;
 public class OptimalZview {
 
     //Button
-    Button btnOpenProjectFile = new Button("Project File");
-    Button btnOpenChoiceFile = new Button("Choice File");
-
+    private Button btnOpenProjectFile = new Button("Project File");
+    private Button btnOpenChoiceFile = new Button("Choice File");
     private Button btnSave = new Button();
     private Button btnStatistik = new Button();
-
     private Button btnStartAssignment = new Button();
+    private Button btnCostManipulation = new Button("");
 
     //Label
     private Label lblStatus = new Label("Status");
@@ -118,6 +115,7 @@ public class OptimalZview {
                 this.btnStartAssignment,
                 new Separator(),
                 this.btnStatistik,
+                this.btnCostManipulation,
                 this.btnSave);
 
         comboBoxVersions = new ComboBox<>();
@@ -227,6 +225,7 @@ public class OptimalZview {
         this.btnOpenProjectFile.setId("btnOpenProjectFile");
         this.btnOpenChoiceFile.setId("btnOpenChoiceFile");
         this.btnSave.setId("btnSave");
+        this.btnCostManipulation.setId("btnCostManipulation");
         this.btnStatistik.setId("btnStatistik");
         this.btnStartAssignment.setId("btnStartAssignment");
 
@@ -249,6 +248,7 @@ public class OptimalZview {
         this.btnStartAssignment.setTooltip(new Tooltip("Calculate Assignment"));
         this.btnSave.setTooltip(new Tooltip("Save the current version"));
         this.btnStatistik.setTooltip(new Tooltip("Show the statistics of the actual version"));
+        this.btnCostManipulation.setTooltip(new Tooltip("Adjust the cost values"));
         this.comboBoxVersions.setTooltip(new Tooltip("Version History"));
     }
 
@@ -309,6 +309,10 @@ public class OptimalZview {
 
     public TableColumn<Assignment, Boolean> getColLock() {
         return colLock;
+    }
+
+    public Button getBtnCostManipulation() {
+        return btnCostManipulation;
     }
 
 }

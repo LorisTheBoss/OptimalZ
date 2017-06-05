@@ -4,6 +4,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import source.Assignment;
+
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
@@ -15,6 +16,8 @@ public class OptimalZmodel {
     private ArrayList<Assignment> listAssignmnet;
     private ObservableList<ArrayList<Assignment>> listVersions;
     private boolean isExported = false;
+
+    private int[] costArray = {0, 1, 2, 3, 4};
 
     private SimpleStringProperty priorityFileName;
     private SimpleStringProperty projectsFileName;
@@ -31,9 +34,9 @@ public class OptimalZmodel {
         this.projectsFileName = new SimpleStringProperty();
     }
 
-    public ObservableList<LinkedHashMap<String,String>> getTableData(){
+    public ObservableList<LinkedHashMap<String, String>> getTableData() {
 
-        ObservableList<LinkedHashMap<String,String>> tableData = FXCollections.observableArrayList();
+        ObservableList<LinkedHashMap<String, String>> tableData = FXCollections.observableArrayList();
 
         for (Assignment assignment : listVersions.get(actualVersion - 1)) {
             LinkedHashMap<String, String> rowData = new LinkedHashMap<>();
@@ -42,7 +45,7 @@ public class OptimalZmodel {
             rowData.put("Name", assignment.getName());
             rowData.put("Assigned Project", assignment.getAssignedProject());
 
-            for (int i = 1; i <= assignment.getChosenProjects().size(); i++){
+            for (int i = 1; i <= assignment.getChosenProjects().size(); i++) {
                 rowData.put("Priority " + i, assignment.getChosenProjects().get(i));
             }
 
@@ -110,4 +113,11 @@ public class OptimalZmodel {
         this.actualVersion = actualVersion;
     }
 
+    public int[] getCostArray() {
+        return costArray;
+    }
+
+    public void setCostArray(int[] costArray) {
+        this.costArray = costArray;
+    }
 }

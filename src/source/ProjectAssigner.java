@@ -81,82 +81,6 @@ public class ProjectAssigner {
         this.computeAssignment();
     }
 
-    /**
-     * reads the two .csv files @param priorityFileName and
-     *
-     * @param projectNumberListFileName that actually store the student's selection
-     *                                  and the available projects in this turn
-     */
-    public void readCSV2(String priorityFileName, String projectNumberListFileName) {
-        try {
-            Scanner scan = new Scanner(new File(projectNumberListFileName));
-            //scan.nextLine(); // header is not used
-            while (scan.hasNext()) {
-                String projectNumber = scan.next();
-                this.projectNumbers.add(projectNumber);
-
-                //LorisGrether
-                System.out.println(projectNumber);
-            }
-            scan.close();
-            scan = new Scanner(new File(priorityFileName));
-            scan.nextLine();  // header is not used
-            Scanner lineScanner;
-
-            while (scan.hasNext()) {
-                String studentLine = scan.nextLine();
-
-                //LorisGrether
-                System.out.println(studentLine);
-
-                lineScanner = new Scanner(studentLine);
-                lineScanner.useDelimiter(":");
-                String students = lineScanner.next();
-                this.studentList.add(students);
-
-                //String[] split = studentLine.split(":");
-                //if (checkLineSyntax(split[1])) {
-
-                if (checkLineSyntax(lineScanner.next())) {
-
-                    for (int i = 0; i < studentLine.length(); i++) {
-
-                        if (studentLine.charAt(i) == ':') {
-
-                            //studentLine = fillEmptyParameters(studentLine, i);
-                        }
-                    }
-
-                    String[] split = studentLine.split(":");
-
-                    if (checkName(split[0])) { //checks if the group name is unique
-
-                        //creates a new Assignment
-                        model.getListAssignmnet().add(createAssignment(split));
-                    }
-                }
-            }
-            scan.close();
-            System.out.println();
-            System.out.println("CONTROL INFO: Number of Groups = " + studentList.size() + " Number of Projects = " + projectNumbers.size());
-            if (studentList.size() > projectNumbers.size()) {
-                System.err.println("\nMore groups than projects - complete assignment is not possible!\n");
-            }
-
-            model.setAreFilesReadIn(true);
-
-        } catch (FileNotFoundException e) {
-            //TODO you have to catch this error in the front end
-            view.getLblStatus().setText("ERROR: Invalid filename");
-            System.err.println("invalid filename");
-            e.printStackTrace();
-        }
-
-        //TODO at the moment auskommentiert because it is not needed yet
-        //TODO bruche mer das überhaupt no tobi?
-        //addValuesToEmptyLists();
-    }
-
     public void readCSV(String priorityFileName, String projectNumberListFileName) {
         try {
             Scanner scan = new Scanner(new File(projectNumberListFileName));
@@ -188,8 +112,6 @@ public class ProjectAssigner {
 
                 String[] split = studentLine.split(":");
 
-                //if (checkLineSyntax(split[1])) {
-
                 if (checkName(split[0])) { //checks if the group name is unique
 
                     Assignment assignment = new Assignment();
@@ -208,7 +130,6 @@ public class ProjectAssigner {
 
                     model.getListAssignmnet().add(assignment);
                 }
-                //}
             }
             scan.close();
             System.out.println();
@@ -227,10 +148,6 @@ public class ProjectAssigner {
             System.err.println("invalid filename");
             e.printStackTrace();
         }
-
-        //TODO at the moment auskommentiert because it is not needed yet
-        //addValuesToEmptyLists();
-
     }
 
     private Assignment createAssignment(String[] split) {
@@ -273,19 +190,6 @@ public class ProjectAssigner {
         return newStudentLine;
     }
 
-    //This method checks if the used delimiter is only used to split the csv values or if it is used as a character in the name value
-    private boolean checkLineSyntax(String project) {
-
-        for (int i = 0; i < this.getProjectNumbers().size(); i++) {
-
-            //Now it should work
-            if (this.getProjectNumbers().get(i).equals(project) || project.equals("Eig") || project.equals("eig")) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     //checks if the names chosen by the students are unique
     private boolean checkName(String name) {
 
@@ -293,69 +197,12 @@ public class ProjectAssigner {
 
             if (model.getListAssignmnet().get(i).getName().equals(name)) {
 
+                view.getLblStatus().setText("Group name exists twice!");
                 return false; // the name of the group already exists and the application should escalate (error)
             }
         }
 
         return true;
-    }
-
-
-
-    public void computeCostMatrix2(String priorityFileName) throws FileNotFoundException {
-        this.costMatrix = new double[studentList.size()][projectNumbers.size() + studentList.size()];
-        this.fillMatrix(); // fills the matrix with entries MAX_PRIO
-        Scanner scan = new Scanner(new File(priorityFileName));
-        scan.nextLine();
-        Scanner lineScanner;
-        int i = 0;
-        while (scan.hasNext()) {
-
-            String studentLine = scan.nextLine();
-
-            for (int s = 0; s < studentLine.length(); s++) {
-
-                if (studentLine.charAt(s) == ':') {
-
-                    //studentLine = fillEmptyParameters(studentLine, s);
-                }
-            }
-
-            lineScanner = new Scanner(studentLine);
-            lineScanner.useDelimiter(":");
-
-            String[] split = studentLine.split(":");
-
-            if (checkLineSyntax(split[1])) {
-
-                lineScanner.next(); // the student group
-
-                //for (int q = 0; q < 5; q++) {
-                for (int q = 1; q < 6; q++) {
-
-                    //String projectCode = lineScanner.next();
-                    String projectCode = split[q];
-
-                    System.out.println("prio " + q + ": " + split[q]);
-
-                    int index = this.searchProjectIndex(projectCode); // returns the index of the projected
-
-                    if (index >= 0) {
-                        this.costMatrix[i][index] = q;
-                    } else {
-                        if (index == -1) {
-                            this.costMatrix[i][projectNumbers.size() + i] = 0; // own project
-                        }
-                        if (index == -2) {
-                            // empty cell found:
-                            // currently we do nothing in this case?!
-                        }
-                    }
-                }
-                i++;
-            }
-        }
-        scan.close();
     }
 
     /**
@@ -386,10 +233,10 @@ public class ProjectAssigner {
             lineScanner.next(); // the student group
 
 
-            int[] linear = {0,1,2,3,4};
-            int[] quadratic = {0,1,4,9,16};
-            //todo check which is selected
-            int[] selected = quadratic;
+            int[] linear = {0, 1, 2, 3, 4};
+            int[] quadratic = {0, 1, 4, 9, 16};
+
+            int[] selected = model.getCostArray();
 
             for (int q = 0; q < 5; q++) {
 
@@ -397,14 +244,11 @@ public class ProjectAssigner {
                 int index = this.searchProjectIndex(projectCode); // returns the index of the project
 
                 if (index >= 0) {
-                    this.costMatrix[i][index] = linear[q];
+                    this.costMatrix[i][index] = selected[q];
+                    //this.costMatrix[i][index] = q;
                 } else {
                     if (index == -1) {
                         this.costMatrix[i][projectNumbers.size() + i] = 0; // own project
-                    }
-                    if (index == -2) {
-                        // empty cell found:
-                        // currently we do nothing in this case?!
                     }
                 }
             }
@@ -413,9 +257,7 @@ public class ProjectAssigner {
         scan.close();
         buildDeepCopy();
 
-
         printMatrix();
-
     }
 
 
@@ -427,7 +269,7 @@ public class ProjectAssigner {
         int[][] assignment = new int[this.studentList.size()][2];
         HungarianAlgorithm ha = new HungarianAlgorithm();
         assignment = ha.hgAlgorithm(copyOfCostMatrix);
-        this.printAssignment2(assignment);
+        this.printAssignment(assignment);
         list.add(assignment);
     }
 
@@ -442,7 +284,7 @@ public class ProjectAssigner {
      * prints the @param assignment
      * on the console
      */
-    public void printAssignment2(int[][] assignment) {
+    public void printAssignment(int[][] assignment) {
 
         this.model.getListAssignmnet();
 
@@ -483,7 +325,7 @@ public class ProjectAssigner {
 
                         if (this.costMatrix[i][assignment[i][1]] == 0.0) {
                             newVersion.get(j).setAssignedProject("Eigenes");
-                        } else if (this.costMatrix[i][assignment[i][1]] == 10.0) {
+                        } else if (this.costMatrix[i][assignment[i][1]] == 100.0) {
                             newVersion.get(j).setAssignedProject("Nicht Zugewiesen");
                         }
 
@@ -524,7 +366,7 @@ public class ProjectAssigner {
 
                         if (this.costMatrix[i][assignment[i][1]] == 0.0) {
                             this.model.getListVersions().get(model.getActualVersion() - 1).get(j).setAssignedProject("Eigenes");
-                        } else if (this.costMatrix[i][assignment[i][1]] == 10.0) {
+                        } else if (this.costMatrix[i][assignment[i][1]] == 100.0) {
                             this.model.getListVersions().get(model.getActualVersion() - 1).get(j).setAssignedProject("Nicht Zugewiesen");
                         }
 
@@ -534,48 +376,6 @@ public class ProjectAssigner {
             }
         }
     }
-
-    /**
-     * prints the @param assignment
-     * on the console
-     */
-    public void printAssignment(int[][] assignment) {
-
-        this.model.getListAssignmnet();
-
-        for (int i = 0; i < assignment.length; i++) {
-
-            //Loris Grether
-            for (int j = 0; j < model.getListAssignmnet().size(); j++) {
-
-                if (this.studentList.get(i).equals(model.getListAssignmnet().get(j).getName())) {
-
-                    if (assignment[i][1] < this.projectNumbers.size()) {
-                        System.out.println(this.studentList.get(i) + "\t-->\t" + this.projectNumbers.get(assignment[i][1]) + " (Cost = " + this.costMatrix[i][assignment[i][1]] + ")");
-
-                        this.model.getListAssignmnet().get(j).setAssignedProject(this.projectNumbers.get(assignment[i][1]));
-                        this.model.getListAssignmnet().get(j).setCost(this.costMatrix[i][assignment[i][1]]);
-
-                    } else {
-
-                        //Loris Grether
-
-                        if (this.costMatrix[i][assignment[i][1]] == 0.0) {
-                            this.model.getListAssignmnet().get(j).setAssignedProject("Eigenes");
-                        } else if (this.costMatrix[i][assignment[i][1]] == 10.0) {
-                            this.model.getListAssignmnet().get(j).setAssignedProject("Nicht Zugewiesen");
-                        }
-
-                        System.out.println(this.studentList.get(i) + "\t-->\t Eigenes? " + " (Cost = " + this.costMatrix[i][assignment[i][1]] + ")");
-                    }
-                }
-            }
-        }
-
-        ArrayList<Assignment> newVersion = new ArrayList<>(model.getListAssignmnet());
-        model.getListVersions().add(newVersion);
-    }
-
 
     /**
      * @return the index of the projectCode in *this*
@@ -592,11 +392,6 @@ public class ProjectAssigner {
             }
         }
         return -1;
-//        if (projectCode.contains("eig") || projectCode.contains("Eig")) {
-//            return -1;
-//        } else {
-//            return -2;
-//        }
     }
 
     /**
@@ -610,31 +405,6 @@ public class ProjectAssigner {
         }
     }
 
-    /**
-     * @author Tobias Gerhard
-     * Method that fills empty values with space (" ")
-     */
-    private void addValuesToEmptyLists() {
-        //Some toby stuff
-        int p = 0;
-
-        while (p <= model.getListAssignmnet().size() - 1) {
-            if (model.getListAssignmnet().get(p).getChosenProjects().size() < 5) {
-
-                int numberOfValues = model.getListAssignmnet().get(p).getChosenProjects().size();
-                int inCreasingNumber = numberOfValues + 1; //this number is necessary to count to 5, so that the keys can be filled
-
-                //dann, adde so viele values
-                while (inCreasingNumber <= 5) {
-                    model.getListAssignmnet().get(p).getChosenProjects().put(inCreasingNumber, "10");
-                    inCreasingNumber++;
-                    System.out.println("done: " + inCreasingNumber);
-                }
-
-            }
-            p++;
-        }
-    }
 
     // ***************************
     // some methods for debugging
@@ -663,6 +433,5 @@ public class ProjectAssigner {
     public LinkedList<String> getStudentList() {
         return studentList;
     }
-
 
 }

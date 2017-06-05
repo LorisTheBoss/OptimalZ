@@ -38,18 +38,9 @@
 
 }
 
-#btnUndo{
-	
-	-fx-graphic: url("/pictures/Undo.png");
+#btnCostManipulation{
+    -fx-graphic: url("/pictures/settings.png");
     -fx-min-height: 32px;
-	
-}
-
-#btnRedo{
-	
-	-fx-graphic: url("/pictures/Redo.png");
-    -fx-min-height: 32px;
-
 }
 
 #btnStartAssignment{

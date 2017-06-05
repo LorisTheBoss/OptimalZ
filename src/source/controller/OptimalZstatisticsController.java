@@ -67,7 +67,7 @@ public class OptimalZstatisticsController {
         ArrayList<Assignment> arrAssignments = model.getListVersions().get(actualVersion - 1); //arrAssignments now is the list with the current  assignments
 
         while (i <= arrAssignments.size() - 1) {
-            if (arrAssignments.get(i).getCost() != null && arrAssignments.get(i).getCost() == 0.0) {
+            if (arrAssignments.get(i).getCost() != null && arrAssignments.get(i).getCost() == model.getCostArray()[0]) {
                 number += 1;
             }
             i++;
@@ -90,7 +90,7 @@ public class OptimalZstatisticsController {
         ArrayList<Assignment> arrAssignments = model.getListVersions().get(actualVersion - 1); //arrAssignments now is the list with the current assignments
 
         while (i <= arrAssignments.size() - 1) {
-            if (arrAssignments.get(i).getCost() != null && arrAssignments.get(i).getCost() == 1.0) {
+            if (arrAssignments.get(i).getCost() != null && arrAssignments.get(i).getCost() == model.getCostArray()[1]) {
                 number += 1;
             }
             i++;
@@ -113,7 +113,7 @@ public class OptimalZstatisticsController {
         ArrayList<Assignment> arrAssignments = model.getListVersions().get(actualVersion - 1); //arrAssignments now is the list with the current assignments
 
         while (i <= arrAssignments.size() - 1) {
-            if (arrAssignments.get(i).getCost() != null && arrAssignments.get(i).getCost() == 2.0) {
+            if (arrAssignments.get(i).getCost() != null && arrAssignments.get(i).getCost() == model.getCostArray()[2]) {
                 number += 1;
             }
             i++;
@@ -137,7 +137,7 @@ public class OptimalZstatisticsController {
         ArrayList<Assignment> arrAssignments = model.getListVersions().get(actualVersion - 1); //arrAssignments now is the list with the current assignments
 
         while (i <= arrAssignments.size() - 1) {
-            if (arrAssignments.get(i).getCost() != null && arrAssignments.get(i).getCost() == 3.0) {
+            if (arrAssignments.get(i).getCost() != null && arrAssignments.get(i).getCost() == model.getCostArray()[3]) {
                 number += 1;
             }
             i++;
@@ -160,7 +160,7 @@ public class OptimalZstatisticsController {
         ArrayList<Assignment> arrAssignments = model.getListVersions().get(actualVersion - 1); //arrAssignments now is the list with the current assignments
 
         while (i <= arrAssignments.size() - 1) {
-            if (arrAssignments.get(i).getCost() != null && arrAssignments.get(i).getCost() == 4.0) {
+            if (arrAssignments.get(i).getCost() != null && arrAssignments.get(i).getCost() == model.getCostArray()[4]) {
                 number += 1;
             }
             i++;
