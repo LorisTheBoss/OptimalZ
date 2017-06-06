@@ -8,6 +8,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+import javafx.application.Platform;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -284,15 +285,14 @@ public class OptimalZcontroller {
 
             @Override
             public void handle(WindowEvent event) {
-                //TODO if needed can be uncommented. If the user closes the application without saving an assignment he is warned
-                /*
+
                 if (model.getIsExported() == true) {
                     Platform.exit();
                 } else {
                     Alert closeAlert = new Alert(Alert.AlertType.CONFIRMATION);
-                    closeAlert.setTitle("Wir benötigen Ihre Besätigung");
-                    closeAlert.setHeaderText("Es wurde noch keine Projektzuteilung exportiert.");
-                    closeAlert.setContentText("Soll das Programm wirklich geschlossen werden?");
+                    closeAlert.setTitle("Confirm Application closing");
+                    closeAlert.setHeaderText("No assignment was saved yet.");
+                    closeAlert.setContentText("Do you want to close the Application anyway?");
                     Optional<ButtonType> result = closeAlert.showAndWait();
 
                     if (result.get() == ButtonType.OK) {
@@ -301,7 +301,7 @@ public class OptimalZcontroller {
                         event.consume();
                     }
                 }
-                */
+
             }
         });
 
