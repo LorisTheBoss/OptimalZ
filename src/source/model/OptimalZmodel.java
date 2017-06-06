@@ -13,8 +13,12 @@ import java.util.LinkedHashMap;
  */
 public class OptimalZmodel {
 
+    //A list that contains all assignments
     private ArrayList<Assignment> listAssignmnet;
+
+    // the listVersions contains all listAssignments and is used for the version control
     private ObservableList<ArrayList<Assignment>> listVersions;
+
     private boolean isExported = false;
 
     private int[] costArray = {0, 1, 2, 3, 4};
@@ -33,27 +37,6 @@ public class OptimalZmodel {
         this.priorityFileName = new SimpleStringProperty();
         this.projectsFileName = new SimpleStringProperty();
     }
-
-    public ObservableList<LinkedHashMap<String, String>> getTableData() {
-
-        ObservableList<LinkedHashMap<String, String>> tableData = FXCollections.observableArrayList();
-
-        for (Assignment assignment : listVersions.get(actualVersion - 1)) {
-            LinkedHashMap<String, String> rowData = new LinkedHashMap<>();
-
-            rowData.put("ID", String.valueOf(assignment.getId()));
-            rowData.put("Name", assignment.getName());
-            rowData.put("Assigned Project", assignment.getAssignedProject());
-
-            for (int i = 1; i <= assignment.getChosenProjects().size(); i++) {
-                rowData.put("Priority " + i, assignment.getChosenProjects().get(i));
-            }
-
-            tableData.add(rowData);
-        }
-        return tableData;
-    }
-
 
     // ----- getters and setters ------
 

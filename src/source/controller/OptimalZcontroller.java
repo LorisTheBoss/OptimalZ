@@ -57,12 +57,13 @@ public class OptimalZcontroller {
 
     private void eventhandler() {
 
+        /***
+         * This method catches all doubleclicks on a cell in the tableview and fills the changed values in a map
+         */
         view.getTableView().setOnMousePressed(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
                 if (event.isPrimaryButtonDown() && event.getClickCount() == 2) {
-
-                    System.out.println("hallo");
 
                     if (view.getTableView().getSelectionModel().getSelectedCells().size() != 0) {
 
@@ -75,34 +76,14 @@ public class OptimalZcontroller {
                             TableColumn col = pos.getTableColumn();
                             String projectCode = (String) col.getCellObservableValue(item).getValue();
 
-                            //This code works with the ListAssignment but i guess it should be the listVersions
-//                    for (int i = 0; i < model.getListAssignmnet().size(); i++) {
-//
-//                        if (model.getListAssignmnet().get(i).getId() == view.getTableView().getSelectionModel().getSelectedItem().getId()) {
-//
-//                            System.out.println(model.getListAssignmnet().get(i).getName());
-//                            System.out.println(projectCode);
-//
-//                            map.put(model.getListAssignmnet().get(i).getName(), projectCode);
-//                            model.getListAssignmnet().get(i).setLockedBoolean(true);
-//
-//                            view.getTableView().refresh();
-//                        }
-//                    }
-
                             ArrayList<Assignment> actualList = model.getListVersions().get(model.getActualVersion() - 1);
 
                             for (int i = 0; i < actualList.size(); i++) {
 
-                                //if (actualList.get(i).getId() == view.getTableView().getSelectionModel().getSelectedItem().getId()) {
                                 if (actualList.get(i).getName().equals(view.getTableView().getSelectionModel().getSelectedItem().getName())) {
-
-                                    System.out.println("DoubleClickEvent Add: " + actualList.get(i).getName() + " " + projectCode);
 
                                     map.put(actualList.get(i).getName(), projectCode);
                                     model.getListVersions().get(model.getActualVersion() - 1).get(i).setLockedBoolean(true);
-
-                                    System.out.println("current map size: " + map.size());
 
                                     view.getTableView().refresh();
                                     break;
@@ -114,23 +95,13 @@ public class OptimalZcontroller {
             }
         });
 
-/*        model.getListVersions().addListener(new ListChangeListener<ArrayList<Assignment>>() {
-            @Override
-            public void onChanged(Change<? extends ArrayList<Assignment>> c) {
-
-                view.getComboBoxVersions().getItems().add("Version " + model.getListVersions().size());
-                view.getComboBoxVersions().getSelectionModel().selectLast();
-                model.setActualVersion(model.getListVersions().size());
-            }
-        });*/
-
-
+        /***
+         * If the user changes the version this event will be set on action
+         */
         view.getComboBoxVersions().setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
                 view.getTableView().refresh();
-
-                System.out.println("other version was selected");
 
                 int index = view.getComboBoxVersions().getSelectionModel().getSelectedIndex();
                 System.out.println(index);
@@ -145,9 +116,6 @@ public class OptimalZcontroller {
 
                     System.out.println(index + " <--> " + String.valueOf(model.getActualVersion() - 1));
 
-
-                    //model.setActualVersion(Integer.parseInt(split[1]));
-
                     ObservableList<Assignment> tableValues = FXCollections.observableArrayList();
                     tableValues.addAll(model.getListVersions().get(model.getActualVersion() - 1));
                     view.getTableView().setItems(tableValues);
@@ -157,6 +125,7 @@ public class OptimalZcontroller {
 
                 view.getTableView().refresh();
 
+                //We need this in order that the GUI has no update delays
                 Event.fireEvent(view.getTableView(), new MouseEvent(MouseEvent.MOUSE_PRESSED, 200,
                         200, 200, 200, MouseButton.SECONDARY, 1, true, true, true, true,
                         true, true, true, true, true, true, null));
@@ -184,7 +153,6 @@ public class OptimalZcontroller {
 
                 CostManipuationView costManipuationView = new CostManipuationView(model);
 
-                System.out.println("hallo du cost manipulation");
             }
         });
 
@@ -246,22 +214,15 @@ public class OptimalZcontroller {
             @Override
             public void handle(ActionEvent event) {
 
-                System.out.println("start calculation!!!");
-
                 if ((assigner.getProjectNumbers().size() != 0 && assigner.getStudentList().size() != 0) && model.getAreFilesReadIn()) {
 
                     try {
-                        model.getListVersions();
                         assigner.computeCostMatrix(model.getPriorityFileName().getValue());
                         assigner.recomputeAssignment(map);
-
-                        model.getListVersions().get(model.getActualVersion() - 1);
 
                         ObservableList<Assignment> tableValues = FXCollections.observableArrayList();
                         tableValues.addAll(model.getListVersions().get(model.getActualVersion() - 1));
                         view.getTableView().setItems(tableValues);
-
-                        //view.getLblStatus().setText("INFO: Assignment was successfully computed");
 
                         view.getComboBoxVersions().getItems().add("Version " + model.getListVersions().size());
                         view.getComboBoxVersions().getSelectionModel().selectLast();
@@ -323,11 +284,8 @@ public class OptimalZcontroller {
 
             @Override
             public void handle(WindowEvent event) {
-
-
-                //TODO This code is okay but comment because it is bothersome!! --> Don't forget to uncomment this stuff before the hand in
+                //TODO if needed can be uncommented. If the user closes the application without saving an assignment he is warned
                 /*
-
                 if (model.getIsExported() == true) {
                     Platform.exit();
                 } else {
@@ -343,30 +301,9 @@ public class OptimalZcontroller {
                         event.consume();
                     }
                 }
-
                 */
-
             }
         });
-
-//        /**
-//         * @author Jonas Stucki
-//         * Table Cell Priority rendering
-//         */
-//
-//        view.getColProjectPrio1().setCellFactory(new Callback<TableColumn.CellDataFeatures<Assignment, String>, TableCell<Assignment, String>>() {
-//            @Override
-//            public TableCell<Assignment, String> call(TableColumn.CellDataFeatures<Assignment, String> param) {
-//
-//                Assignment assignment = param.getValue();
-//
-//                return assignment;
-//            }
-//
-//
-//        });
-
-//        view.getColProjectPrio1().setCellFactory(column -> return new TableCell<Assignment, String>(){
 
         view.getColProjectPrio1().setCellFactory(column -> new AssignedValueCell("rgba(10, 194, 2, 0.4)"));
         view.getColProjectPrio2().setCellFactory(column -> new AssignedValueCell("rgba(155, 221, 0, 0.4)"));
@@ -394,51 +331,6 @@ public class OptimalZcontroller {
                 }
             }
         });
-
-
-    }
-
-    public void fillTableView() {
-
-        if (view.getTableData().size() != 0) {
-
-            for (Map.Entry entry : view.getTableData().get(0).entrySet()) {
-
-                TableColumn column = new TableColumn(entry.getKey().toString());
-                column.setCellValueFactory(new MapValueFactory<String>(entry.getKey().toString()));
-                view.getTable().getColumns().add(column);
-
-            }
-
-            TableColumn<Assignment, Boolean> colLock = new TableColumn("Lock");
-            //colLock.setCellValueFactory(new PropertyValueFactory<String, String>("lock"));
-            view.getTable().getColumns().add(colLock);
-
-
-            colLock.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Assignment, Boolean>, ObservableValue<Boolean>>() {
-                @Override
-                public ObservableValue<Boolean> call(TableColumn.CellDataFeatures<Assignment, Boolean> param) {
-
-                    SimpleBooleanProperty isLocked = new SimpleBooleanProperty();
-                    isLocked.addListener(new ChangeListener<Boolean>() {
-                        @Override
-                        public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-                            System.out.println("--------->    Locked    !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-
-
-                        }
-                    });
-                    return isLocked;
-                }
-            });
-
-            //
-            colLock.setCellFactory(p -> {
-                CheckBoxTableCell<Assignment, Boolean> cell = new CheckBoxTableCell<>();
-                cell.setAlignment(Pos.CENTER);
-                return cell;
-            });
-        }
     }
 
     /**
@@ -484,8 +376,7 @@ public class OptimalZcontroller {
             this.model.setIsExported(true);
 
         } catch (Exception e) {
-            //TODO catch this in the frontend
-            System.err.println("Something went wrong during export");
+            view.getLblStatus().setText("Something went wrong during export");
             this.model.setIsExported(false);
         } finally {
             fileWriter.flush();
@@ -500,8 +391,6 @@ public class OptimalZcontroller {
         fileChooser.setTitle("OptimalZ - Open " + fileType);
         File desktop = new File(System.getProperty("user.home"), "Desktop");
 
-        //Loris
-//        File desktop = new File("C:/Users/LorisGrether/Desktop/FHNW/Semester4/PracticalProject/Source/TestData/Tobi/NoIssues");
         fileChooser.setInitialDirectory(desktop);
 
         fileChooser.getExtensionFilters().addAll(

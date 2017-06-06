@@ -17,7 +17,6 @@ public class OptimalZmain extends Application {
 		launch();
 	}
 
-	
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		

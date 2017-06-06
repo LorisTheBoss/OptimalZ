@@ -83,7 +83,7 @@ public class OptimalZview {
         BorderPane root = new BorderPane();
 
         root.setTop(createTop());
-        root.setCenter(createCenter2());
+        root.setCenter(createCenter());
         root.setBottom(createBottom());
 
         scene = new Scene(root, 850, 600);
@@ -130,19 +130,11 @@ public class OptimalZview {
         return topBox;
     }
 
+    /***
+     * In this method we create the tableview and define all the columns
+     * @return tableview that contains assignments
+     */
     public Node createCenter() {
-
-        tableData = FXCollections.observableArrayList();
-
-        table = new TableView<>(tableData);
-
-        table.setEditable(true);
-        table.getSelectionModel().setCellSelectionEnabled(true);
-
-        return table;
-    }
-
-    public Node createCenter2() {
 
         tableView = new TableView<Assignment>();
 
@@ -189,8 +181,6 @@ public class OptimalZview {
 
         ObservableList<Assignment> tableValues = FXCollections.observableArrayList();
 
-        //tableValues.addAll(model.getListAssignmnet());
-
         colID.setCellValueFactory(new PropertyValueFactory<Assignment, Integer>("id"));
         colName.setCellValueFactory(new PropertyValueFactory<Assignment, String>("name"));
         colAssignedProject.setCellValueFactory(new PropertyValueFactory<Assignment, String>("assignedProject"));
@@ -219,6 +209,9 @@ public class OptimalZview {
         return bottomBox;
     }
 
+    /***
+     * Here we define the control ID's to style some controls in the css files
+     */
     private void setControlIDs() {
 
         //Button ID's

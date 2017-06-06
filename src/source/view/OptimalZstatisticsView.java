@@ -14,6 +14,8 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
+import javafx.util.StringConverter;
+import javafx.util.converter.FormatStringConverter;
 import source.view.IntegerStringConverter;
 import source.Assignment;
 import source.Project;
@@ -147,7 +149,7 @@ public class OptimalZstatisticsView {
         dataOwn.getNode().setStyle("-fx-bar-fill: rgba(151, 65, 198, 1);");
 
         bc.setLegendVisible(false);
-//        yAxis.setTickLabelFormatter(IntegerStringConverter());
+        yAxis.setTickLabelFormatter( new IntegerStringConverter());
 
         return bc;
     }

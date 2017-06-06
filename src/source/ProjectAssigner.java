@@ -13,7 +13,6 @@ import java.util.*;
 public class ProjectAssigner {
 
     public ProjectAssigner() {
-
     }
 
     //Loris Grether
@@ -89,7 +88,6 @@ public class ProjectAssigner {
                 String projectNumber = scan.next();
                 this.projectNumbers.add(projectNumber);
 
-                //LorisGrether
                 System.out.println(projectNumber);
             }
             scan.close();
@@ -101,8 +99,6 @@ public class ProjectAssigner {
                 String studentLine = scan.nextLine();
 
                 studentLine = fillEmptyParameters(studentLine);
-
-                //LorisGrether
                 System.out.println(studentLine);
 
                 lineScanner = new Scanner(studentLine);
@@ -143,30 +139,17 @@ public class ProjectAssigner {
             model.setAreFilesReadIn(true);
 
         } catch (FileNotFoundException e) {
-            //TODO you have to catch this error in the front end
             view.getLblStatus().setText("ERROR: Invalid filename");
             System.err.println("invalid filename");
             e.printStackTrace();
         }
     }
 
-    private Assignment createAssignment(String[] split) {
-        Assignment assignment = new Assignment();
-
-        assignment.setName(split[0]);
-        assignment.setProjectPrio1(split[1]);
-        assignment.setProjectPrio2(split[2]);
-        assignment.setProjectPrio3(split[3]);
-        assignment.setProjectPrio4(split[4]);
-        assignment.setProjectPrio5(split[5]);
-
-        for (int i = 1; i < split.length; i++) {
-
-            assignment.getChosenProjects().put(i, split[i]);
-        }
-        return assignment;
-    }
-
+    /***
+     * If the separator ':' has no empty space between them this method will make one
+     * @param studentLine student line that may contains errors like no spaces between the separators
+     * @return the newStudentLine with inserted spaces if needed
+     */
     private String fillEmptyParameters(String studentLine) {
 
         String newStudentLine = "";
@@ -232,10 +215,6 @@ public class ProjectAssigner {
             lineScanner.useDelimiter(":");
             lineScanner.next(); // the student group
 
-
-            int[] linear = {0, 1, 2, 3, 4};
-            int[] quadratic = {0, 1, 4, 9, 16};
-
             int[] selected = model.getCostArray();
 
             for (int q = 0; q < 5; q++) {
@@ -257,7 +236,7 @@ public class ProjectAssigner {
         scan.close();
         buildDeepCopy();
 
-        printMatrix();
+        //printMatrix();
     }
 
 
@@ -283,6 +262,7 @@ public class ProjectAssigner {
     /**
      * prints the @param assignment
      * on the console
+     * a new  assignment will be added to the version list
      */
     public void printAssignment(int[][] assignment) {
 
@@ -342,6 +322,7 @@ public class ProjectAssigner {
     /**
      * prints the @param assignment
      * on the console
+     * differs from the printAssignment method in so far that here we change the version and do not add e new version to the version list
      */
     public void printAssignment3(int[][] assignment) {
 
@@ -405,7 +386,6 @@ public class ProjectAssigner {
         }
     }
 
-
     // ***************************
     // some methods for debugging
     // ***************************
@@ -423,7 +403,6 @@ public class ProjectAssigner {
         }
     }
 
-
     // ----- getters and setters -----
 
     public LinkedList<String> getProjectNumbers() {
@@ -433,5 +412,4 @@ public class ProjectAssigner {
     public LinkedList<String> getStudentList() {
         return studentList;
     }
-
 }

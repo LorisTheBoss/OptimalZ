@@ -6,6 +6,10 @@ import javafx.beans.value.ObservableBooleanValue;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+/***
+ * Each row in the tableview corresponds to one assignment
+ * The single assignments are stored in the listAssignment arraylist in the model
+ */
 public class Assignment {
 
     private static int counter = 1;
@@ -133,9 +137,7 @@ public class Assignment {
 
     public Boolean getLockedBoolean() {
 
-        //if (isLockedBoolean != null){
-            return isLockedBoolean;//}
-        //else {return null;}
+            return isLockedBoolean;
     }
 
     public void setLockedBoolean(Boolean lockedBoolean) {

@@ -81,6 +81,7 @@ public class CostManipuationView {
         });
     }
 
+    //Check if the values that are typed in from the user are integers in a range from 0-50 with some simple regular expressions
     private boolean checkCostValues() {
 
         if (txtCost1.getText().matches("^(?:[0-9]|[1-4][0-9]|50)$")) {
